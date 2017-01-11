@@ -93,3 +93,60 @@ Por cierto, que se me olvidaba: Esto va a ser UNROM de 64K, necesito 16K solo pa
 
 Voy a por el conversor del mapa. Tiene que exportar chunks de supermetatiles y luego un índice de dichos supermetatiles. Y por tiras. Va a ser diver diver y no me va a dar tiempo, pero al menos lo planteow.
 
+~~
+
+Nah. La idea parecía buena pero para este mapa no parece que sirva. Voy por la cuarta fila de supermetatiles (¡y son 24!) y ya hay más de 256 bloques diferentes, con lo que la idea se va al pedus. A cascal, por tiles. Ocupa un egg, pero bueno. Tengo 16K solo para este mapaco. Uso el colsmapper que tenía para Yun y a cascal. CASCAL!
+
+Veamos, hay 56 metatiles; 56x5 = 280 bytes. El mapa columnado ocupa 320x48 = 15360. O sea, que ambas cosas me caben en la misma página. Eso está BIEN. Cuando tenga que escrollear, la pongo, hago fullerías, y la quito. Como mola UNROM.
+
+Para ir teniendo cosas, voy a ir haciendo el compile.bat y que vaya guardando cosas en sitios. Por ejemplo, todo esto puede ir en PRG0. En PRG1 puedo meter gráficos y músicas. En PRG2/PRG3, el motor. Por ir empezando.
+
+~~
+
+Bueno, ya tengo todos los tiestos convertidos. Ahora voy a trasladar enemigos y tal. Supongo y espero que todos los datos de la tira actual me quepan en RAM. Cuando tenga todo dentro monto el esqueleto y me pongo a hacer el nuevo scroller.
+
+Hum. No hago más que dudar sobre el scroller y si no me cogerá el toro. Hay que tener en cuenta que puede ir para ambos lados y que un cambio brusco puede ser heavy.
+
+DA+-------------+BC
+
+O no, es el comecocos de siempre. Por lo general se van a ver 9 chunks, con un cachito de B. Nada más andar a la derecha se empieza a pintar el décimo, que es C, y nada más andar a la izquierda se pintará el menos dos, o sea, D. Si al empezar A y B están pintados da igual adonde vayamos que dará tiempo a que esté la nueva columna antes de llegar. Lo que estoy viendo es que a lo mejor me va a venir mejor guardar el mapa de otra forma, por cachos de 4x4, que son los que actualizaré cada frame, para así sólo tener que incrementar el puntero para el siguiente mientras estoy pintando la columna... aunque la copia a VRAM esta optimizada para columnas. No sé qué hacer, probaré tal y como tenía planteado a ver si va bien de tiempo.
+
+el motor de pongpong no se raya un carajo y va pintando una nueva columna de patrones SIEMPRE que se cambia la posición de la cámara. Lo hace en el chunk de la izquierda o de la derecha sin pensárselo, ciclando el contador de estados del pintador de columnas continuamente. No parece cogerle el toro, pero tiene siempre todo pintado en 5 ciclos y Lin Lin creo que nunca se mueve a mas de 2 pixels por frame.
+
+Veamos, vamos a poner supuestos.
+
+1. Empezamos y nos movemos a 4ppf (velocidad máxima de volar) a la izquierda durante 8 frames, o sea, -32 pixels. Al final de ese desplazamiento, A estará dentro del area visible fuera pero D estará dibujad completamente. OK.
+
+2. Empezamos y nos movemos a 4ppf a la derecha. A los 8 frames lo mismo, B estará dentro entero pero C estará completamente dibujado.
+
+3. Empezamos y nos movemos a 4pff, primero 4 frames a la derecha y luego paramos. B se verá a la mitad, y de C tendremos pintados atributos y dos chunks de los 6. Entonces nos movemos 4 frames a la izquierda: se pintarán en D los 4 últimos chunks, y desaparecera B. tendríamos 8 frames para que tuviese que aparecer D y ya estaría completamente dibujado.
+
+No paro de cambiar de idea. Pintar un chunk de 4x4 patrones implicaría una actualización de (3+4)*4 bytes, o sea, 28 bytes por frame. Pintar una columna de 16 patrones solo necesitaría 19 bytes o 22, de forma alterna, lo que sería un poco raro.
+
+Nada, lo de siempre, hasta que no me ponga no lo sabré. Pero igualmente para ver todas estas mierdas necesito un exporter que me saque el mapa en chunks de 2x2 metatiles en vez de columnas. Bueno, en columnas de chunks. O sea, lo que tenía más o menos en pongpong pero que saque bytes y que tenga columnas de 12 de alto. Lo puedo modificar a partir de ahí para máxima velocidad.
+
+00
+11
+22
+33
+44
+55
+66
+77
+88
+99
+AA
+BB
+
+Tambien podría probar la forma más sencilla que sería hacer más o menos como Pong Pong pero con la ventaja de que no hay que decodificar los bytes del mapa y que los metatiles están desintercalados.
+
+En ese caso tendría 5 ciclos de pintado:
+
+- 4 ciclos que pintan una columna de 24 patrones (27 bytes).
+- 1 ciclo de cálculo de atributos y escritura (18 bytes).
+
+Hm. Sólo gano 1 byte de actualización por frame y necesito leer y mandar al buffer más patrones (24 vs 16).
+
+Creo que me quedo con el plan original pero tendré que modificar el exporter del mapa.
+
+

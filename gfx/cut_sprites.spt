@@ -1,0 +1,19 @@
+NOSKIPEMPTY
+MAPFILE ..\dev\prg2\spritedata.h
+
+# METASPRITES
+OPEN ss.png
+PALS palss.png
+
+LABEL sspl
+METASPRITESET 0, 0, 2, 3, 8, 3, -4, -8 FLIPPED
+
+LABEL ssena
+METASPRITESET 0, 9, 2, 2, 4, 1, 0, 0 FLIPPED
+LABEL ssenb
+METASPRITESET 8, 9, 2, 2, 4, 1, 0, 0
+LABEL ssenc
+METASPRITESET 0, 11, 2, 2, 6, 1, 0, 0
+
+LABEL ssit
+METASPRITESET 0, 13, 2, 2, 7, 1, 0, 0
