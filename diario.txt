@@ -1,0 +1,95 @@
+20170111
+========
+
+Voy a divagar un momento.
+
+Esto es una locura. Faltan 20 días para que termine el concurso de nesdev y se me ha ocurrido hacer un remake del abandonado Cheril the Goddes pero usando scroll. Necesito rehacer todos los sprites y montar un proyecto nuevo con un montón de cosas que aún no he probado. Además tengo que integrar la cantidad de cosas chulas que tenía el original: portales, objetos, chac-chacs...
+
+El tema está en que el juego siga 100% orientado a pantallas, pero que se muestre con scroll. Esto implica tener un scroller para ir mostrando nuevo contenido, además de manejar dos pantallas de enemigos a la vez. La idea es que sea lo más sencillo posible.
+
+Si la pantalla de scroll siempre está alineada a pantalla HW, modificar el contenido debería ser trivial. Sólo tendría que tener en cuenta dónde estoy. Lo digo porque los chac-chacs se hacen pintando tiles. Esto es muy importante. 
+
+El motor debería poder empezar en cualquier sitio del mapa, pero siempre alineado a pantalla. Esto es MUY importante. Si se dice que tengo que empezar en X = n, tengo que empezar realmente al principio de la pantalla que contenga a X.
+
+Si siempre llevo sincronía entre scroll y pantallas, puedo usar el motor de movimiento tal cual con prx y pry como bytes, y px un signed char normal que sólo pueda tomar valores hasta 4096. Así no importa que el mapa tenga 20 pantallas de ancho. Para las colisiones con los malos tengo que idear una estrategia para:
+
+1.- Sólo tener en cuenta los 3 de la pantalla donde está Cheril. Por tanto tengo que llevar un registro de en qué pantalla estoy, y actualizarlo siempre que px se reinicie al llegar a uno u otro bordes.
+2.- Si se está en la misma pantalla, las coordenadas "x" reales son más que suficientes.
+
+El problema, si quiero usar bytes para las coordenadas de los malos, es cómo pintarlos en la pantalla con desplazamiento ajustados al offset de la cámara. Creo que ahora voy a coger el cuaderno y a hacer un par de dibujitos a ver si me aclaro.
+
+~~
+
+Creo que lo tengo (y me valdrá también para los enemigos de Yun en SMS):
+
+El quid está en dividir los enemigos por pantalla. Estaré procesando 6 enemigos. Los 3 primeros siempre están en la pantalla de la izquierda, y los 3 últimos en la de la derecha.
+
+Se entiendeo que cam_x_module es la parte LSB de cam_x (o sea, cam_x & 0xff).
+
+Para los 3 primeros, en la pantalla de la izquierda:
+	- Si en_x < cam_x_module -> NO
+	- Si en_x >= cam_x_module -> SI
+
+	spr_x = en_x - cam_x_module;
+
+Para los 3 últimos, en la pantalla de la derecha:
+	- Si en_x <= cam_x_module - 16 -> SI
+	- Si en_x > cam_x_module - 16 -> NO
+
+	spr_x = 256 - cam_x_module + en_x
+
+Lo dejo aquí apuntadico.
+
+~~
+
+El scroller puede basarse en el de pongpong. Veré cómo generalizarlo bien. El tema es pintar una columna siempre en el borde al que se esté avanzando. En la función scroll_to se mira si el desplazamiento de cam_pos respecto del valor anterior es hacia la izquierda o hacia la derecha y se pinta la columna no visible (-1 o +9, si hablamos de chunks de 32).
+
+El problema en NES son los atributos, que hay que calcular y enviar. Teniendo una columna "en el horizonte", hay 32 pixels de scroll de tiempo para tener la siguiente lista. 
+
+He mirado y en el original, Cheril corre como máximo a 2 pixels por frame, pero cuando es diosa va a 4. 32 / 4 = 8 frames para dibujar la columna completa; estamos hablando de 4 columnas de 24 patrones cada una más una ristra de 6 atributos.
+
+Podrá ser así:
+
+1 frame para calcular atributos.
+1 frame para escribir 6 bytes de atributos.
+6 frames para 24x4 patrones = 16 patrones en cada frame, o lo que es lo mismo, un chunk de 4x4 patrones.
+
+Ahora se me pasa por la cabeza que si pudiese procesar el mapa en chunks de 4x4 el scroller sería de los cojones de sencillo, pero no sé si saldrían demasiados metatiles y ocuparían un huevo. ¡No tengo más que escribir un conversor para comprobarlo!
+
+Ya tengo algo divertido que hacer para luego.
+
+~~~~
+
+Antes de escribir nada, he pensado en una forma mucho mejor para almacenar metatiles, sus atributos, y luego los supermetatiles (por llamarles de alguna forma): en vez de intercalar los datos, lo cual es muy humano, los desintercalaré (deinterlace queda más chulo) y los separaré en cuatro arrays de patrones y una quinta de atributos. Así imprimir será mucho más rápido porque no tendré que andar buscando un puntero multiplicando por 4 y avanzándolo luego. Como de todos modos lo hago desenrollado, todo son ganancias. Voy a añadir la funcionalidad a mkts (el enjendro).
+
+~~
+
+mkts.exe está modificado para el parámetro deinterlace en todos los targets (aunque el scripting de SMS es algo que aún tengo que probar... Cuando llegue el momento ~ quizá deba escribir scripts para toda la conversión que se hace en yun pero ya). Ahora tengo que hacer el exporter del mapa. Lo malo es que lo chulo del mapa eran las estrellicas y las estrellicas se ponían a vuelo. Voy a pensar en qué hacer. Primero de todo, la forma de modificar el mapa en tiempo real era que, al ir a imprimir el tile "t"...
+
+	if (t == 0) {
+		rda = rand8 ();
+		if (level) {
+			t = (rda & 31) == 1 ? t = 45 + (rand8 () & 1) : 44;
+		} else {
+			if ((rda & 15) < 7) t = 40 + ((n_pant + rdx + rdy + rdy) & 3);
+		}
+	} else if (t == 10) {
+		if (map_buff [rda - 16] != 10) t = 16;
+	}
+
+"level" se calcula así:
+
+	level = (n_pant == 0 || n_pant == 60 || 
+		(n_pant >= 57 && n_pant <= 59) ||
+		(n_pant >= 76 && n_pant <= 79) );
+
+Voy a necesitar un preprocesador del .map de entrada para introducir todos esos cambios. También tengo que introducir el offset, eso lo puedo hacer de entrada, y deshacerlo en el conversor, que es lo suyo. Nada de cuadrados negros como primer tile, qué atraso.
+
+~~
+
+Por cierto, que se me olvidaba: Esto va a ser UNROM de 64K, necesito 16K solo para level data (mapa y tablas de metatiles, tiles, y dátiles).
+
+~~
+
+Voy a por el conversor del mapa. Tiene que exportar chunks de supermetatiles y luego un índice de dichos supermetatiles. Y por tiras. Va a ser diver diver y no me va a dar tiempo, pero al menos lo planteow.
+
