@@ -149,4 +149,63 @@ Hm. Sólo gano 1 byte de actualización por frame y necesito leer y mandar al bu
 
 Creo que me quedo con el plan original pero tendré que modificar el exporter del mapa.
 
+Conversor chunky hecho y funcionando. Esquema del programa con UNROM montado. A medida que añado cosas las voy metiendo en compile.bat. Todas las cosas que ya tengo ya están en sus PRGn correspondientes.
 
+20170112
+========
+
+Hoy he estado a otras cosas, pero voy a apuntar unos cuantos hechos que me servirán para simplificarlo todo.
+
+- Siempre estamos alineados a pantallas.
+- La columna "chunk" de scroll #0 está en X=0 de NAMETABLE_A. Todos los cálculos tienen eso en cuenta.
+- A la hora de pintar el chunk N se he hace "& 0xf" al número obtenido de cam_pos. En el esquema de antes, "A" es ((cam_pos >> 5) - 1) & 0xf.
+- Si el bit 3 de "chunk N" es 0, está en NAMETABLE_A. Si es 1, en NAMETABLE_B.
+- A la hora de actualizar cosas en la pantalla (por ejemplo, chack chacks): n_pant & 1 ? NAMETABLE_B : NAMETABLE_A
+- Actualizamos levemente los cálculos de pongpong
+
+	// Calculate memory address of current column [col_idx * 12]
+	gpint = col_idx << 2;
+	col_ptr = map_ptr + gpint + gpit + gpit;
+
+	// VRAM address
+	rdc = gpint & 31;
+
+	// which nametable?
+	if (col_idx & 8) {
+		col_adr = NAMETABLE_B + (TOP_ADJUST << 5) + rdc;
+		col_attr_adr = NAMETABLE_B + ((TOP_ADJUST >> 2) << 3) + 0x03c0 + (rdc >> 2);
+	} else {
+		col_adr = NAMETABLE_A + (TOP_ADJUST << 5) + rdc;
+		col_attr_adr = NAMETABLE_A + ((TOP_ADJUST >> 2) << 3) + 0x03c0 + (rdc >> 2);
+	}
+
+Parece que no pero me he quitado de enmedio unos cuantos desplazamientos de 16 bits. Además, TOP_ADJUST será 0, otra cosa que me ahorro. Y atención qué tontería cómo calculo la dirección de los atributos. ¿Cómo no me he dado cuenta de esto antes?
+
+	// Calculate memory address of current column [col_idx * 12]
+	gpint = col_idx << 2;
+	col_ptr = map_ptr + gpint + gpit + gpit;
+
+	// VRAM address
+	rdc = gpint & 31;
+
+	// which nametable?
+	if (col_idx & 8) {
+		col_adr = NAMETABLE_B + rdc;
+		col_attr_adr = NAMETABLE_B + 0x03c0 + (col_idx & 0x7);
+	} else {
+		col_adr = NAMETABLE_A + rdc;
+		col_attr_adr = NAMETABLE_A + 0x03c0 + (col_idx & 0x7);
+	}
+
+Mecano y me queda. Refollúo, he ahorrado un montón sobre pongpong. Y con la organización de los metatiles, más [en realidad esto no es del todo correcto - pongpong no usa metatiles mapeados, sino compuestos por patrones sucesivos; con la nueva organización podré tener el lujo de los metatiles mapeados sin impacto].
+
+Hemos dicho que en los seis primeros tiempos (por ejemplo) pintaremos 6 cachos de 4x4 patrones. El offset vertical debería ir en una variable aparte y ciclarse así tras pintar cada cacho.
+
+	col_v_offset += 128;
+	if (col_v_offset == 768) col_v_offset = 0;
+
+O mejor, col_v_offset se incrementa en 32 tras cada 4 patrones en linea. La linea de comprobación final tampoco sería necesaria: en el tiempo 7, al calcular los atributos, puede ponerse a 0 sin problema.
+
+Para simplificar la inicialización, lo haremos al revés: primero atributos y luego patrones.
+
+~~
