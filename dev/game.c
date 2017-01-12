@@ -1,6 +1,7 @@
-// Lala the Magical v1.2 [UNROM version]
-// MT NES MK1 ChamanH v0.2
-// Copyleft 2016 by The Mojon Twins
+// Cheril the Goddess R
+
+// Goddess Engine v0.1
+// Copyleft 2017 The Mojon Twins
 
 #include "neslib-unrom.h"
 
