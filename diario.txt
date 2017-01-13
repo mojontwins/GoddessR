@@ -1,4 +1,4 @@
-20170111 
+20170111
 ========
 
 Voy a divagar un momento.
@@ -163,9 +163,10 @@ Hoy he estado a otras cosas, pero voy a apuntar unos cuantos hechos que me servi
 - A la hora de actualizar cosas en la pantalla (por ejemplo, chack chacks): n_pant & 1 ? NAMETABLE_B : NAMETABLE_A
 - Actualizamos levemente los cálculos de pongpong
 
-	// Calculate memory address of current column [col_idx * 12]
+	// Calculate memory address of current column [col_idx * 24]
 	gpint = col_idx << 2;
-	col_ptr = map_ptr + gpint + gpit + gpit;
+	// 24 = 12 * 2 = (4*3)*2
+	col_ptr = map_ptr + ((gpint + gpint + gpint) << 1);
 
 	// VRAM address
 	rdc = gpint & 31;
@@ -181,9 +182,10 @@ Hoy he estado a otras cosas, pero voy a apuntar unos cuantos hechos que me servi
 
 Parece que no pero me he quitado de enmedio unos cuantos desplazamientos de 16 bits. Además, TOP_ADJUST será 0, otra cosa que me ahorro. Y atención qué tontería cómo calculo la dirección de los atributos. ¿Cómo no me he dado cuenta de esto antes?
 
-	// Calculate memory address of current column [col_idx * 12]
+	// Calculate memory address of current column [col_idx * 24]
 	gpint = col_idx << 2;
-	col_ptr = map_ptr + gpint + gpit + gpit;
+	// 24 = 12 * 2 = (4*3)*2
+	col_ptr = map_ptr + ((gpint + gpint + gpint) << 1);
 
 	// VRAM address
 	rdc = gpint & 31;
@@ -209,3 +211,174 @@ O mejor, col_v_offset se incrementa en 32 tras cada 4 patrones en linea. La line
 Para simplificar la inicialización, lo haremos al revés: primero atributos y luego patrones.
 
 ~~
+
+20170113
+========
+
+Hoy me he casao así que no me da mucho tiempo de nada, pero quiero apuntar esto: es una tontería, en la parte de calcular los atributos, tener todo el lookup junto y tener que acceder sumando y hostias. Como en el resto de las cosas: 4 arrays separados y tal. Tengo, por tanto, que modificar el exportador para que me genere los datos guay.
+
+Yo tengo que exportar arrays para estos cuatro tiles:
+
+A B 
+C D
+
+Que además es el orden de los colores en el atributo, así que genial.
+
+~~
+
+Al final del día he escrito la función que pinta un chunk y que utilizaré para scrollear. Ha quedado así tras algun afeite más:
+
+void scroll_paint_chunk (void) {
+	// Calculate memory address of current column [col_idx * 24]
+	gpint = col_idx << 2;
+	// 24 = 12 * 2 = (4*3)*2
+	col_ptr = map_ptr + ((gpint + gpint + gpint) << 1);
+
+	// VRAM address
+	rdc = gpint & 31;
+
+	if (!state_ctr) {
+		// State 0: fetch & paint attrs.
+	
+		// which nametable?
+		gp_addr = ((col_idx & 8) ? NAMETABLE_B : NAMETABLE_A) + 0x03c0 + (col_idx & 0x7);
+		gp_gen = (unsigned char *) col_ptr;
+
+		gpit = 6; while (gpit --) {
+			rda = *gp_gen ++;
+			rdt = attr_lookup_0_0 [rda];
+			rda = *gp_gen ++;
+			rdt += attr_lookup_0_1 [rda];
+			rda = *gp_gen ++;
+			rdt += attr_lookup_0_2 [rda];
+			rda = *gp_gen ++;
+			rdt += attr_lookup_0_3 [rda];
+			*gp_ul ++ = MSB (gp_addr);
+			*gp_ul ++ = LSB (gp_addr);
+			*gp_ul ++= rdt;
+			gp_addr += 8;
+		}
+
+		col_v_offset = 0;
+	} else if (state_ctr < 7) {
+		// State 1..6: draw patterns. 4x4 chunk
+
+		// which nametable?
+		gp_addr = ((col_idx & 8) ? NAMETABLE_B : NAMETABLE_A) + rdc + col_v_offset;
+		gp_gen = (unsigned char *) (col_ptr + (state_ctr << 2) - 4);
+		
+		// Two metatiles
+		rda = *gp_gen ++; rdb = *gp_gen ++;
+		
+		*gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
+		*gp_ul ++ = LSB (gp_addr);
+		*gp_ul ++ = 4;
+		*gp_ul ++ = main_ts_tmaps_0 [rda];
+		*gp_ul ++ = main_ts_tmaps_1 [rda];
+		*gp_ul ++ = main_ts_tmaps_0 [rdb];
+		*gp_ul ++ = main_ts_tmaps_1 [rdb];
+		
+		gp_addr += 32;
+
+		*gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
+		*gp_ul ++ = LSB (gp_addr);
+		*gp_ul ++ = 4;
+		*gp_ul ++ = main_ts_tmaps_2 [rda];
+		*gp_ul ++ = main_ts_tmaps_3 [rda];
+		*gp_ul ++ = main_ts_tmaps_2 [rdb];
+		*gp_ul ++ = main_ts_tmaps_3 [rdb];
+
+		gp_addr += 32;
+
+		// Two metatiles more
+		rda = *gp_gen ++; rdb = *gp_gen ++;
+		
+		*gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
+		*gp_ul ++ = LSB (gp_addr);
+		*gp_ul ++ = 4;
+		*gp_ul ++ = main_ts_tmaps_0 [rda];
+		*gp_ul ++ = main_ts_tmaps_1 [rda];
+		*gp_ul ++ = main_ts_tmaps_0 [rdb];
+		*gp_ul ++ = main_ts_tmaps_1 [rdb];
+		
+		gp_addr += 32;
+
+		*gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
+		*gp_ul ++ = LSB (gp_addr);
+		*gp_ul ++ = 4;
+		*gp_ul ++ = main_ts_tmaps_2 [rda];
+		*gp_ul ++ = main_ts_tmaps_3 [rda];
+		*gp_ul ++ = main_ts_tmaps_2 [rdb];
+		*gp_ul ++ = main_ts_tmaps_3 [rdb];
+
+		// Next chunk at
+		col_v_offset += 128;		
+	} else {
+		// State 7: extra painting?
+		// It may be necessary for custom stuff in this game.
+		// Open / closed gates for instance.
+	}
+
+	state_ctr = (state_ctr + 1) & 7;
+}
+Bella, bella cual culo de un camella. Ya la probaré. Pero seguro que ocupa menos rasters que la original ¡y hace bastante más!
+
+Además me ha sobrado un estado, el 7º, para cosas especiales que pueda necesitar, como por ejemplo pintar modificaciones al mapa (puerta abierta, cancelas del final).
+
+~~
+
+Para ponerme cojonudo:
+
+	*gp_ul ++ = main_ts_tmaps_0 [rda];
+
+Genera:
+
+	lda     _gp_ul
+	ldx     _gp_ul+1
+	sta     regsave
+	stx     regsave+1
+	clc
+	adc     #$01
+	bcc     L4463
+	inx
+L4463:	sta     _gp_ul
+	stx     _gp_ul+1
+	ldy     _rda
+	lda     _main_ts_tmaps_0,y
+	ldy     #$00
+	sta     (regsave),y
+
+Mientras que:
+
+	*gp_ul ++ = *(main_ts_tmaps_0 + rda);
+
+Genera:
+
+	lda     _gp_ul
+	ldx     _gp_ul+1
+	sta     regsave
+	stx     regsave+1
+	clc
+	adc     #$01
+	bcc     L4463
+	inx
+L4463:	sta     _gp_ul
+	stx     _gp_ul+1
+	lda     _rda
+	sta     ptr1
+	tya
+	clc
+	adc     #>(_main_ts_tmaps_0)
+	sta     ptr1+1
+	ldy     #<(_main_ts_tmaps_0)
+	lda     (ptr1),y
+	ldy     #$00
+	sta     (regsave),y
+
+Por eso me he quedado con la primera opción. Fíjate qué curioso, en SDCC sale mejor la segunda.
+
+~~~
+
+Mecano y me queda. Haciendo un bucle tonto para que se scrollee el mapa y midiendo cuántos rasters ocupa mi rutina, resulta que nunca pasa de los 12 (a simple vista). Me he superado, bacalado. Y eso que hay una expresión al principio que creo que se podría optimizar un poco.
+
+Y fin por hoy.

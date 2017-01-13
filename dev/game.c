@@ -52,6 +52,8 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 // ############################################################################
 
 #include "prg1/main_ts_patterns_c.h"
+#include "prg1/main_ss_patterns_c.h"
+#include "prg1/palettes.h"
 
 // ----------------------------------------------------------------------------
 
@@ -73,5 +75,27 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 // CODE segment = PRG3, the fixed segment. Global functions need be here.
 // ############################################################################
 
+#include "prg3/scroller.h"
+
+// Main section
+
+extern const unsigned char music_ROM1 [];	// A pointer to the music data @ ROM1.
+
 void main (void) {
+	// Initialization
+	ticks = ppu_system () ? 60 : 50;
+	halfticks = ticks >> 1;
+	
+	famitone_init (1, music_ROM1);
+
+	// And do it...
+	bank_bg (0);
+	bank_spr (1);
+	oam_size (0);
+	pal_bright (0);
+
+	map_ptr = map_0;
+
+	// Remove 
+	test_scroller ();
 }
