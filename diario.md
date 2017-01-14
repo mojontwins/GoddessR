@@ -382,3 +382,93 @@ Por eso me he quedado con la primera opción. Fíjate qué curioso, en SDCC sale
 Mecano y me queda. Haciendo un bucle tonto para que se scrollee el mapa y midiendo cuántos rasters ocupa mi rutina, resulta que nunca pasa de los 12 (a simple vista). Me he superado, bacalado. Y eso que hay una expresión al principio que creo que se podría optimizar un poco.
 
 Y fin por hoy.
+
+20170114
+========
+
+Me he despertado con una cuestión en la que no había pensado: yo siempre había movido cam_pos según el valor de 16 bits de prx... Pero ahora voy a mantener un prx de 8 bits normal y corriente. Como voy a tener n_pant actualizado correctamente cada vez que prx "sature", este número de 16 bis es, efectvamente, n_pant:prx.
+
+La cosa es que tengo que ver como convertir n_pant:prx en MSB/LSB del mismo número. Creo que cc65 no se va a coscar y no va a optimizar si hago (n_pant << 8) | prx, probaré qué código saca y veré la viablilidad de hacer ASM en linea si llega el caso.
+
+~~
+
+¡Ay, pues no! ¡cc65 optimiza esto de puta madre!
+
+;
+; cam_pos = (n_pant << 8) | prx;
+;
+	lda     _prx
+	sta     _cam_pos
+	lda     _n_pant
+	sta     _cam_pos+1
+
+Ferpecto :) Una cosa más resuelta.
+
+Hoy tocará meter a Cheril dando saltos (modo básico, sin florituras) y a tirar. He pensado que además tengo un montón de sitio en patrones y metatiles para floriturear gráficamente un montón. Ya me da igual si no da tiempo para el concurso, lo voy a poner muy bonico.
+
+~~
+
+Necesito además la infraestructura para la colisión. Ahora tengo que ver si los fantis colisionaban con el escenario; en ese caso, necesitaré hacer el buffer completo de dos pantallas. Voy a echar un vistazo.
+
+No colisionan. ESTUPENDO.
+
+Aunque creo que no me cuesta nada llevar el buffer completo. Con la idea de que en próximos juegos pueda hacer falta. Como ahora mismo no me puedo poner me llevaré el cuaderno y pensaré.
+
+~~
+
+Veamos, lo suyo sería rellenar un buffer a la vez que se pinta el chunk. Pero ¿es realmente necesario? ¿No puede hacerse la colisión tirando directamente del mapdata?
+
+De entrada tenemos que está organizado por columnas y tiene un byte por tile. Cada 192 bytes del mapa es una pantalla. Si apuntamos el puntero al principio del stripe actual,
+
+	n_pant * 192 = (n_pant * 64) * 3, también n_pant * 64 + n_pant * 128.
+
+Podemos hacer:
+
+	gpint = n_pant << 6;
+	gpint = gpint + gpint + gpint;
+
+Aunque también podemos tener un cur_scr_ptr e incrementarlo/decrementarlo en 192 a la vez que n_pant.
+
+En ese caso, un cálculo de attr (x, y) sería
+
+behs [*(cur_scr_ptr + x * 12 + y << 4)];
+
+x * 12 = (x * 4) * 3 = (x * 8) + (x * 4)
+
+Y me ahorro el buffer circular y las mierdas en lata. Lo malo de esto es que sólo puedo usar la colisión para la pantalla actual donde está el jugador. Si en el futuro necesitase colisionar enemigos, debería almacenar el cur_scr_ptr de dicho enemigo en su estructura de datos, y generalizar.
+
+También vamos a dar dos tiles de ajuste como en Lala para que moverse por la parte superior de la pantalla sea menos dolor.
+
+Sería algo así:
+
+void cm_two_points (void) {
+	cyaux = cy1 < 2 ? 0 : cy1 - 2; cxaux = cx1 << 2; 
+	at1 = behs [*(cur_scr_ptr + cxaux + cxaux + cxaux + cyaux)];
+	cyaux = cy2 < 2 ? 0 : cy2 - 2; cxaux = cx2 << 2; 
+	at2 = behs [*(cur_scr_ptr + cxaux + cxaux + cxaux + cyaux)];
+}
+
+En realidad las colisiones siempre son para un segmento vertical o uno horizontal, por lo que creo que podríamos simplificar:
+
+void cm_two_points_horizontal (void) {
+	// cy1 == cy2
+	cyaux = cy1 < 2 ? 0 : cy1 - 2; 
+	cxaux = cx1 << 2;
+	at1 = behs [*(cur_scr_ptr + cxaux + cxaux + cxaux + cyaux)];
+	cyaux = cx2 << 2; 
+	at2 = behs [*(cur_scr_ptr + cxaux + cxaux + cxaux + cyaux)];
+}
+
+void cm_two_points_vertical (void) {
+	// cx1 == cx2
+	cxaux = cx1 << 2; cxaux = cxaux + cxaux + cxaux;
+	cyaux = cy1 < 2 ? 0 : cy1 - 2; 
+	at1 = behs [*(cur_scr_ptr + cxaux + cyaux)];
+	cyaux = cy2 < 2 ? 0 : cy2 - 2; 
+	at2 = behs [*(cur_scr_ptr + cxaux + cyaux)];
+}
+
+Que serían levemente más rápidas y además me ahorro una asignación antes de la llamada en todos los casos. Creo que merece la pena.
+
+~~
+
