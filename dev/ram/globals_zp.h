@@ -30,4 +30,12 @@ unsigned char state_ctr;
 unsigned int col_v_offset;
 
 signed int cam_pos, cam_pos_old;
-unsigned char cx1, cx2;
+
+// Collision detection
+unsigned char cx1, cx2, cy1, cy2;
+unsigned char cxaux, cyaux;
+unsigned char at1, at2;
+unsigned char *scr_buffer_ptr;
+
+// Dum
+unsigned char n_pant, prx;

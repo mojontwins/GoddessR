@@ -52,8 +52,18 @@
 	.export		_cam_pos_old
 	.export		_cx1
 	.export		_cx2
+	.export		_cy1
+	.export		_cy2
+	.export		_cxaux
+	.export		_cyaux
+	.export		_at1
+	.export		_at2
+	.export		_scr_buffer_ptr
+	.export		_n_pant
+	.export		_prx
 	.export		_ticks
 	.export		_halfticks
+	.export		_scr_buffer
 	.export		_bitmasks
 	.export		_map_0
 	.export		_main_ts_tmaps_0
@@ -77,6 +87,83 @@
 	.export		_mypal_light_fg
 	.export		_mypal_cuts
 	.export		_mypal_reds
+	.export		_behs
+	.export		_sspl_00_a
+	.export		_sspl_00_b
+	.export		_sspl_01_a
+	.export		_sspl_01_b
+	.export		_sspl_02_a
+	.export		_sspl_02_b
+	.export		_sspl_03_a
+	.export		_sspl_03_b
+	.export		_sspl_04_a
+	.export		_sspl_04_b
+	.export		_sspl_05_a
+	.export		_sspl_05_b
+	.export		_sspl_06_a
+	.export		_sspl_06_b
+	.export		_sspl_07_a
+	.export		_sspl_07_b
+	.export		_sspl_08_a
+	.export		_sspl_08_b
+	.export		_sspl_09_a
+	.export		_sspl_09_b
+	.export		_sspl_0A_a
+	.export		_sspl_0A_b
+	.export		_sspl_0B_a
+	.export		_sspl_0B_b
+	.export		_sspl_0C_a
+	.export		_sspl_0C_b
+	.export		_sspl_0D_a
+	.export		_sspl_0D_b
+	.export		_sspl_0E_a
+	.export		_sspl_0E_b
+	.export		_sspl_0F_a
+	.export		_sspl_0F_b
+	.export		_sspl_10_a
+	.export		_sspl_10_b
+	.export		_sspl_11_a
+	.export		_sspl_11_b
+	.export		_sspl_12_a
+	.export		_sspl_12_b
+	.export		_sspl_13_a
+	.export		_sspl_13_b
+	.export		_sspl_14_a
+	.export		_sspl_14_b
+	.export		_sspl_15_a
+	.export		_sspl_15_b
+	.export		_sspl_16_a
+	.export		_sspl_16_b
+	.export		_sspl_17_a
+	.export		_sspl_17_b
+	.export		_ssena_00_a
+	.export		_ssena_00_b
+	.export		_ssena_01_a
+	.export		_ssena_01_b
+	.export		_ssena_02_a
+	.export		_ssena_02_b
+	.export		_ssena_03_a
+	.export		_ssena_03_b
+	.export		_ssenb_00
+	.export		_ssenb_01
+	.export		_ssenb_02
+	.export		_ssenb_03
+	.export		_ssenc_00
+	.export		_ssenc_01
+	.export		_ssenc_02
+	.export		_ssenc_03
+	.export		_ssenc_04
+	.export		_ssenc_05
+	.export		_ssit_00
+	.export		_ssit_01
+	.export		_ssit_02
+	.export		_ssit_03
+	.export		_ssit_04
+	.export		_ssit_05
+	.export		_ssit_06
+	.export		_shl4
+	.export		_cm_two_points_horizontal
+	.export		_cm_two_points_vertical
 	.export		_scroll_paint_chunk
 	.export		_scroll_draw_one_chunk_completely
 	.export		_scroll_to
@@ -20410,6 +20497,1782 @@ _mypal_reds:
 	.byte	$16
 	.byte	$35
 .segment	"ROM2"
+_behs:
+	.byte	$00
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$01
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$08
+	.byte	$08
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$01
+	.byte	$01
+	.byte	$01
+	.byte	$01
+	.byte	$00
+	.byte	$08
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+_sspl_00_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$00
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$01
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$02
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$03
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$04
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$05
+	.byte	$00
+	.byte	$80
+_sspl_00_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$01
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$00
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$03
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$02
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$05
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$04
+	.byte	$40
+	.byte	$80
+_sspl_01_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$06
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$07
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$08
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$09
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$0A
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$0B
+	.byte	$00
+	.byte	$80
+_sspl_01_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$07
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$06
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$09
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$08
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$0B
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$0A
+	.byte	$40
+	.byte	$80
+_sspl_02_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$0C
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$0D
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$0E
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$0F
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$10
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$11
+	.byte	$00
+	.byte	$80
+_sspl_02_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$0D
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$0C
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$0F
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$0E
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$11
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$10
+	.byte	$40
+	.byte	$80
+_sspl_03_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$12
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$13
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$14
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$15
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$16
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$17
+	.byte	$00
+	.byte	$80
+_sspl_03_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$13
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$12
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$15
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$14
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$17
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$16
+	.byte	$40
+	.byte	$80
+_sspl_04_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$18
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$19
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$1A
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$1B
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$1C
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$1D
+	.byte	$00
+	.byte	$80
+_sspl_04_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$19
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$18
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$1B
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$1A
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$1D
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$1C
+	.byte	$40
+	.byte	$80
+_sspl_05_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$1E
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$1F
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$20
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$21
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$22
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$23
+	.byte	$00
+	.byte	$80
+_sspl_05_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$1F
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$1E
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$21
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$20
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$23
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$22
+	.byte	$40
+	.byte	$80
+_sspl_06_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$24
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$1F
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$25
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$26
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$22
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$27
+	.byte	$00
+	.byte	$80
+_sspl_06_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$1F
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$24
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$26
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$25
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$27
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$22
+	.byte	$40
+	.byte	$80
+_sspl_07_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$28
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$1F
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$29
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$2A
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$2B
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$2C
+	.byte	$00
+	.byte	$80
+_sspl_07_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$1F
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$28
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$2A
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$29
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$2C
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$2B
+	.byte	$40
+	.byte	$80
+_sspl_08_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$2D
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$2E
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$2F
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$30
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$31
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$32
+	.byte	$00
+	.byte	$80
+_sspl_08_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$2E
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$2D
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$30
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$2F
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$32
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$31
+	.byte	$40
+	.byte	$80
+_sspl_09_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$33
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$34
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$35
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$36
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$37
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$38
+	.byte	$00
+	.byte	$80
+_sspl_09_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$34
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$33
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$36
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$35
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$38
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$37
+	.byte	$40
+	.byte	$80
+_sspl_0A_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$39
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$3A
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$3B
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$3C
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$3D
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$3E
+	.byte	$00
+	.byte	$80
+_sspl_0A_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$3A
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$39
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$3C
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$3B
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$3E
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$3D
+	.byte	$40
+	.byte	$80
+_sspl_0B_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$3F
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$40
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$41
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$42
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$43
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$44
+	.byte	$00
+	.byte	$80
+_sspl_0B_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$40
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$3F
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$42
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$41
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$44
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$43
+	.byte	$40
+	.byte	$80
+_sspl_0C_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$45
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$46
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$47
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$48
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$49
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$4A
+	.byte	$00
+	.byte	$80
+_sspl_0C_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$46
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$45
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$48
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$47
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$4A
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$49
+	.byte	$40
+	.byte	$80
+_sspl_0D_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$4B
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$4B
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$4C
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$4D
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$4E
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$4F
+	.byte	$00
+	.byte	$80
+_sspl_0D_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$4B
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$4B
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$4D
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$4C
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$4F
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$4E
+	.byte	$40
+	.byte	$80
+_sspl_0E_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$50
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$51
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$52
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$53
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$54
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$55
+	.byte	$00
+	.byte	$80
+_sspl_0E_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$51
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$50
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$53
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$52
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$55
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$54
+	.byte	$40
+	.byte	$80
+_sspl_0F_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$56
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$2E
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$57
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$58
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$59
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$5A
+	.byte	$00
+	.byte	$80
+_sspl_0F_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$2E
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$56
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$58
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$57
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$5A
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$59
+	.byte	$40
+	.byte	$80
+_sspl_10_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$5B
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$5C
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$5D
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$5E
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$5F
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$60
+	.byte	$00
+	.byte	$80
+_sspl_10_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$5C
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$5B
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$5E
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$5D
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$60
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$5F
+	.byte	$40
+	.byte	$80
+_sspl_11_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$61
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$62
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$63
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$64
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$65
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$66
+	.byte	$00
+	.byte	$80
+_sspl_11_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$62
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$61
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$64
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$63
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$66
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$65
+	.byte	$40
+	.byte	$80
+_sspl_12_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$67
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$68
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$69
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$6A
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$6B
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$6C
+	.byte	$00
+	.byte	$80
+_sspl_12_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$68
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$67
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$6A
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$69
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$6C
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$6B
+	.byte	$40
+	.byte	$80
+_sspl_13_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$6D
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$6E
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$6F
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$70
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$71
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$72
+	.byte	$00
+	.byte	$80
+_sspl_13_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$6E
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$6D
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$70
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$6F
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$72
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$71
+	.byte	$40
+	.byte	$80
+_sspl_14_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$68
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$73
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$74
+	.byte	$00
+	.byte	$04
+	.byte	$00
+	.byte	$75
+	.byte	$00
+	.byte	$FC
+	.byte	$08
+	.byte	$76
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$77
+	.byte	$00
+	.byte	$80
+_sspl_14_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$73
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$68
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$75
+	.byte	$40
+	.byte	$04
+	.byte	$00
+	.byte	$74
+	.byte	$40
+	.byte	$FC
+	.byte	$08
+	.byte	$77
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$76
+	.byte	$40
+	.byte	$80
+_sspl_15_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$78
+	.byte	$03
+	.byte	$04
+	.byte	$F8
+	.byte	$79
+	.byte	$03
+	.byte	$FC
+	.byte	$00
+	.byte	$7A
+	.byte	$03
+	.byte	$04
+	.byte	$00
+	.byte	$7B
+	.byte	$03
+	.byte	$FC
+	.byte	$08
+	.byte	$7C
+	.byte	$03
+	.byte	$04
+	.byte	$08
+	.byte	$7D
+	.byte	$03
+	.byte	$80
+_sspl_15_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$79
+	.byte	$43
+	.byte	$04
+	.byte	$F8
+	.byte	$78
+	.byte	$43
+	.byte	$FC
+	.byte	$00
+	.byte	$7B
+	.byte	$43
+	.byte	$04
+	.byte	$00
+	.byte	$7A
+	.byte	$43
+	.byte	$FC
+	.byte	$08
+	.byte	$7D
+	.byte	$43
+	.byte	$04
+	.byte	$08
+	.byte	$7C
+	.byte	$43
+	.byte	$80
+_sspl_16_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$7E
+	.byte	$03
+	.byte	$04
+	.byte	$F8
+	.byte	$7E
+	.byte	$43
+	.byte	$FC
+	.byte	$00
+	.byte	$7F
+	.byte	$03
+	.byte	$04
+	.byte	$00
+	.byte	$7F
+	.byte	$43
+	.byte	$FC
+	.byte	$08
+	.byte	$7E
+	.byte	$83
+	.byte	$04
+	.byte	$08
+	.byte	$7E
+	.byte	$C3
+	.byte	$80
+_sspl_16_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$7E
+	.byte	$03
+	.byte	$04
+	.byte	$F8
+	.byte	$7E
+	.byte	$43
+	.byte	$FC
+	.byte	$00
+	.byte	$7F
+	.byte	$03
+	.byte	$04
+	.byte	$00
+	.byte	$7F
+	.byte	$43
+	.byte	$FC
+	.byte	$08
+	.byte	$7E
+	.byte	$83
+	.byte	$04
+	.byte	$08
+	.byte	$7E
+	.byte	$C3
+	.byte	$80
+_sspl_17_a:
+	.byte	$FC
+	.byte	$F8
+	.byte	$4B
+	.byte	$00
+	.byte	$04
+	.byte	$F8
+	.byte	$4B
+	.byte	$00
+	.byte	$FC
+	.byte	$00
+	.byte	$80
+	.byte	$03
+	.byte	$04
+	.byte	$00
+	.byte	$80
+	.byte	$43
+	.byte	$FC
+	.byte	$08
+	.byte	$4B
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$4B
+	.byte	$00
+	.byte	$80
+_sspl_17_b:
+	.byte	$FC
+	.byte	$F8
+	.byte	$4B
+	.byte	$40
+	.byte	$04
+	.byte	$F8
+	.byte	$4B
+	.byte	$40
+	.byte	$FC
+	.byte	$00
+	.byte	$80
+	.byte	$03
+	.byte	$04
+	.byte	$00
+	.byte	$80
+	.byte	$43
+	.byte	$FC
+	.byte	$08
+	.byte	$4B
+	.byte	$40
+	.byte	$04
+	.byte	$08
+	.byte	$4B
+	.byte	$40
+	.byte	$80
+_ssena_00_a:
+	.byte	$00
+	.byte	$00
+	.byte	$81
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$82
+	.byte	$01
+	.byte	$00
+	.byte	$08
+	.byte	$83
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$84
+	.byte	$01
+	.byte	$80
+_ssena_00_b:
+	.byte	$00
+	.byte	$00
+	.byte	$82
+	.byte	$41
+	.byte	$08
+	.byte	$00
+	.byte	$81
+	.byte	$41
+	.byte	$00
+	.byte	$08
+	.byte	$84
+	.byte	$41
+	.byte	$08
+	.byte	$08
+	.byte	$83
+	.byte	$41
+	.byte	$80
+_ssena_01_a:
+	.byte	$00
+	.byte	$00
+	.byte	$85
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$86
+	.byte	$01
+	.byte	$00
+	.byte	$08
+	.byte	$87
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$88
+	.byte	$01
+	.byte	$80
+_ssena_01_b:
+	.byte	$00
+	.byte	$00
+	.byte	$86
+	.byte	$41
+	.byte	$08
+	.byte	$00
+	.byte	$85
+	.byte	$41
+	.byte	$00
+	.byte	$08
+	.byte	$88
+	.byte	$41
+	.byte	$08
+	.byte	$08
+	.byte	$87
+	.byte	$41
+	.byte	$80
+_ssena_02_a:
+	.byte	$00
+	.byte	$00
+	.byte	$89
+	.byte	$02
+	.byte	$08
+	.byte	$00
+	.byte	$8A
+	.byte	$02
+	.byte	$00
+	.byte	$08
+	.byte	$8B
+	.byte	$02
+	.byte	$08
+	.byte	$08
+	.byte	$8C
+	.byte	$02
+	.byte	$80
+_ssena_02_b:
+	.byte	$00
+	.byte	$00
+	.byte	$8A
+	.byte	$42
+	.byte	$08
+	.byte	$00
+	.byte	$89
+	.byte	$42
+	.byte	$00
+	.byte	$08
+	.byte	$8C
+	.byte	$42
+	.byte	$08
+	.byte	$08
+	.byte	$8B
+	.byte	$42
+	.byte	$80
+_ssena_03_a:
+	.byte	$00
+	.byte	$00
+	.byte	$8D
+	.byte	$02
+	.byte	$08
+	.byte	$00
+	.byte	$8E
+	.byte	$02
+	.byte	$00
+	.byte	$08
+	.byte	$8F
+	.byte	$02
+	.byte	$08
+	.byte	$08
+	.byte	$90
+	.byte	$02
+	.byte	$80
+_ssena_03_b:
+	.byte	$00
+	.byte	$00
+	.byte	$8E
+	.byte	$42
+	.byte	$08
+	.byte	$00
+	.byte	$8D
+	.byte	$42
+	.byte	$00
+	.byte	$08
+	.byte	$90
+	.byte	$42
+	.byte	$08
+	.byte	$08
+	.byte	$8F
+	.byte	$42
+	.byte	$80
+_ssenb_00:
+	.byte	$00
+	.byte	$00
+	.byte	$91
+	.byte	$03
+	.byte	$08
+	.byte	$00
+	.byte	$92
+	.byte	$03
+	.byte	$00
+	.byte	$08
+	.byte	$93
+	.byte	$03
+	.byte	$08
+	.byte	$08
+	.byte	$94
+	.byte	$03
+	.byte	$80
+_ssenb_01:
+	.byte	$00
+	.byte	$00
+	.byte	$95
+	.byte	$03
+	.byte	$08
+	.byte	$00
+	.byte	$96
+	.byte	$03
+	.byte	$00
+	.byte	$08
+	.byte	$97
+	.byte	$03
+	.byte	$08
+	.byte	$08
+	.byte	$98
+	.byte	$03
+	.byte	$80
+_ssenb_02:
+	.byte	$00
+	.byte	$00
+	.byte	$99
+	.byte	$03
+	.byte	$08
+	.byte	$00
+	.byte	$99
+	.byte	$43
+	.byte	$00
+	.byte	$08
+	.byte	$9A
+	.byte	$03
+	.byte	$08
+	.byte	$08
+	.byte	$9B
+	.byte	$03
+	.byte	$80
+_ssenb_03:
+	.byte	$00
+	.byte	$00
+	.byte	$99
+	.byte	$03
+	.byte	$08
+	.byte	$00
+	.byte	$99
+	.byte	$43
+	.byte	$00
+	.byte	$08
+	.byte	$9C
+	.byte	$03
+	.byte	$08
+	.byte	$08
+	.byte	$9D
+	.byte	$03
+	.byte	$80
+_ssenc_00:
+	.byte	$00
+	.byte	$00
+	.byte	$9E
+	.byte	$03
+	.byte	$08
+	.byte	$00
+	.byte	$9F
+	.byte	$03
+	.byte	$00
+	.byte	$08
+	.byte	$A0
+	.byte	$03
+	.byte	$08
+	.byte	$08
+	.byte	$A1
+	.byte	$03
+	.byte	$80
+_ssenc_01:
+	.byte	$00
+	.byte	$00
+	.byte	$A2
+	.byte	$03
+	.byte	$08
+	.byte	$00
+	.byte	$A3
+	.byte	$03
+	.byte	$00
+	.byte	$08
+	.byte	$A0
+	.byte	$03
+	.byte	$08
+	.byte	$08
+	.byte	$A1
+	.byte	$03
+	.byte	$80
+_ssenc_02:
+	.byte	$00
+	.byte	$00
+	.byte	$A4
+	.byte	$21
+	.byte	$08
+	.byte	$00
+	.byte	$A5
+	.byte	$21
+	.byte	$00
+	.byte	$08
+	.byte	$A6
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$A6
+	.byte	$01
+	.byte	$80
+_ssenc_03:
+	.byte	$00
+	.byte	$00
+	.byte	$A7
+	.byte	$03
+	.byte	$08
+	.byte	$00
+	.byte	$A8
+	.byte	$03
+	.byte	$00
+	.byte	$08
+	.byte	$A9
+	.byte	$03
+	.byte	$08
+	.byte	$08
+	.byte	$AA
+	.byte	$03
+	.byte	$80
+_ssenc_04:
+	.byte	$00
+	.byte	$00
+	.byte	$AB
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$AC
+	.byte	$01
+	.byte	$00
+	.byte	$08
+	.byte	$AD
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$AE
+	.byte	$01
+	.byte	$80
+_ssenc_05:
+	.byte	$00
+	.byte	$00
+	.byte	$AF
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$B0
+	.byte	$01
+	.byte	$00
+	.byte	$08
+	.byte	$B1
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$B2
+	.byte	$01
+	.byte	$80
+_ssit_00:
+	.byte	$00
+	.byte	$00
+	.byte	$B3
+	.byte	$03
+	.byte	$08
+	.byte	$00
+	.byte	$B4
+	.byte	$03
+	.byte	$00
+	.byte	$08
+	.byte	$B5
+	.byte	$03
+	.byte	$08
+	.byte	$08
+	.byte	$B6
+	.byte	$03
+	.byte	$80
+_ssit_01:
+	.byte	$00
+	.byte	$00
+	.byte	$B7
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$B8
+	.byte	$01
+	.byte	$00
+	.byte	$08
+	.byte	$B9
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$BA
+	.byte	$01
+	.byte	$80
+_ssit_02:
+	.byte	$00
+	.byte	$00
+	.byte	$BB
+	.byte	$03
+	.byte	$08
+	.byte	$00
+	.byte	$BB
+	.byte	$43
+	.byte	$00
+	.byte	$08
+	.byte	$BB
+	.byte	$83
+	.byte	$08
+	.byte	$08
+	.byte	$BB
+	.byte	$C3
+	.byte	$80
+_ssit_03:
+	.byte	$00
+	.byte	$00
+	.byte	$BC
+	.byte	$03
+	.byte	$08
+	.byte	$00
+	.byte	$BD
+	.byte	$03
+	.byte	$00
+	.byte	$08
+	.byte	$BE
+	.byte	$03
+	.byte	$08
+	.byte	$08
+	.byte	$BF
+	.byte	$03
+	.byte	$80
+_ssit_04:
+	.byte	$00
+	.byte	$00
+	.byte	$C0
+	.byte	$03
+	.byte	$08
+	.byte	$00
+	.byte	$C1
+	.byte	$03
+	.byte	$00
+	.byte	$08
+	.byte	$C2
+	.byte	$03
+	.byte	$08
+	.byte	$08
+	.byte	$C3
+	.byte	$03
+	.byte	$80
+_ssit_05:
+	.byte	$00
+	.byte	$00
+	.byte	$C4
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$C5
+	.byte	$01
+	.byte	$00
+	.byte	$08
+	.byte	$C6
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$C7
+	.byte	$01
+	.byte	$80
+_ssit_06:
+	.byte	$00
+	.byte	$00
+	.byte	$C8
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$C9
+	.byte	$01
+	.byte	$00
+	.byte	$08
+	.byte	$CA
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$CB
+	.byte	$01
+	.byte	$80
+_shl4:
+	.byte	$00
+	.byte	$10
+	.byte	$20
+	.byte	$30
+	.byte	$40
+	.byte	$50
+	.byte	$60
+	.byte	$70
+	.byte	$80
+	.byte	$90
+	.byte	$A0
+	.byte	$B0
 .segment	"CODE"
 
 .segment	"BSS"
@@ -20471,13 +22334,205 @@ _cx1:
 	.res	1,$00
 _cx2:
 	.res	1,$00
+_cy1:
+	.res	1,$00
+_cy2:
+	.res	1,$00
+_cxaux:
+	.res	1,$00
+_cyaux:
+	.res	1,$00
+_at1:
+	.res	1,$00
+_at2:
+	.res	1,$00
+_scr_buffer_ptr:
+	.res	2,$00
+_n_pant:
+	.res	1,$00
+_prx:
+	.res	1,$00
 .segment	"BSS"
 _ticks:
 	.res	1,$00
 _halfticks:
 	.res	1,$00
 _update_list:
-	.res	96,$00
+	.res	97,$00
+_scr_buffer:
+	.res	384,$00
+
+; ---------------------------------------------------------------
+; void __near__ cm_two_points_horizontal (void)
+; ---------------------------------------------------------------
+
+.segment	"CODE"
+
+.proc	_cm_two_points_horizontal: near
+
+.segment	"CODE"
+
+;
+; cyaux = *(shl4 + (cy1 < 2 ? 0 : cy1 - 2)); 
+;
+	ldx     #$00
+	lda     _cy1
+	cmp     #$02
+	bcs     L57C2
+	txa
+	jmp     L5604
+L57C2:	lda     _cy1
+	sec
+	sbc     #$02
+	bcs     L5604
+	dex
+L5604:	sta     ptr1
+	txa
+	clc
+	adc     #>(_shl4)
+	sta     ptr1+1
+	ldy     #<(_shl4)
+	lda     (ptr1),y
+	sta     _cyaux
+;
+; at1 = behs [*(scr_buffer_ptr + cyaux + cx1)];
+;
+	lda     _scr_buffer_ptr
+	ldx     _scr_buffer_ptr+1
+	clc
+	adc     _cyaux
+	bcc     L57BE
+	inx
+L57BE:	ldy     _cx1
+	sta     ptr1
+	stx     ptr1+1
+	lda     (ptr1),y
+	sta     ptr1
+	lda     #$00
+	clc
+	adc     #>(_behs)
+	sta     ptr1+1
+	ldy     #<(_behs)
+	lda     (ptr1),y
+	sta     _at1
+;
+; at1 = behs [*(scr_buffer_ptr + cyaux + cx2)];
+;
+	lda     _scr_buffer_ptr
+	ldx     _scr_buffer_ptr+1
+	clc
+	adc     _cyaux
+	bcc     L57C0
+	inx
+L57C0:	ldy     _cx2
+	sta     ptr1
+	stx     ptr1+1
+	lda     (ptr1),y
+	sta     ptr1
+	lda     #$00
+	clc
+	adc     #>(_behs)
+	sta     ptr1+1
+	ldy     #<(_behs)
+	lda     (ptr1),y
+	sta     _at1
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ cm_two_points_vertical (void)
+; ---------------------------------------------------------------
+
+.segment	"CODE"
+
+.proc	_cm_two_points_vertical: near
+
+.segment	"CODE"
+
+;
+; cyaux = cy1 < 2 ? 0 : cy1 - 2; 
+;
+	lda     _cy1
+	cmp     #$02
+	bcs     L57C5
+	lda     #$00
+	jmp     L57C6
+L57C5:	lda     _cy1
+	sec
+	sbc     #$02
+L57C6:	sta     _cyaux
+;
+; at1 = behs [*(scr_buffer_ptr + (cyaux << 4) + cx1)];
+;
+	ldx     #$00
+	lda     _cyaux
+	jsr     aslax4
+	clc
+	adc     _scr_buffer_ptr
+	pha
+	txa
+	adc     _scr_buffer_ptr+1
+	tax
+	pla
+	ldy     _cx1
+	sta     ptr1
+	stx     ptr1+1
+	lda     (ptr1),y
+	sta     ptr1
+	lda     #$00
+	clc
+	adc     #>(_behs)
+	sta     ptr1+1
+	ldy     #<(_behs)
+	lda     (ptr1),y
+	sta     _at1
+;
+; cyaux = cy2 < 2 ? 0 : cy2 - 2; 
+;
+	lda     _cy2
+	cmp     #$02
+	bcs     L57C7
+	lda     #$00
+	jmp     L57C8
+L57C7:	lda     _cy2
+	sec
+	sbc     #$02
+L57C8:	sta     _cyaux
+;
+; at2 = behs [*(scr_buffer_ptr + (cyaux << 4) + cx1)];
+;
+	ldx     #$00
+	lda     _cyaux
+	jsr     aslax4
+	clc
+	adc     _scr_buffer_ptr
+	pha
+	txa
+	adc     _scr_buffer_ptr+1
+	tax
+	pla
+	ldy     _cx1
+	sta     ptr1
+	stx     ptr1+1
+	lda     (ptr1),y
+	sta     ptr1
+	lda     #$00
+	clc
+	adc     #>(_behs)
+	sta     ptr1+1
+	ldy     #<(_behs)
+	lda     (ptr1),y
+	sta     _at2
+;
+; }
+;
+	rts
+
+.endproc
 
 ; ---------------------------------------------------------------
 ; void __near__ scroll_paint_chunk (void)
@@ -20534,17 +22589,17 @@ _update_list:
 ; if (!state_ctr) {
 ;
 	lda     _state_ctr
-	jne     L50D5
+	jne     L57CF
 ;
 ; gp_addr = ((col_idx & 8) ? NAMETABLE_B : NAMETABLE_A) + 0x03c0 + (col_idx & 0x7);
 ;
 	lda     _col_idx
 	and     #$08
-	beq     L4F64
+	beq     L5635
 	ldx     #$24
-	jmp     L50D1
-L4F64:	ldx     #$20
-L50D1:	lda     #$00
+	jmp     L57CB
+L5635:	ldx     #$20
+L57CB:	lda     #$00
 	clc
 	adc     #$C0
 	sta     ptr1
@@ -20556,9 +22611,9 @@ L50D1:	lda     #$00
 	clc
 	adc     ptr1
 	ldx     ptr1+1
-	bcc     L50D7
+	bcc     L57D3
 	inx
-L50D7:	sta     _gp_addr
+L57D3:	sta     _gp_addr
 	stx     _gp_addr+1
 ;
 ; gp_gen = (unsigned char *) col_ptr;
@@ -20568,23 +22623,22 @@ L50D7:	sta     _gp_addr
 	lda     _col_ptr+1
 	sta     _gp_gen+1
 ;
-; gpit = 6; while (gpit --) {
+; gpit = 6; do {
 ;
 	lda     #$06
 	sta     _gpit
-	jmp     L50D4
 ;
 ; rda = *gp_gen ++;
 ;
-L4F6D:	lda     _gp_gen
+L563E:	lda     _gp_gen
 	ldx     _gp_gen+1
 	sta     regsave
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4F73
+	bcc     L5643
 	inx
-L4F73:	sta     _gp_gen
+L5643:	sta     _gp_gen
 	stx     _gp_gen+1
 	ldy     #$00
 	lda     (regsave),y
@@ -20604,9 +22658,9 @@ L4F73:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4F7A
+	bcc     L564A
 	inx
-L4F7A:	sta     _gp_gen
+L564A:	sta     _gp_gen
 	stx     _gp_gen+1
 	ldy     #$00
 	lda     (regsave),y
@@ -20628,9 +22682,9 @@ L4F7A:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4F81
+	bcc     L5651
 	inx
-L4F81:	sta     _gp_gen
+L5651:	sta     _gp_gen
 	stx     _gp_gen+1
 	ldy     #$00
 	lda     (regsave),y
@@ -20652,9 +22706,9 @@ L4F81:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4F88
+	bcc     L5658
 	inx
-L4F88:	sta     _gp_gen
+L5658:	sta     _gp_gen
 	stx     _gp_gen+1
 	ldy     #$00
 	lda     (regsave),y
@@ -20668,7 +22722,7 @@ L4F88:	sta     _gp_gen
 	adc     _rdt
 	sta     _rdt
 ;
-; *gp_ul ++ = MSB (gp_addr);
+; UPDATE = MSB (gp_addr);
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -20676,15 +22730,15 @@ L4F88:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4F8E
+	bcc     L565E
 	inx
-L4F8E:	sta     _gp_ul
+L565E:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr+1
 	ldy     #$00
 	sta     (regsave),y
 ;
-; *gp_ul ++ = LSB (gp_addr);
+; UPDATE = LSB (gp_addr);
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -20692,14 +22746,14 @@ L4F8E:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4F93
+	bcc     L5663
 	inx
-L4F93:	sta     _gp_ul
+L5663:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr
 	sta     (regsave),y
 ;
-; *gp_ul ++= rdt;
+; UPDATE= rdt;
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -20707,9 +22761,9 @@ L4F93:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4F98
+	bcc     L5668
 	inx
-L4F98:	sta     _gp_ul
+L5668:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _rdt
 	sta     (regsave),y
@@ -20720,19 +22774,15 @@ L4F98:	sta     _gp_ul
 	clc
 	adc     _gp_addr
 	sta     _gp_addr
-	bcc     L50D4
+	bcc     L566C
 	inc     _gp_addr+1
 ;
-; gpit = 6; while (gpit --) {
+; } while (-- gpit);
 ;
-L50D4:	lda     _gpit
-	pha
-	sec
-	sbc     #$01
-	sta     _gpit
-	pla
+L566C:	dec     _gpit
+	lda     _gpit
 	tax
-	jne     L4F6D
+	jne     L563E
 ;
 ; col_v_offset = 0;
 ;
@@ -20741,26 +22791,26 @@ L50D4:	lda     _gpit
 ;
 ; } else if (state_ctr < 7) {
 ;
-	jmp     L50D6
-L50D5:	lda     _state_ctr
+	jmp     L57D2
+L57CF:	lda     _state_ctr
 	cmp     #$07
-	jcs     L50D6
+	jcs     L57D0
 ;
 ; gp_addr = ((col_idx & 8) ? NAMETABLE_B : NAMETABLE_A) + rdc + col_v_offset;
 ;
 	lda     _col_idx
 	and     #$08
-	beq     L4FA6
+	beq     L5677
 	ldx     #$24
-	jmp     L50D2
-L4FA6:	ldx     #$20
-L50D2:	lda     #$00
+	jmp     L57CC
+L5677:	ldx     #$20
+L57CC:	lda     #$00
 	clc
 	adc     _rdc
-	bcc     L50D3
+	bcc     L57CD
 	inx
 	clc
-L50D3:	adc     _col_v_offset
+L57CD:	adc     _col_v_offset
 	sta     _gp_addr
 	txa
 	adc     _col_v_offset+1
@@ -20780,9 +22830,9 @@ L50D3:	adc     _col_v_offset
 	pla
 	sec
 	sbc     #$04
-	bcs     L4FAE
+	bcs     L567F
 	dex
-L4FAE:	sta     _gp_gen
+L567F:	sta     _gp_gen
 	stx     _gp_gen+1
 ;
 ; rda = *gp_gen ++; rdb = *gp_gen ++;
@@ -20791,9 +22841,9 @@ L4FAE:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FB1
+	bcc     L5682
 	inx
-L4FB1:	sta     _gp_gen
+L5682:	sta     _gp_gen
 	stx     _gp_gen+1
 	ldy     #$00
 	lda     (regsave),y
@@ -20804,14 +22854,14 @@ L4FB1:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FB4
+	bcc     L5685
 	inx
-L4FB4:	sta     _gp_gen
+L5685:	sta     _gp_gen
 	stx     _gp_gen+1
 	lda     (regsave),y
 	sta     _rdb
 ;
-; *gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
+; UPDATE = MSB (gp_addr) | NT_UPD_HORZ;
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -20819,15 +22869,15 @@ L4FB4:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FB6
+	bcc     L5687
 	inx
-L4FB6:	sta     _gp_ul
+L5687:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr+1
 	ora     #$40
 	sta     (regsave),y
 ;
-; *gp_ul ++ = LSB (gp_addr);
+; UPDATE = LSB (gp_addr);
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -20835,14 +22885,14 @@ L4FB6:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FBB
+	bcc     L568C
 	inx
-L4FBB:	sta     _gp_ul
+L568C:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr
 	sta     (regsave),y
 ;
-; *gp_ul ++ = 4;
+; UPDATE = 4;
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -20850,14 +22900,14 @@ L4FBB:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FC0
+	bcc     L5691
 	inx
-L4FC0:	sta     _gp_ul
+L5691:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     #$04
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_0 [rda];
+; UPDATE = main_ts_tmaps_0 [rda];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -20865,16 +22915,16 @@ L4FC0:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FC3
+	bcc     L5694
 	inx
-L4FC3:	sta     _gp_ul
+L5694:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_0,y
 	ldy     #$00
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_1 [rda];
+; UPDATE = main_ts_tmaps_1 [rda];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -20882,16 +22932,16 @@ L4FC3:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FC8
+	bcc     L5699
 	inx
-L4FC8:	sta     _gp_ul
+L5699:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_1,y
 	ldy     #$00
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_0 [rdb];
+; UPDATE = main_ts_tmaps_0 [rdb];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -20899,16 +22949,16 @@ L4FC8:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FCD
+	bcc     L569E
 	inx
-L4FCD:	sta     _gp_ul
+L569E:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_0,y
 	ldy     #$00
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_1 [rdb];
+; UPDATE = main_ts_tmaps_1 [rdb];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -20916,9 +22966,9 @@ L4FCD:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FD2
+	bcc     L56A3
 	inx
-L4FD2:	sta     _gp_ul
+L56A3:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_1,y
@@ -20931,26 +22981,26 @@ L4FD2:	sta     _gp_ul
 	clc
 	adc     _gp_addr
 	sta     _gp_addr
-	bcc     L4FD8
+	bcc     L56A9
 	inc     _gp_addr+1
 ;
-; *gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
+; UPDATE = MSB (gp_addr) | NT_UPD_HORZ;
 ;
-L4FD8:	lda     _gp_ul
+L56A9:	lda     _gp_ul
 	ldx     _gp_ul+1
 	sta     regsave
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FDA
+	bcc     L56AB
 	inx
-L4FDA:	sta     _gp_ul
+L56AB:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr+1
 	ora     #$40
 	sta     (regsave),y
 ;
-; *gp_ul ++ = LSB (gp_addr);
+; UPDATE = LSB (gp_addr);
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -20958,14 +23008,14 @@ L4FDA:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FDF
+	bcc     L56B0
 	inx
-L4FDF:	sta     _gp_ul
+L56B0:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr
 	sta     (regsave),y
 ;
-; *gp_ul ++ = 4;
+; UPDATE = 4;
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -20973,14 +23023,14 @@ L4FDF:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FE4
+	bcc     L56B5
 	inx
-L4FE4:	sta     _gp_ul
+L56B5:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     #$04
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_2 [rda];
+; UPDATE = main_ts_tmaps_2 [rda];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -20988,16 +23038,16 @@ L4FE4:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FE7
+	bcc     L56B8
 	inx
-L4FE7:	sta     _gp_ul
+L56B8:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_2,y
 	ldy     #$00
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_3 [rda];
+; UPDATE = main_ts_tmaps_3 [rda];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21005,16 +23055,16 @@ L4FE7:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FEC
+	bcc     L56BD
 	inx
-L4FEC:	sta     _gp_ul
+L56BD:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_3,y
 	ldy     #$00
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_2 [rdb];
+; UPDATE = main_ts_tmaps_2 [rdb];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21022,16 +23072,16 @@ L4FEC:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FF1
+	bcc     L56C2
 	inx
-L4FF1:	sta     _gp_ul
+L56C2:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_2,y
 	ldy     #$00
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_3 [rdb];
+; UPDATE = main_ts_tmaps_3 [rdb];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21039,9 +23089,9 @@ L4FF1:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FF6
+	bcc     L56C7
 	inx
-L4FF6:	sta     _gp_ul
+L56C7:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_3,y
@@ -21054,37 +23104,31 @@ L4FF6:	sta     _gp_ul
 	clc
 	adc     _gp_addr
 	sta     _gp_addr
-	bcc     L4FFC
+	bcc     L56CD
 	inc     _gp_addr+1
 ;
-; rda = *gp_gen ++; rdb = *gp_gen ++;
+; rda = *gp_gen ++; rdb = *gp_gen;
 ;
-L4FFC:	lda     _gp_gen
+L56CD:	lda     _gp_gen
 	ldx     _gp_gen+1
 	sta     regsave
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L4FFF
+	bcc     L56D0
 	inx
-L4FFF:	sta     _gp_gen
+L56D0:	sta     _gp_gen
 	stx     _gp_gen+1
 	lda     (regsave),y
 	sta     _rda
 	lda     _gp_gen
-	ldx     _gp_gen+1
-	sta     regsave
-	stx     regsave+1
-	clc
-	adc     #$01
-	bcc     L5002
-	inx
-L5002:	sta     _gp_gen
-	stx     _gp_gen+1
-	lda     (regsave),y
+	sta     ptr1
+	lda     _gp_gen+1
+	sta     ptr1+1
+	lda     (ptr1),y
 	sta     _rdb
 ;
-; *gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
+; UPDATE = MSB (gp_addr) | NT_UPD_HORZ;
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21092,15 +23136,15 @@ L5002:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5004
+	bcc     L56D4
 	inx
-L5004:	sta     _gp_ul
+L56D4:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr+1
 	ora     #$40
 	sta     (regsave),y
 ;
-; *gp_ul ++ = LSB (gp_addr);
+; UPDATE = LSB (gp_addr);
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21108,14 +23152,14 @@ L5004:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5009
+	bcc     L56D9
 	inx
-L5009:	sta     _gp_ul
+L56D9:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr
 	sta     (regsave),y
 ;
-; *gp_ul ++ = 4;
+; UPDATE = 4;
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21123,14 +23167,14 @@ L5009:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L500E
+	bcc     L56DE
 	inx
-L500E:	sta     _gp_ul
+L56DE:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     #$04
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_0 [rda];
+; UPDATE = main_ts_tmaps_0 [rda];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21138,16 +23182,16 @@ L500E:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5011
+	bcc     L56E1
 	inx
-L5011:	sta     _gp_ul
+L56E1:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_0,y
 	ldy     #$00
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_1 [rda];
+; UPDATE = main_ts_tmaps_1 [rda];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21155,16 +23199,16 @@ L5011:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5016
+	bcc     L56E6
 	inx
-L5016:	sta     _gp_ul
+L56E6:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_1,y
 	ldy     #$00
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_0 [rdb];
+; UPDATE = main_ts_tmaps_0 [rdb];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21172,16 +23216,16 @@ L5016:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L501B
+	bcc     L56EB
 	inx
-L501B:	sta     _gp_ul
+L56EB:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_0,y
 	ldy     #$00
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_1 [rdb];
+; UPDATE = main_ts_tmaps_1 [rdb];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21189,9 +23233,9 @@ L501B:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5020
+	bcc     L56F0
 	inx
-L5020:	sta     _gp_ul
+L56F0:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_1,y
@@ -21204,26 +23248,26 @@ L5020:	sta     _gp_ul
 	clc
 	adc     _gp_addr
 	sta     _gp_addr
-	bcc     L5026
+	bcc     L56F6
 	inc     _gp_addr+1
 ;
-; *gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
+; UPDATE = MSB (gp_addr) | NT_UPD_HORZ;
 ;
-L5026:	lda     _gp_ul
+L56F6:	lda     _gp_ul
 	ldx     _gp_ul+1
 	sta     regsave
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5028
+	bcc     L56F8
 	inx
-L5028:	sta     _gp_ul
+L56F8:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr+1
 	ora     #$40
 	sta     (regsave),y
 ;
-; *gp_ul ++ = LSB (gp_addr);
+; UPDATE = LSB (gp_addr);
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21231,14 +23275,14 @@ L5028:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L502D
+	bcc     L56FD
 	inx
-L502D:	sta     _gp_ul
+L56FD:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr
 	sta     (regsave),y
 ;
-; *gp_ul ++ = 4;
+; UPDATE = 4;
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21246,14 +23290,14 @@ L502D:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5032
+	bcc     L5702
 	inx
-L5032:	sta     _gp_ul
+L5702:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     #$04
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_2 [rda];
+; UPDATE = main_ts_tmaps_2 [rda];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21261,16 +23305,16 @@ L5032:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5035
+	bcc     L5705
 	inx
-L5035:	sta     _gp_ul
+L5705:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_2,y
 	ldy     #$00
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_3 [rda];
+; UPDATE = main_ts_tmaps_3 [rda];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21278,16 +23322,16 @@ L5035:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L503A
+	bcc     L570A
 	inx
-L503A:	sta     _gp_ul
+L570A:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_3,y
 	ldy     #$00
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_2 [rdb];
+; UPDATE = main_ts_tmaps_2 [rdb];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21295,16 +23339,16 @@ L503A:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L503F
+	bcc     L570F
 	inx
-L503F:	sta     _gp_ul
+L570F:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_2,y
 	ldy     #$00
 	sta     (regsave),y
 ;
-; *gp_ul ++ = main_ts_tmaps_3 [rdb];
+; UPDATE = main_ts_tmaps_3 [rdb];
 ;
 	lda     _gp_ul
 	ldx     _gp_ul+1
@@ -21312,9 +23356,9 @@ L503F:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5044
+	bcc     L5714
 	inx
-L5044:	sta     _gp_ul
+L5714:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_3,y
@@ -21327,12 +23371,109 @@ L5044:	sta     _gp_ul
 	clc
 	adc     _col_v_offset
 	sta     _col_v_offset
-	bcc     L50D6
+	jcc     L57D2
 	inc     _col_v_offset+1
+;
+; } else {
+;
+	jmp     L57D2
+;
+; gp_aux = scr_buffer + ((col_idx & 8) ? 192 : 0) + ((col_idx & 0x7) << 1);
+;
+L57D0:	lda     _col_idx
+	and     #$08
+	beq     L5722
+	lda     #$C0
+L5722:	clc
+	adc     #<(_scr_buffer)
+	sta     ptr1
+	lda     #$00
+	adc     #>(_scr_buffer)
+	sta     ptr1+1
+	lda     _col_idx
+	ldx     #$00
+	and     #$07
+	asl     a
+	bcc     L57CE
+	inx
+	clc
+L57CE:	adc     ptr1
+	sta     _gp_aux
+	txa
+	adc     ptr1+1
+	sta     _gp_aux+1
+;
+; gp_gen = (unsigned char *) col_ptr;
+;
+	lda     _col_ptr
+	sta     _gp_gen
+	lda     _col_ptr+1
+	sta     _gp_gen+1
+;
+; gpit = 12; do {
+;
+	lda     #$0C
+	sta     _gpit
+;
+; *gp_aux ++ = *gp_gen;
+;
+L572A:	lda     _gp_aux
+	ldx     _gp_aux+1
+	sta     regsave
+	stx     regsave+1
+	clc
+	adc     #$01
+	bcc     L572E
+	inx
+L572E:	sta     _gp_aux
+	stx     _gp_aux+1
+	lda     regsave
+	ldx     regsave+1
+	jsr     pushax
+	lda     _gp_gen
+	sta     ptr1
+	lda     _gp_gen+1
+	sta     ptr1+1
+	ldy     #$00
+	lda     (ptr1),y
+	jsr     staspidx
+;
+; *gp_aux = *gp_gen ++;
+;
+	lda     _gp_aux
+	ldx     _gp_aux+1
+	jsr     pushax
+	lda     _gp_gen
+	ldx     _gp_gen+1
+	sta     regsave
+	stx     regsave+1
+	clc
+	adc     #$01
+	bcc     L5732
+	inx
+L5732:	sta     _gp_gen
+	stx     _gp_gen+1
+	ldy     #$00
+	lda     (regsave),y
+	jsr     staspidx
+;
+; gp_aux += 15;
+;
+	lda     #$0F
+	clc
+	adc     _gp_aux
+	sta     _gp_aux
+	bcc     L5735
+	inc     _gp_aux+1
+;
+; } while (-- gpit);
+;
+L5735:	dec     _gpit
+	bne     L572A
 ;
 ; state_ctr = (state_ctr + 1) & 7;
 ;
-L50D6:	lda     _state_ctr
+L57D2:	lda     _state_ctr
 	clc
 	adc     #$01
 	and     #$07
@@ -21476,8 +23617,8 @@ L50D6:	lda     _state_ctr
 	lda     _cam_pos_old
 	ldx     _cam_pos_old+1
 	jsr     tosicmp
-	bmi     L506B
-	beq     L506B
+	bmi     L5756
+	beq     L5756
 ;
 ; col_idx = (cam_pos >> 5) + 9;
 ;
@@ -21490,14 +23631,14 @@ L50D6:	lda     _state_ctr
 ;
 ; } else if (cam_pos < cam_pos_old) {
 ;
-	jmp     L50DA
-L506B:	lda     _cam_pos
+	jmp     L57D6
+L5756:	lda     _cam_pos
 	cmp     _cam_pos_old
 	lda     _cam_pos+1
 	sbc     _cam_pos_old+1
-	bvc     L50D8
+	bvc     L57D4
 	eor     #$80
-L50D8:	bpl     L5073
+L57D4:	bpl     L575E
 ;
 ; col_idx = (cam_pos >> 5) - 1;
 ;
@@ -21507,7 +23648,7 @@ L50D8:	bpl     L5073
 	jsr     asrax1
 	sec
 	sbc     #$01
-L50DA:	sta     _col_idx
+L57D6:	sta     _col_idx
 ;
 ; scroll_paint_chunk ();
 ;
@@ -21515,7 +23656,7 @@ L50DA:	sta     _col_idx
 ;
 ; cam_pos_old = cam_pos;
 ;
-L5073:	lda     _cam_pos
+L575E:	lda     _cam_pos
 	sta     _cam_pos_old
 	lda     _cam_pos+1
 	sta     _cam_pos_old+1
@@ -21545,14 +23686,14 @@ L5073:	lda     _cam_pos
 	jsr     asrax1
 	sta     _cx1
 	lda     _cx1
-	beq     L50DB
+	beq     L57D7
 	sec
 	sbc     #$01
 	sta     _cx1
 ;
 ; cx2 = cx1 + 10;
 ;
-L50DB:	lda     _cx1
+L57D7:	lda     _cx1
 	clc
 	adc     #$0A
 	sta     _cx2
@@ -21560,26 +23701,26 @@ L50DB:	lda     _cx1
 ; for (col_idx = cx1; col_idx <= cx2; col_idx ++) {
 ;
 	lda     _cx1
-L50DD:	sta     _col_idx
+L57D9:	sta     _col_idx
 	sec
 	sbc     _cx2
-	bcc     L5089
-	bne     L5087
+	bcc     L5774
+	bne     L5772
 ;
 ; scroll_draw_one_chunk_completely ();
 ;
-L5089:	jsr     _scroll_draw_one_chunk_completely
+L5774:	jsr     _scroll_draw_one_chunk_completely
 ;
 ; for (col_idx = cx1; col_idx <= cx2; col_idx ++) {
 ;
 	lda     _col_idx
 	clc
 	adc     #$01
-	jmp     L50DD
+	jmp     L57D9
 ;
 ; }
 ;
-L5087:	rts
+L5772:	rts
 
 .endproc
 
@@ -21653,13 +23794,13 @@ L5087:	rts
 ;
 ; cam_pos ++;
 ;
-L50A4:	lda     _cam_pos
+L578F:	lda     _cam_pos
 	ldx     _cam_pos+1
 	clc
 	adc     #$01
-	bcc     L50A9
+	bcc     L5794
 	inx
-L50A9:	sta     _cam_pos
+L5794:	sta     _cam_pos
 	stx     _cam_pos+1
 ;
 ; gp_ul = update_list;
@@ -21710,7 +23851,7 @@ L50A9:	sta     _cam_pos
 ;
 ; while (1) {
 ;
-	jmp     L50A4
+	jmp     L578F
 
 .endproc
 
@@ -21730,11 +23871,11 @@ L50A9:	sta     _cam_pos
 	jsr     _ppu_system
 	stx     tmp1
 	ora     tmp1
-	beq     L50BC
+	beq     L57A7
 	lda     #$3C
-	jmp     L50DE
-L50BC:	lda     #$32
-L50DE:	sta     _ticks
+	jmp     L57DA
+L57A7:	lda     #$32
+L57DA:	sta     _ticks
 ;
 ; halfticks = ticks >> 1;
 ;
@@ -21775,6 +23916,13 @@ L50DE:	sta     _ticks
 	sta     _map_ptr
 	lda     #>(_map_0)
 	sta     _map_ptr+1
+;
+; cam_pos = (n_pant << 8) | prx;
+;
+	lda     _prx
+	sta     _cam_pos
+	lda     _n_pant
+	sta     _cam_pos+1
 ;
 ; test_scroller ();
 ;

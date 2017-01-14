@@ -6,7 +6,6 @@
 #include "neslib-unrom.h"
 
 #include "definitions.h"
-#include "config.h"
 
 // ----------------------------------------------------------------------------
 
@@ -64,7 +63,9 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 // ROM2, game functions here. When the game is running, ROM2 is paged in
 // ############################################################################
 
-
+#include "prg2/assets/behs.h"
+#include "prg2/assets/spritedata.h"
+#include "prg2/assets/precalcs.h"
 
 // ----------------------------------------------------------------------------
 
@@ -75,7 +76,8 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 // CODE segment = PRG3, the fixed segment. Global functions need be here.
 // ############################################################################
 
-#include "prg3/scroller.h"
+#include "prg3/engine/general.h"
+#include "prg3/engine/scroller.h"
 
 // Main section
 
@@ -95,6 +97,8 @@ void main (void) {
 	pal_bright (0);
 
 	map_ptr = map_0;
+
+	cam_pos = (n_pant << 8) | prx;
 
 	// Remove 
 	test_scroller ();

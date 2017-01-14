@@ -473,3 +473,94 @@ Que serían levemente más rápidas y además me ahorro una asignación antes de
 
 ~~
 
+Hum - Ahora que lo pienso, farfis de mí, voy a tener que usar el buffer de RAM porque el fondo es modificable :-/
+
+SUPUTAMATER.
+
+Haré la copia a la vez que pinto la columna, no debería ser muy complejo. El cálculo en cm_two_points_horizontal y cm_two_points_vertical será además más sencillo.
+
+~~
+
+Ahora tengo que pensar en cómo montar el buffer. Mierder, esto me ha pillado un poco por sorpresa.
+
+Veamos, supuestamente nosotros siempre estamos en la misma pantalla que se va pintando. El tema más sencillo, por potencias de dos, es llenar un buffer que ocupe ambas pantallas, y luego en las rutinas de colisión usar la parte izquierda o derecha del buffer, según corresponda.
+
+Podríamos incializar con scr_buffer como un array de 384 tiles, y tener scr_buffer_0 y scr_buffer_1 apuntndo a scr_buffer y (scr_buffer + 192), respectivamente.
+
+Podría probar a rellenar el buffer en el 8º paso (state_ctr == 7), que ahora mismo está libre. Y de paso podría parchear luego de alguna forma para rellenar como me conviene.
+
+En col_idx tenemos el índice de la columna o chunk. Hay 16 columnas chunk o 32 tiles para poner en el buffer:
+
+    rdx = (col_idx & 0xf) << 1;
+
+De esta manera:
+
+    // State 7: collision buffer
+    rdx = (col_idx & 0xf) << 1;
+    gp_gen = (unsigned char *) col_ptr;
+    for (gpint = rdx; gpint < 384; gpint += 32)
+        scr_buffer [gpint] = *gp_gen ++;
+        scr_buffer [gpint + 1] = *gp_gen ++;
+    }
+
+De este modo, las rutinas de colisión quedarían así:
+
+    void cm_two_points_horizontal (void) {
+        // cy1 == cy2
+        cyaux = cy1 < 2 ? 0 : cy1 - 2; 
+        gpint = cyaux << 5;
+        at1 = behs [*(scr_buffer + gpint + cx1)];
+        at1 = behs [*(scr_buffer + gpint + cx2)];
+    }
+
+    void cm_two_points_vertical (void) {
+        // cx1 == cx2
+        cyaux = cy1 < 2 ? 0 : cy1 - 2; 
+        at1 = behs [*(scr_buffer + (cyaux << 5) + cx1)];
+        cyaux = cy2 < 2 ? 0 : cy2 - 2; 
+        at2 = behs [*(scr_buffer + (cyaux << 5) + cx1)];
+    }
+
+Hm, pero no. Me lo vuelvo a pensar y va a ser mejor tener el buffer partido en 2 buffers de 1 pantalla.
+
+    // State 7: collision buffer
+    gp_aux = scr_buffer + ((col_idx & 8) ? 192 : 0) + (col_idx & 0x7) << 1;
+    gp_gen = (unsigned char *) col_ptr;
+    rdy = 12; do {
+        *gp_aux ++ = *gp_gen;
+        *gp_aux = *gp_gen ++;
+        gp_aux += 15;
+    } while (-- rdy);
+
+De este modo, las rutinas de colisión quedarían así (teniendo scr_buffer_ptr bien apuntado dependiendo del valor de n_pant!):
+
+    void cm_two_points_horizontal (void) {
+        // cy1 == cy2
+        cyaux = (cy1 < 2 ? 0 : cy1 - 2) << 4; 
+        at1 = behs [*(scr_buffer_ptr + cyaux + cx1)];
+        at1 = behs [*(scr_buffer_ptr + cyaux + cx2)];
+    }
+
+    void cm_two_points_vertical (void) {
+        // cx1 == cx2
+        cyaux = cy1 < 2 ? 0 : cy1 - 2; 
+        at1 = behs [*(scr_buffer_ptr + (cyaux << 4) + cx1)];
+        cyaux = cy2 < 2 ? 0 : cy2 - 2; 
+        at2 = behs [*(scr_buffer_ptr + (cyaux << 4) + cx1)];
+    }
+
+Cuando vaya a actualizar n_pant:
+
+    n_pant ++;
+    scr_buffer_ptr = scr_buffer + ((n_pant & 1) ? 192 : 0);
+
+Y también
+
+    n_pant --;
+    scr_buffer_ptr = scr_buffer + ((n_pant & 1) ? 192 : 0);
+
+El cálculo de scr_buffer_ptr lo puedo meter en una macro.
+
+    n_pant ++; SCR_BUFFER_PTR_UPD;
+
+Etc...

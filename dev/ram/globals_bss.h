@@ -7,4 +7,7 @@
 unsigned char ticks, halfticks;				
 
 // Update list for VBlank updates
-static unsigned char update_list [96];
+static unsigned char update_list [1 + UPDATE_LIST_SIZE * 3];
+
+// Collision buffer
+unsigned char scr_buffer [384];
