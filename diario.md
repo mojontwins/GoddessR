@@ -58,7 +58,7 @@ Ahora se me pasa por la cabeza que si pudiese procesar el mapa en chunks de 4x4 
 
 Ya tengo algo divertido que hacer para luego.
 
-~~~~
+~~
 
 Antes de escribir nada, he pensado en una forma mucho mejor para almacenar metatiles, sus atributos, y luego los supermetatiles (por llamarles de alguna forma): en vez de intercalar los datos, lo cual es muy humano, los desintercalaré (deinterlace queda más chulo) y los separaré en cuatro arrays de patrones y una quinta de atributos. Así imprimir será mucho más rápido porque no tendré que andar buscando un puntero multiplicando por 4 y avanzándolo luego. Como de todos modos lo hago desenrollado, todo son ganancias. Voy a añadir la funcionalidad a mkts (el enjendro).
 
@@ -377,7 +377,7 @@ L4463:	sta     _gp_ul
 
 Por eso me he quedado con la primera opción. Fíjate qué curioso, en SDCC sale mejor la segunda.
 
-~~~
+~~
 
 Mecano y me queda. Haciendo un bucle tonto para que se scrollee el mapa y midiendo cuántos rasters ocupa mi rutina, resulta que nunca pasa de los 12 (a simple vista). Me he superado, bacalado. Y eso que hay una expresión al principio que creo que se podría optimizar un poco.
 
