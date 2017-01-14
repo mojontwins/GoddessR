@@ -11,3 +11,6 @@ static unsigned char update_list [1 + UPDATE_LIST_SIZE * 3];
 
 // Collision buffer
 unsigned char scr_buffer [384];
+
+// Stuff
+signed char fader;

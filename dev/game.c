@@ -28,6 +28,9 @@
 
 const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 
+#include "prg2/assets/behs.h"
+#include "prg3/engine/general.h"
+
 // ----------------------------------------------------------------------------
 
 #pragma rodata-name	("ROM0")
@@ -63,9 +66,13 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 // ROM2, game functions here. When the game is running, ROM2 is paged in
 // ############################################################################
 
-#include "prg2/assets/behs.h"
 #include "prg2/assets/spritedata.h"
+#include "prg2/assets/metasprites.h"
 #include "prg2/assets/precalcs.h"
+
+#include "prg2/engine/printer.h"
+#include "prg2/engine/camera.h"
+#include "prg2/engine/player.h"
 
 // ----------------------------------------------------------------------------
 
@@ -76,8 +83,8 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 // CODE segment = PRG3, the fixed segment. Global functions need be here.
 // ############################################################################
 
-#include "prg3/engine/general.h"
 #include "prg3/engine/scroller.h"
+#include "prg3/engine/game.h"
 
 // Main section
 
@@ -96,10 +103,21 @@ void main (void) {
 	oam_size (0);
 	pal_bright (0);
 
-	map_ptr = map_0;
+	// Rehash
+	game_init ();
 
-	cam_pos = (n_pant << 8) | prx;
-
-	// Remove 
-	test_scroller ();
+	while (1) { 	
+		game_loop ();
+		switch (game_res) {
+			case PLAYER_EXIT_TOP:
+				level --;
+				py = 3072; pvy = -PLAYER_VY_JUMP_MAX; pvx = 0;
+				break;
+			case PLAYER_EXIT_BOTTOM:
+				level ++;
+				pvx = pvy = 0;
+				py = 0;
+				break;
+		}
+	}
 }

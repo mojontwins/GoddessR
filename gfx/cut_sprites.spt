@@ -1,5 +1,5 @@
 NOSKIPEMPTY
-MAPFILE ..\dev\prg2\spritedata.h
+MAPFILE ..\dev\prg2\assets\spritedata.h
 
 # METASPRITES
 OPEN ss.png

@@ -12,16 +12,25 @@
 	.macpack	longbranch
 	.forceimport	__STARTUP__
 	.import		_pal_bg
+	.import		_pal_spr
 	.import		_pal_bright
 	.import		_ppu_wait_nmi
+	.import		_ppu_off
 	.import		_ppu_on_all
 	.import		_ppu_system
 	.import		_oam_size
+	.import		_oam_meta_spr
+	.import		_oam_hide_rest
 	.import		_famitone_init
+	.import		_pad_poll
 	.import		_scroll
+	.import		_split
 	.import		_bank_spr
 	.import		_bank_bg
 	.import		_set_vram_update
+	.import		_vram_adr
+	.import		_vram_put
+	.import		_vram_fill
 	.import		_tokumaru_lzss
 	.import		_bankswitch
 	.export		_rda
@@ -39,6 +48,7 @@
 	.export		_gp_aux
 	.export		_gp_ul
 	.export		_gp_addr
+	.export		_oam_index
 	.export		_pad0
 	.export		_pad
 	.export		_half_life
@@ -50,6 +60,8 @@
 	.export		_col_v_offset
 	.export		_cam_pos
 	.export		_cam_pos_old
+	.export		_section_x0
+	.export		_section_x1
 	.export		_cx1
 	.export		_cx2
 	.export		_cy1
@@ -59,12 +71,41 @@
 	.export		_at1
 	.export		_at2
 	.export		_scr_buffer_ptr
+	.export		_scr_v_offset
 	.export		_n_pant
+	.export		_base_pant
+	.export		_level
+	.export		_section
+	.export		_game_res
 	.export		_prx
+	.export		_pry
+	.export		_px
+	.export		_py
+	.export		_pvx
+	.export		_pvy
+	.export		_pgotten
+	.export		_pfacing
+	.export		_psprid
+	.export		_ppossee
+	.export		_pslip
+	.export		_phit
+	.export		_pj
+	.export		_pjb
+	.export		_pctj
+	.export		_ppressingh
+	.export		_pfr
+	.export		_pflickers
+	.export		_pgtmx
+	.export		_pgtmy
+	.export		_px_world
 	.export		_ticks
 	.export		_halfticks
 	.export		_scr_buffer
+	.export		_fader
 	.export		_bitmasks
+	.export		_behs
+	.export		_cm_two_points_horizontal
+	.export		_cm_two_points_vertical
 	.export		_map_0
 	.export		_main_ts_tmaps_0
 	.export		_main_ts_tmaps_1
@@ -87,7 +128,6 @@
 	.export		_mypal_light_fg
 	.export		_mypal_cuts
 	.export		_mypal_reds
-	.export		_behs
 	.export		_sspl_00_a
 	.export		_sspl_00_b
 	.export		_sspl_01_a
@@ -161,14 +201,32 @@
 	.export		_ssit_04
 	.export		_ssit_05
 	.export		_ssit_06
-	.export		_shl4
-	.export		_cm_two_points_horizontal
-	.export		_cm_two_points_vertical
+	.export		_spr_pl
+	.export		_sections_0
+	.export		_sections_1
+	.export		_sections_2
+	.export		_sections_3
+	.export		_sections
+	.export		_split_and_wait
+	.export		_fade_out_split
+	.export		_fade_in_split
+	.export		_fade_out
+	.export		_fade_in
+	.export		_cls
+	.export		_p_t2
+	.export		_p_s
+	.export		_camera_do
+	.export		_player_reset_movement
+	.export		_player_init
+	.export		_player_move
+	.export		_player_render
 	.export		_scroll_paint_chunk
 	.export		_scroll_draw_one_chunk_completely
 	.export		_scroll_to
 	.export		_scroll_draw_screen
-	.export		_test_scroller
+	.export		_game_init
+	.export		_game_strip_setup
+	.export		_game_loop
 	.import		_music_ROM1
 	.export		_main
 
@@ -185,6 +243,71 @@ _bitmasks:
 	.byte	$F3
 	.byte	$CF
 	.byte	$3F
+_behs:
+	.byte	$00
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$01
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$08
+	.byte	$08
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$08
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$04
+	.byte	$08
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$01
+	.byte	$01
+	.byte	$01
+	.byte	$01
+	.byte	$00
+	.byte	$08
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
+	.byte	$00
 .segment	"ROM0"
 _map_0:
 	.byte	$08
@@ -2221,8 +2344,8 @@ _map_0:
 	.byte	$00
 	.byte	$28
 	.byte	$29
-	.byte	$2A
 	.byte	$04
+	.byte	$00
 	.byte	$0B
 	.byte	$29
 	.byte	$08
@@ -4170,7 +4293,7 @@ _map_0:
 	.byte	$01
 	.byte	$10
 	.byte	$01
-	.byte	$10
+	.byte	$0A
 	.byte	$01
 	.byte	$11
 	.byte	$02
@@ -4193,8 +4316,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$02
 	.byte	$11
@@ -4217,8 +4340,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$00
@@ -4241,8 +4364,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$11
 	.byte	$01
 	.byte	$01
@@ -4265,8 +4388,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$11
 	.byte	$02
@@ -4289,8 +4412,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$00
 	.byte	$00
@@ -4313,8 +4436,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$28
 	.byte	$00
 	.byte	$00
@@ -4337,8 +4460,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$2A
 	.byte	$00
 	.byte	$28
@@ -4361,8 +4484,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$28
 	.byte	$00
 	.byte	$00
@@ -4385,8 +4508,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$02
 	.byte	$28
@@ -4409,8 +4532,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$11
 	.byte	$2A
@@ -4433,8 +4556,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$0C
 	.byte	$01
@@ -4457,8 +4580,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$0C
 	.byte	$0C
 	.byte	$0C
@@ -4481,8 +4604,8 @@ _map_0:
 	.byte	$00
 	.byte	$08
 	.byte	$08
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$22
@@ -4505,8 +4628,8 @@ _map_0:
 	.byte	$0E
 	.byte	$09
 	.byte	$25
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$0C
 	.byte	$0C
 	.byte	$21
@@ -4529,8 +4652,8 @@ _map_0:
 	.byte	$0D
 	.byte	$08
 	.byte	$09
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$0C
 	.byte	$0C
 	.byte	$0C
@@ -4553,8 +4676,8 @@ _map_0:
 	.byte	$08
 	.byte	$08
 	.byte	$25
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$02
 	.byte	$01
@@ -4577,8 +4700,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$00
 	.byte	$28
@@ -4601,8 +4724,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$29
 	.byte	$2A
@@ -4625,8 +4748,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$00
@@ -4649,8 +4772,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$28
 	.byte	$00
 	.byte	$00
@@ -4673,8 +4796,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$28
@@ -4697,8 +4820,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$28
 	.byte	$29
 	.byte	$00
@@ -4721,8 +4844,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$2A
 	.byte	$00
 	.byte	$28
@@ -4745,8 +4868,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$28
 	.byte	$00
 	.byte	$2A
@@ -4818,7 +4941,7 @@ _map_0:
 	.byte	$01
 	.byte	$10
 	.byte	$01
-	.byte	$10
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$28
@@ -4841,8 +4964,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$29
 	.byte	$00
@@ -4865,8 +4988,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$00
 	.byte	$28
@@ -4889,8 +5012,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$28
 	.byte	$00
 	.byte	$2A
@@ -4913,8 +5036,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$2A
 	.byte	$00
 	.byte	$28
@@ -4937,8 +5060,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$2A
@@ -4961,8 +5084,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$02
@@ -4985,8 +5108,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$01
@@ -5009,8 +5132,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$00
 	.byte	$28
@@ -5033,8 +5156,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$29
 	.byte	$2A
@@ -5057,8 +5180,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$00
@@ -5081,8 +5204,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$00
@@ -5105,8 +5228,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$00
 	.byte	$00
@@ -5129,8 +5252,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$00
 	.byte	$2A
@@ -5153,8 +5276,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$28
@@ -5177,8 +5300,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$29
 	.byte	$2A
@@ -5201,8 +5324,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$00
@@ -5225,8 +5348,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$2A
@@ -5249,8 +5372,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$00
@@ -5273,8 +5396,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$29
 	.byte	$2A
@@ -5297,8 +5420,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$02
 	.byte	$00
@@ -5321,8 +5444,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$02
@@ -5345,8 +5468,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$02
 	.byte	$02
@@ -5369,8 +5492,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$02
 	.byte	$00
@@ -5393,8 +5516,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$00
@@ -5417,8 +5540,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$29
 	.byte	$00
@@ -5441,8 +5564,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$2A
 	.byte	$01
 	.byte	$28
@@ -5465,8 +5588,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$28
 	.byte	$29
 	.byte	$2A
@@ -5489,8 +5612,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$2A
 	.byte	$00
 	.byte	$28
@@ -5513,8 +5636,8 @@ _map_0:
 	.byte	$05
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$00
@@ -5537,8 +5660,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$28
@@ -5561,8 +5684,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$00
 	.byte	$01
@@ -5585,8 +5708,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$2A
 	.byte	$02
 	.byte	$00
@@ -5609,8 +5732,8 @@ _map_0:
 	.byte	$23
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$2A
@@ -5633,8 +5756,8 @@ _map_0:
 	.byte	$0C
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$2A
 	.byte	$00
 	.byte	$00
@@ -5753,8 +5876,8 @@ _map_0:
 	.byte	$01
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$29
 	.byte	$01
@@ -6161,8 +6284,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$02
 	.byte	$28
@@ -6185,8 +6308,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$02
 	.byte	$00
@@ -6209,8 +6332,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$02
 	.byte	$00
@@ -6233,8 +6356,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$02
 	.byte	$2A
@@ -6257,8 +6380,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$02
 	.byte	$00
@@ -6281,8 +6404,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$02
 	.byte	$00
@@ -6305,8 +6428,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$02
 	.byte	$00
@@ -6329,8 +6452,8 @@ _map_0:
 	.byte	$02
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$02
 	.byte	$2A
@@ -6567,8 +6690,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$03
 	.byte	$03
 	.byte	$01
@@ -6591,8 +6714,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$03
 	.byte	$03
 	.byte	$11
@@ -6615,8 +6738,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$03
 	.byte	$03
 	.byte	$01
@@ -6639,8 +6762,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$03
 	.byte	$03
 	.byte	$11
@@ -6663,8 +6786,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$03
 	.byte	$03
 	.byte	$02
@@ -6687,8 +6810,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$03
 	.byte	$03
 	.byte	$02
@@ -6711,7 +6834,7 @@ _map_0:
 	.byte	$01
 	.byte	$10
 	.byte	$01
-	.byte	$10
+	.byte	$0A
 	.byte	$01
 	.byte	$03
 	.byte	$01
@@ -6856,7 +6979,7 @@ _map_0:
 	.byte	$10
 	.byte	$10
 	.byte	$03
-	.byte	$10
+	.byte	$0A
 	.byte	$01
 	.byte	$03
 	.byte	$02
@@ -6879,8 +7002,8 @@ _map_0:
 	.byte	$0C
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$03
 	.byte	$03
 	.byte	$02
@@ -7912,7 +8035,7 @@ _map_0:
 	.byte	$10
 	.byte	$10
 	.byte	$03
-	.byte	$10
+	.byte	$0A
 	.byte	$11
 	.byte	$03
 	.byte	$28
@@ -7935,8 +8058,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$03
 	.byte	$03
 	.byte	$2A
@@ -7959,8 +8082,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$03
 	.byte	$03
 	.byte	$01
@@ -7983,8 +8106,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$03
 	.byte	$03
 	.byte	$01
@@ -8007,7 +8130,7 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
+	.byte	$0A
 	.byte	$03
 	.byte	$03
 	.byte	$01
@@ -9933,7 +10056,7 @@ _map_0:
 	.byte	$20
 	.byte	$28
 	.byte	$29
-	.byte	$2A
+	.byte	$24
 	.byte	$00
 	.byte	$00
 	.byte	$29
@@ -11176,7 +11299,7 @@ _map_0:
 	.byte	$09
 	.byte	$10
 	.byte	$09
-	.byte	$10
+	.byte	$0A
 	.byte	$08
 	.byte	$25
 	.byte	$09
@@ -11199,8 +11322,8 @@ _map_0:
 	.byte	$2C
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$08
 	.byte	$08
 	.byte	$09
@@ -11223,8 +11346,8 @@ _map_0:
 	.byte	$2D
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$08
 	.byte	$25
 	.byte	$09
@@ -11247,8 +11370,8 @@ _map_0:
 	.byte	$2C
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$08
 	.byte	$08
 	.byte	$09
@@ -11271,8 +11394,8 @@ _map_0:
 	.byte	$2C
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$25
 	.byte	$08
 	.byte	$09
@@ -11295,8 +11418,8 @@ _map_0:
 	.byte	$2C
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$08
 	.byte	$25
 	.byte	$09
@@ -11319,7 +11442,7 @@ _map_0:
 	.byte	$08
 	.byte	$10
 	.byte	$09
-	.byte	$10
+	.byte	$0A
 	.byte	$08
 	.byte	$08
 	.byte	$08
@@ -12281,8 +12404,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$02
 	.byte	$02
@@ -12305,8 +12428,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$02
@@ -12329,8 +12452,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$02
 	.byte	$02
@@ -12353,8 +12476,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$02
@@ -12377,8 +12500,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$11
@@ -12401,8 +12524,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$00
 	.byte	$11
@@ -12425,8 +12548,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$29
 	.byte	$01
@@ -12449,8 +12572,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$2A
 	.byte	$11
 	.byte	$24
@@ -12473,8 +12596,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$29
 	.byte	$01
@@ -12497,8 +12620,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$01
 	.byte	$24
@@ -12521,8 +12644,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$02
@@ -12545,8 +12668,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$11
@@ -12569,8 +12692,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$01
@@ -12593,8 +12716,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$00
@@ -12617,8 +12740,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$11
@@ -12641,8 +12764,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$28
@@ -12665,8 +12788,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$11
@@ -12689,8 +12812,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$00
@@ -12713,8 +12836,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$00
@@ -12737,8 +12860,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$11
@@ -12761,8 +12884,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$2A
@@ -12785,8 +12908,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$11
@@ -12809,8 +12932,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$02
 	.byte	$00
@@ -12833,8 +12956,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$02
@@ -12857,8 +12980,8 @@ _map_0:
 	.byte	$02
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$11
@@ -12881,8 +13004,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$28
@@ -12905,8 +13028,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$2A
@@ -12929,8 +13052,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$02
 	.byte	$02
@@ -12953,8 +13076,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$02
@@ -12977,8 +13100,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$02
 	.byte	$02
@@ -13001,8 +13124,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$02
@@ -13025,8 +13148,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$11
@@ -13049,8 +13172,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$02
@@ -13073,8 +13196,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$02
 	.byte	$02
@@ -13097,8 +13220,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$2A
@@ -13121,8 +13244,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$11
@@ -13145,8 +13268,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$02
 	.byte	$02
@@ -13169,8 +13292,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$02
@@ -13193,8 +13316,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$28
 	.byte	$00
 	.byte	$2A
@@ -13217,8 +13340,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$00
@@ -13241,8 +13364,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$01
@@ -13265,8 +13388,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$01
@@ -13289,8 +13412,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$2A
@@ -13313,8 +13436,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$00
@@ -13337,8 +13460,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$01
@@ -13361,8 +13484,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$00
 	.byte	$28
@@ -13385,8 +13508,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$28
 	.byte	$00
 	.byte	$00
@@ -13409,8 +13532,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$28
@@ -13433,8 +13556,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$00
 	.byte	$01
@@ -13457,7 +13580,7 @@ _map_0:
 	.byte	$01
 	.byte	$10
 	.byte	$01
-	.byte	$10
+	.byte	$0A
 	.byte	$02
 	.byte	$2A
 	.byte	$0C
@@ -13482,7 +13605,7 @@ _map_0:
 	.byte	$02
 	.byte	$10
 	.byte	$10
-	.byte	$10
+	.byte	$0A
 	.byte	$0C
 	.byte	$02
 	.byte	$0C
@@ -13528,7 +13651,7 @@ _map_0:
 	.byte	$10
 	.byte	$10
 	.byte	$03
-	.byte	$10
+	.byte	$0A
 	.byte	$02
 	.byte	$03
 	.byte	$11
@@ -13551,7 +13674,7 @@ _map_0:
 	.byte	$0C
 	.byte	$10
 	.byte	$10
-	.byte	$10
+	.byte	$0A
 	.byte	$03
 	.byte	$04
 	.byte	$02
@@ -13575,7 +13698,7 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$03
-	.byte	$10
+	.byte	$0A
 	.byte	$01
 	.byte	$03
 	.byte	$02
@@ -13625,7 +13748,7 @@ _map_0:
 	.byte	$11
 	.byte	$10
 	.byte	$01
-	.byte	$10
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$01
@@ -13672,7 +13795,7 @@ _map_0:
 	.byte	$10
 	.byte	$10
 	.byte	$03
-	.byte	$10
+	.byte	$0A
 	.byte	$01
 	.byte	$03
 	.byte	$02
@@ -13721,7 +13844,7 @@ _map_0:
 	.byte	$01
 	.byte	$10
 	.byte	$01
-	.byte	$10
+	.byte	$0A
 	.byte	$02
 	.byte	$02
 	.byte	$02
@@ -13793,8 +13916,8 @@ _map_0:
 	.byte	$00
 	.byte	$02
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$11
@@ -13817,8 +13940,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$01
@@ -13841,8 +13964,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$01
@@ -13865,8 +13988,8 @@ _map_0:
 	.byte	$0C
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$0C
 	.byte	$0C
@@ -13889,8 +14012,8 @@ _map_0:
 	.byte	$0C
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$0C
 	.byte	$02
 	.byte	$0C
@@ -13913,8 +14036,8 @@ _map_0:
 	.byte	$0C
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$02
@@ -13937,8 +14060,8 @@ _map_0:
 	.byte	$0C
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$01
@@ -13961,8 +14084,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$01
@@ -13985,8 +14108,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$02
 	.byte	$02
@@ -14009,8 +14132,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$02
 	.byte	$01
 	.byte	$2A
@@ -14033,8 +14156,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$00
 	.byte	$01
@@ -14057,8 +14180,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$01
 	.byte	$24
@@ -14081,8 +14204,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$02
@@ -14105,8 +14228,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$11
 	.byte	$01
@@ -14129,8 +14252,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$11
 	.byte	$11
@@ -14153,8 +14276,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$11
 	.byte	$11
@@ -14177,8 +14300,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$01
 	.byte	$01
 	.byte	$02
@@ -14201,8 +14324,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$11
 	.byte	$01
 	.byte	$01
@@ -14225,8 +14348,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$11
 	.byte	$00
 	.byte	$01
@@ -14249,8 +14372,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$28
 	.byte	$00
 	.byte	$00
@@ -14273,8 +14396,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$2A
 	.byte	$00
 	.byte	$28
@@ -14297,8 +14420,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$2A
@@ -14321,8 +14444,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$2A
 	.byte	$00
 	.byte	$00
@@ -14345,8 +14468,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$28
 	.byte	$00
 	.byte	$2A
@@ -14369,8 +14492,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$00
@@ -14393,8 +14516,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$28
 	.byte	$00
 	.byte	$00
@@ -14417,8 +14540,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$00
@@ -14441,8 +14564,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$29
 	.byte	$00
@@ -14465,8 +14588,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$2A
 	.byte	$00
 	.byte	$00
@@ -14489,8 +14612,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$29
 	.byte	$2A
@@ -14513,8 +14636,8 @@ _map_0:
 	.byte	$04
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$28
@@ -14537,8 +14660,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$2A
@@ -14561,8 +14684,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$28
@@ -14585,8 +14708,8 @@ _map_0:
 	.byte	$29
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$2A
@@ -14609,8 +14732,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$2A
 	.byte	$00
 	.byte	$00
@@ -14633,8 +14756,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$28
 	.byte	$00
 	.byte	$2A
@@ -14657,8 +14780,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$00
 	.byte	$00
@@ -14681,8 +14804,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$28
 	.byte	$00
 	.byte	$00
@@ -14705,8 +14828,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$00
 	.byte	$01
 	.byte	$28
@@ -14729,8 +14852,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$11
 	.byte	$01
 	.byte	$01
@@ -14753,8 +14876,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$11
 	.byte	$09
 	.byte	$01
@@ -14777,8 +14900,8 @@ _map_0:
 	.byte	$08
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$09
 	.byte	$09
 	.byte	$09
@@ -14801,8 +14924,8 @@ _map_0:
 	.byte	$09
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$09
 	.byte	$09
 	.byte	$2C
@@ -14825,8 +14948,8 @@ _map_0:
 	.byte	$09
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$09
 	.byte	$09
 	.byte	$2C
@@ -14849,8 +14972,8 @@ _map_0:
 	.byte	$09
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$09
 	.byte	$09
 	.byte	$2C
@@ -14873,8 +14996,8 @@ _map_0:
 	.byte	$09
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$09
 	.byte	$09
 	.byte	$2C
@@ -14897,8 +15020,8 @@ _map_0:
 	.byte	$09
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$09
 	.byte	$09
 	.byte	$2C
@@ -14921,8 +15044,8 @@ _map_0:
 	.byte	$09
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$09
 	.byte	$09
 	.byte	$2C
@@ -14945,8 +15068,8 @@ _map_0:
 	.byte	$09
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$09
 	.byte	$09
 	.byte	$2C
@@ -14969,7 +15092,7 @@ _map_0:
 	.byte	$08
 	.byte	$10
 	.byte	$08
-	.byte	$10
+	.byte	$0A
 	.byte	$09
 	.byte	$09
 	.byte	$2C
@@ -15521,8 +15644,8 @@ _map_0:
 	.byte	$00
 	.byte	$10
 	.byte	$10
-	.byte	$10
-	.byte	$10
+	.byte	$0A
+	.byte	$0A
 	.byte	$09
 	.byte	$09
 	.byte	$00
@@ -15545,7 +15668,7 @@ _map_0:
 	.byte	$09
 	.byte	$10
 	.byte	$09
-	.byte	$10
+	.byte	$0A
 	.byte	$09
 _main_ts_tmaps_0:
 	.byte	$00
@@ -20497,71 +20620,6 @@ _mypal_reds:
 	.byte	$16
 	.byte	$35
 .segment	"ROM2"
-_behs:
-	.byte	$00
-	.byte	$08
-	.byte	$08
-	.byte	$08
-	.byte	$08
-	.byte	$08
-	.byte	$08
-	.byte	$08
-	.byte	$08
-	.byte	$08
-	.byte	$01
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$01
-	.byte	$08
-	.byte	$00
-	.byte	$08
-	.byte	$08
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$08
-	.byte	$08
-	.byte	$08
-	.byte	$08
-	.byte	$08
-	.byte	$08
-	.byte	$08
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$04
-	.byte	$08
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$01
-	.byte	$01
-	.byte	$01
-	.byte	$01
-	.byte	$00
-	.byte	$08
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
-	.byte	$00
 _sspl_00_a:
 	.byte	$FC
 	.byte	$F8
@@ -22260,19 +22318,83 @@ _ssit_06:
 	.byte	$CB
 	.byte	$01
 	.byte	$80
-_shl4:
-	.byte	$00
-	.byte	$10
-	.byte	$20
-	.byte	$30
-	.byte	$40
-	.byte	$50
-	.byte	$60
-	.byte	$70
-	.byte	$80
-	.byte	$90
-	.byte	$A0
-	.byte	$B0
+_spr_pl:
+	.addr	_sspl_00_a
+	.addr	_sspl_01_a
+	.addr	_sspl_02_a
+	.addr	_sspl_03_a
+	.addr	_sspl_04_a
+	.addr	_sspl_05_a
+	.addr	_sspl_06_a
+	.addr	_sspl_07_a
+	.addr	_sspl_06_a
+	.addr	_sspl_08_a
+	.addr	_sspl_09_a
+	.addr	_sspl_0A_a
+	.addr	_sspl_0B_a
+	.addr	_sspl_0C_a
+	.addr	_sspl_0D_a
+	.addr	_sspl_0C_a
+	.addr	_sspl_0B_a
+	.addr	_sspl_0A_a
+	.addr	_sspl_09_a
+	.addr	_sspl_08_a
+	.addr	_sspl_0E_a
+	.addr	_sspl_0F_a
+	.addr	_sspl_00_b
+	.addr	_sspl_01_b
+	.addr	_sspl_02_b
+	.addr	_sspl_03_b
+	.addr	_sspl_04_b
+	.addr	_sspl_05_b
+	.addr	_sspl_06_b
+	.addr	_sspl_07_b
+	.addr	_sspl_06_b
+	.addr	_sspl_08_b
+	.addr	_sspl_09_b
+	.addr	_sspl_0A_b
+	.addr	_sspl_0B_b
+	.addr	_sspl_0C_b
+	.addr	_sspl_0D_b
+	.addr	_sspl_0C_b
+	.addr	_sspl_0B_b
+	.addr	_sspl_0A_b
+	.addr	_sspl_09_b
+	.addr	_sspl_08_b
+	.addr	_sspl_0F_b
+	.addr	_sspl_0F_b
+_sections_0:
+	.word	$0000
+	.word	$0100
+	.word	$1000
+	.word	$1400
+_sections_1:
+	.word	$0000
+	.word	$0900
+	.word	$0B00
+	.word	$0D00
+	.word	$1000
+	.word	$1100
+	.word	$1400
+_sections_2:
+	.word	$0000
+	.word	$0400
+	.word	$0900
+	.word	$0C00
+	.word	$1100
+	.word	$1400
+_sections_3:
+	.word	$0000
+	.word	$0100
+	.word	$0900
+	.word	$0B00
+	.word	$1000
+	.word	$1400
+_sections:
+	.addr	_sections_0
+	.addr	_sections_1
+	.addr	_sections_2
+	.addr	_sections_3
 .segment	"CODE"
 
 .segment	"BSS"
@@ -22308,6 +22430,8 @@ _gp_ul:
 	.res	2,$00
 _gp_addr:
 	.res	2,$00
+_oam_index:
+	.res	1,$00
 _pad0:
 	.res	1,$00
 _pad:
@@ -22317,7 +22441,7 @@ _half_life:
 _frame_counter:
 	.res	1,$00
 _col_idx:
-	.res	1,$00
+	.res	2,$00
 _col_ptr:
 	.res	2,$00
 _map_ptr:
@@ -22329,6 +22453,10 @@ _col_v_offset:
 _cam_pos:
 	.res	2,$00
 _cam_pos_old:
+	.res	2,$00
+_section_x0:
+	.res	2,$00
+_section_x1:
 	.res	2,$00
 _cx1:
 	.res	1,$00
@@ -22348,10 +22476,60 @@ _at2:
 	.res	1,$00
 _scr_buffer_ptr:
 	.res	2,$00
+_scr_v_offset:
+	.res	1,$00
 _n_pant:
+	.res	1,$00
+_base_pant:
+	.res	1,$00
+_level:
+	.res	1,$00
+_section:
+	.res	2,$00
+_game_res:
 	.res	1,$00
 _prx:
 	.res	1,$00
+_pry:
+	.res	1,$00
+_px:
+	.res	2,$00
+_py:
+	.res	2,$00
+_pvx:
+	.res	2,$00
+_pvy:
+	.res	2,$00
+_pgotten:
+	.res	1,$00
+_pfacing:
+	.res	1,$00
+_psprid:
+	.res	1,$00
+_ppossee:
+	.res	1,$00
+_pslip:
+	.res	1,$00
+_phit:
+	.res	1,$00
+_pj:
+	.res	1,$00
+_pjb:
+	.res	1,$00
+_pctj:
+	.res	1,$00
+_ppressingh:
+	.res	1,$00
+_pfr:
+	.res	1,$00
+_pflickers:
+	.res	1,$00
+_pgtmx:
+	.res	1,$00
+_pgtmy:
+	.res	1,$00
+_px_world:
+	.res	2,$00
 .segment	"BSS"
 _ticks:
 	.res	1,$00
@@ -22361,6 +22539,8 @@ _update_list:
 	.res	97,$00
 _scr_buffer:
 	.res	384,$00
+_fader:
+	.res	1,$00
 
 ; ---------------------------------------------------------------
 ; void __near__ cm_two_points_horizontal (void)
@@ -22373,26 +22553,35 @@ _scr_buffer:
 .segment	"CODE"
 
 ;
-; cyaux = *(shl4 + (cy1 < 2 ? 0 : cy1 - 2)); 
+; if (cx1 > 15) cx1 = cx2;
 ;
-	ldx     #$00
-	lda     _cy1
+	lda     _cx1
+	cmp     #$10
+	bcc     L5A80
+	lda     _cx2
+	sta     _cx1
+;
+; if (cx2 > 15) cx2 = cx2;
+;
+L5A80:	lda     _cx2
+	cmp     #$10
+	bcc     L5A81
+	sta     _cx2
+;
+; cyaux = (cy1 < 2 ? 0 : cy1 - 2) << 4; 
+;
+L5A81:	lda     _cy1
 	cmp     #$02
-	bcs     L57C2
-	txa
-	jmp     L5604
-L57C2:	lda     _cy1
+	bcs     L5A82
+	lda     #$00
+	jmp     L005B
+L5A82:	lda     _cy1
 	sec
 	sbc     #$02
-	bcs     L5604
-	dex
-L5604:	sta     ptr1
-	txa
-	clc
-	adc     #>(_shl4)
-	sta     ptr1+1
-	ldy     #<(_shl4)
-	lda     (ptr1),y
+L005B:	asl     a
+	asl     a
+	asl     a
+	asl     a
 	sta     _cyaux
 ;
 ; at1 = behs [*(scr_buffer_ptr + cyaux + cx1)];
@@ -22401,9 +22590,9 @@ L5604:	sta     ptr1
 	ldx     _scr_buffer_ptr+1
 	clc
 	adc     _cyaux
-	bcc     L57BE
+	bcc     L5A7C
 	inx
-L57BE:	ldy     _cx1
+L5A7C:	ldy     _cx1
 	sta     ptr1
 	stx     ptr1+1
 	lda     (ptr1),y
@@ -22416,15 +22605,15 @@ L57BE:	ldy     _cx1
 	lda     (ptr1),y
 	sta     _at1
 ;
-; at1 = behs [*(scr_buffer_ptr + cyaux + cx2)];
+; at2 = behs [*(scr_buffer_ptr + cyaux + cx2)];
 ;
 	lda     _scr_buffer_ptr
 	ldx     _scr_buffer_ptr+1
 	clc
 	adc     _cyaux
-	bcc     L57C0
+	bcc     L5A7E
 	inx
-L57C0:	ldy     _cx2
+L5A7E:	ldy     _cx2
 	sta     ptr1
 	stx     ptr1+1
 	lda     (ptr1),y
@@ -22435,7 +22624,7 @@ L57C0:	ldy     _cx2
 	sta     ptr1+1
 	ldy     #<(_behs)
 	lda     (ptr1),y
-	sta     _at1
+	sta     _at2
 ;
 ; }
 ;
@@ -22454,17 +22643,26 @@ L57C0:	ldy     _cx2
 .segment	"CODE"
 
 ;
+; if (cx1 > 15) {at1 = 0; at2 = 0; return;}
+;
+	lda     _cx1
+	cmp     #$10
+	bcc     L5A86
+	lda     #$00
+	sta     _at1
+	jmp     L5A85
+;
 ; cyaux = cy1 < 2 ? 0 : cy1 - 2; 
 ;
-	lda     _cy1
+L5A86:	lda     _cy1
 	cmp     #$02
-	bcs     L57C5
+	bcs     L5A87
 	lda     #$00
-	jmp     L57C6
-L57C5:	lda     _cy1
+	jmp     L5A88
+L5A87:	lda     _cy1
 	sec
 	sbc     #$02
-L57C6:	sta     _cyaux
+L5A88:	sta     _cyaux
 ;
 ; at1 = behs [*(scr_buffer_ptr + (cyaux << 4) + cx1)];
 ;
@@ -22495,13 +22693,13 @@ L57C6:	sta     _cyaux
 ;
 	lda     _cy2
 	cmp     #$02
-	bcs     L57C7
+	bcs     L5A89
 	lda     #$00
-	jmp     L57C8
-L57C7:	lda     _cy2
+	jmp     L5A8A
+L5A89:	lda     _cy2
 	sec
 	sbc     #$02
-L57C8:	sta     _cyaux
+L5A8A:	sta     _cyaux
 ;
 ; at2 = behs [*(scr_buffer_ptr + (cyaux << 4) + cx1)];
 ;
@@ -22526,7 +22724,1513 @@ L57C8:	sta     _cyaux
 	sta     ptr1+1
 	ldy     #<(_behs)
 	lda     (ptr1),y
-	sta     _at2
+L5A85:	sta     _at2
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ split_and_wait (void)
+; ---------------------------------------------------------------
+
+.segment	"ROM2"
+
+.proc	_split_and_wait: near
+
+.segment	"ROM2"
+
+;
+; ppu_wait_nmi ();
+;
+	jsr     _ppu_wait_nmi
+;
+; split (cam_pos, 0);
+;
+	lda     _cam_pos
+	ldx     _cam_pos+1
+	jsr     pushax
+	ldx     #$00
+	txa
+	jmp     _split
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ fade_out_split (void)
+; ---------------------------------------------------------------
+
+.segment	"ROM2"
+
+.proc	_fade_out_split: near
+
+.segment	"ROM2"
+
+;
+; for (fader = 4; fader > -1; fader --) {
+;
+	lda     #$04
+L5A8B:	sta     _fader
+	tax
+	bmi     L5673
+;
+; pal_bright (fader);
+;
+	lda     _fader
+	jsr     _pal_bright
+;
+; split_and_wait ();
+;
+	jsr     _split_and_wait
+;
+; for (fader = 4; fader > -1; fader --) {
+;
+	lda     _fader
+	sec
+	sbc     #$01
+	jmp     L5A8B
+;
+; }
+;
+L5673:	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ fade_in_split (void)
+; ---------------------------------------------------------------
+
+.segment	"ROM2"
+
+.proc	_fade_in_split: near
+
+.segment	"ROM2"
+
+;
+; for (fader = 0; fader < 5; fader ++) {
+;
+	lda     #$00
+L5A8C:	sta     _fader
+	sec
+	sbc     #$05
+	bvc     L5688
+	eor     #$80
+L5688:	bpl     L5681
+;
+; pal_bright (fader);
+;
+	lda     _fader
+	jsr     _pal_bright
+;
+; split_and_wait ();
+;
+	jsr     _split_and_wait
+;
+; for (fader = 0; fader < 5; fader ++) {
+;
+	lda     _fader
+	clc
+	adc     #$01
+	jmp     L5A8C
+;
+; }
+;
+L5681:	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ fade_out (void)
+; ---------------------------------------------------------------
+
+.segment	"ROM2"
+
+.proc	_fade_out: near
+
+.segment	"ROM2"
+
+;
+; void fade_out (void) { fader = 5; while (fader --) { pal_bright (fader); ppu_wait_nmi (); } } 
+;
+	lda     #$05
+	sta     _fader
+	jmp     L5A8D
+L5691:	lda     _fader
+	jsr     _pal_bright
+	jsr     _ppu_wait_nmi
+L5A8D:	lda     _fader
+	pha
+	sec
+	sbc     #$01
+	sta     _fader
+	pla
+	tax
+	bne     L5691
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ fade_in (void)
+; ---------------------------------------------------------------
+
+.segment	"ROM2"
+
+.proc	_fade_in: near
+
+.segment	"ROM2"
+
+;
+; void fade_in (void) { fader = 5; while (fader --) { pal_bright (4 - fader); ppu_wait_nmi (); } }
+;
+	lda     #$05
+	sta     _fader
+	jmp     L5A8E
+L569C:	lda     #$04
+	jsr     pusha0
+	lda     _fader
+	bpl     L56A3
+	ldx     #$FF
+L56A3:	jsr     tossubax
+	jsr     _pal_bright
+	jsr     _ppu_wait_nmi
+L5A8E:	lda     _fader
+	pha
+	sec
+	sbc     #$01
+	sta     _fader
+	pla
+	tax
+	bne     L569C
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ cls (void)
+; ---------------------------------------------------------------
+
+.segment	"ROM2"
+
+.proc	_cls: near
+
+.segment	"ROM2"
+
+;
+; void cls (void) { vram_adr (0x2000); vram_fill (0xff, 0x400); }
+;
+	ldx     #$20
+	lda     #$00
+	jsr     _vram_adr
+	lda     #$FF
+	jsr     pusha
+	ldx     #$04
+	lda     #$00
+	jmp     _vram_fill
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ p_t2 (unsigned char, unsigned char, unsigned char)
+; ---------------------------------------------------------------
+
+.segment	"ROM2"
+
+.proc	_p_t2: near
+
+.segment	"ROM2"
+
+;
+; void p_t2 (unsigned char x, unsigned char y, unsigned char n) {
+;
+	jsr     pusha
+;
+; gp_addr = NAMETABLE_A + (y << 5) + x;
+;
+	ldy     #$01
+	ldx     #$00
+	lda     (sp),y
+	jsr     aslax4
+	stx     tmp1
+	asl     a
+	rol     tmp1
+	sta     ptr1
+	lda     tmp1
+	clc
+	adc     #$20
+	sta     ptr1+1
+	iny
+	lda     (sp),y
+	clc
+	adc     ptr1
+	ldx     ptr1+1
+	bcc     L5A8F
+	inx
+L5A8F:	sta     _gp_addr
+	stx     _gp_addr+1
+;
+; UPDATE = MSB (gp_addr) | NT_UPD_HORZ;
+;
+	lda     _gp_ul
+	ldx     _gp_ul+1
+	sta     regsave
+	stx     regsave+1
+	clc
+	adc     #$01
+	bcc     L56B0
+	inx
+L56B0:	sta     _gp_ul
+	stx     _gp_ul+1
+	lda     _gp_addr+1
+	ora     #$40
+	ldy     #$00
+	sta     (regsave),y
+;
+; UPDATE = LSB (gp_addr);
+;
+	lda     _gp_ul
+	ldx     _gp_ul+1
+	sta     regsave
+	stx     regsave+1
+	clc
+	adc     #$01
+	bcc     L56B5
+	inx
+L56B5:	sta     _gp_ul
+	stx     _gp_ul+1
+	lda     _gp_addr
+	sta     (regsave),y
+;
+; UPDATE = 2; 
+;
+	lda     _gp_ul
+	ldx     _gp_ul+1
+	sta     regsave
+	stx     regsave+1
+	clc
+	adc     #$01
+	bcc     L56BA
+	inx
+L56BA:	sta     _gp_ul
+	stx     _gp_ul+1
+	lda     #$02
+	sta     (regsave),y
+;
+; UPDATE = DIGIT ((n / 10));
+;
+	lda     _gp_ul
+	ldx     _gp_ul+1
+	sta     regsave
+	stx     regsave+1
+	clc
+	adc     #$01
+	bcc     L56BD
+	inx
+L56BD:	sta     _gp_ul
+	stx     _gp_ul+1
+	lda     regsave
+	ldx     regsave+1
+	jsr     pushax
+	ldy     #$02
+	lda     (sp),y
+	jsr     pusha0
+	lda     #$0A
+	jsr     tosudiva0
+	clc
+	adc     #$01
+	ldy     #$00
+	jsr     staspidx
+;
+; UPDATE = DIGIT ((n % 10));
+;
+	lda     _gp_ul
+	ldx     _gp_ul+1
+	sta     regsave
+	stx     regsave+1
+	clc
+	adc     #$01
+	bcc     L56C4
+	inx
+L56C4:	sta     _gp_ul
+	stx     _gp_ul+1
+	lda     regsave
+	ldx     regsave+1
+	jsr     pushax
+	ldy     #$02
+	lda     (sp),y
+	jsr     pusha0
+	lda     #$0A
+	jsr     tosumoda0
+	clc
+	adc     #$01
+	ldy     #$00
+	jsr     staspidx
+;
+; }
+;
+	jmp     incsp3
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ p_s (unsigned char, unsigned char, __near__ unsigned char *)
+; ---------------------------------------------------------------
+
+.segment	"ROM2"
+
+.proc	_p_s: near
+
+.segment	"ROM2"
+
+;
+; void p_s (unsigned char x, unsigned char y, unsigned char *s) {
+;
+	jsr     pushax
+;
+; vram_adr (NAMETABLE_A + (y << 5) + x);
+;
+	ldy     #$02
+	ldx     #$00
+	lda     (sp),y
+	jsr     aslax4
+	stx     tmp1
+	asl     a
+	rol     tmp1
+	sta     ptr1
+	lda     tmp1
+	clc
+	adc     #$20
+	sta     ptr1+1
+	iny
+	lda     (sp),y
+	clc
+	adc     ptr1
+	ldx     ptr1+1
+	bcc     L5A90
+	inx
+L5A90:	jsr     _vram_adr
+;
+; while (rda = *s ++) {
+;
+	jmp     L56D0
+;
+; if (rda == '%') {
+;
+L56CE:	lda     _rda
+	cmp     #$25
+	bne     L5A92
+;
+; y ++; vram_adr (NAMETABLE_A + (y << 5) + x);
+;
+	ldy     #$02
+	lda     (sp),y
+	clc
+	adc     #$01
+	sta     (sp),y
+	ldx     #$00
+	lda     (sp),y
+	jsr     aslax4
+	stx     tmp1
+	asl     a
+	rol     tmp1
+	sta     ptr1
+	lda     tmp1
+	clc
+	adc     #$20
+	sta     ptr1+1
+	iny
+	lda     (sp),y
+	clc
+	adc     ptr1
+	ldx     ptr1+1
+	bcc     L5A91
+	inx
+L5A91:	jsr     _vram_adr
+;
+; } else vram_put (rda - 32);
+;
+	jmp     L56D0
+L5A92:	lda     _rda
+	sec
+	sbc     #$20
+	jsr     _vram_put
+;
+; while (rda = *s ++) {
+;
+L56D0:	ldy     #$01
+	lda     (sp),y
+	tax
+	dey
+	lda     (sp),y
+	sta     regsave
+	stx     regsave+1
+	clc
+	adc     #$01
+	bcc     L56D3
+	inx
+L56D3:	jsr     stax0sp
+	ldy     #$00
+	lda     (regsave),y
+	sta     _rda
+	tax
+	bne     L56CE
+;
+; }
+;
+	jmp     incsp4
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ camera_do (void)
+; ---------------------------------------------------------------
+
+.segment	"ROM2"
+
+.proc	_camera_do: near
+
+.segment	"ROM2"
+
+;
+; cam_pos = px_world - 120;
+;
+	lda     _px_world
+	ldx     _px_world+1
+	sec
+	sbc     #$78
+	bcs     L56E1
+	dex
+L56E1:	sta     _cam_pos
+	stx     _cam_pos+1
+;
+; if (cam_pos < section_x0) cam_pos = section_x0;
+;
+	cmp     _section_x0
+	txa
+	sbc     _section_x0+1
+	bvc     L5A93
+	eor     #$80
+L5A93:	bpl     L56E2
+	lda     _section_x0
+	sta     _cam_pos
+	lda     _section_x0+1
+	sta     _cam_pos+1
+;
+; if (cam_pos > section_x1) cam_pos = section_x1;
+;
+L56E2:	lda     _cam_pos
+	ldx     _cam_pos+1
+	jsr     pushax
+	lda     _section_x1
+	ldx     _section_x1+1
+	jsr     tosicmp
+	bmi     L56E6
+	beq     L56E6
+	lda     _section_x1
+	sta     _cam_pos
+	lda     _section_x1+1
+	sta     _cam_pos+1
+;
+; }
+;
+L56E6:	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ player_reset_movement (void)
+; ---------------------------------------------------------------
+
+.segment	"ROM2"
+
+.proc	_player_reset_movement: near
+
+.segment	"ROM2"
+
+;
+; pvx = pvy = 0;
+;
+	lda     #$00
+	sta     _pvy
+	sta     _pvy+1
+	sta     _pvx
+	sta     _pvx+1
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ player_init (void)
+; ---------------------------------------------------------------
+
+.segment	"ROM2"
+
+.proc	_player_init: near
+
+.segment	"ROM2"
+
+;
+; prx = (4 << 4); px = prx << FIX_BITS;
+;
+	lda     #$40
+	sta     _prx
+	ldx     #$00
+	lda     _prx
+	jsr     aslax4
+	sta     _px
+	stx     _px+1
+;
+; pry = (6 << 4); py = pry << FIX_BITS;
+;
+	lda     #$60
+	sta     _pry
+	ldx     #$00
+	lda     _pry
+	jsr     aslax4
+	sta     _py
+	stx     _py+1
+;
+; pfacing = pfr = 0;
+;
+	lda     #$00
+	sta     _pfr
+	sta     _pfacing
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ player_move (void)
+; ---------------------------------------------------------------
+
+.segment	"ROM2"
+
+.proc	_player_move: near
+
+.segment	"ROM2"
+
+;
+; pad = pad0;  // Add ifs.
+;
+	lda     _pad0
+	sta     _pad
+;
+; if (!pgotten) {
+;
+	lda     _pgotten
+	bne     L5707
+;
+; if (pvy < PLAYER_VY_FALLING_MAX) pvy += PLAYER_G; else pvy = PLAYER_VY_FALLING_MAX;
+;
+	lda     _pvy
+	cmp     #$40
+	lda     _pvy+1
+	sbc     #$00
+	bvc     L5703
+	eor     #$80
+L5703:	asl     a
+	ldx     #$00
+	bcc     L5A98
+	lda     #$04
+	clc
+	adc     _pvy
+	sta     _pvy
+	bcc     L5707
+	inc     _pvy+1
+	jmp     L5707
+L5A98:	lda     #$40
+	sta     _pvy
+	stx     _pvy+1
+;
+; py = py + pvy;
+;
+L5707:	lda     _py
+	clc
+	adc     _pvy
+	sta     _py
+	lda     _py+1
+	adc     _pvy+1
+	tax
+	stx     _py+1
+;
+; if (py < 0) { if (level) { game_res = PLAYER_EXIT_TOP; return; } else py = 0; }
+;
+	cpx     #$80
+	bcc     L5712
+	lda     _level
+	beq     L5A9A
+	lda     #$01
+	sta     _game_res
+	rts
+L5A9A:	sta     _py
+	sta     _py+1
+;
+; if (py > (208 << FIX_BITS)) { game_res = PLAYER_EXIT_BOTTOM; return; }
+;
+L5712:	lda     _py
+	cmp     #$01
+	lda     _py+1
+	sbc     #$0D
+	bvs     L5718
+	eor     #$80
+L5718:	bpl     L5715
+	lda     #$02
+	sta     _game_res
+	rts
+;
+; pry = py >> FIX_BITS;
+;
+L5715:	lda     _py
+	ldx     _py+1
+	jsr     asrax4
+	sta     _pry
+;
+; cx1 = prx >> 4;
+;
+	lda     _prx
+	lsr     a
+	lsr     a
+	lsr     a
+	lsr     a
+	sta     _cx1
+;
+; cx2 = (prx + 7) >> 4;
+;
+	ldx     #$00
+	lda     _prx
+	clc
+	adc     #$07
+	bcc     L5722
+	inx
+L5722:	jsr     shrax4
+	sta     _cx2
+;
+; if (pvy + pgtmy < 0) {
+;
+	ldx     #$00
+	lda     _pgtmy
+	bpl     L5725
+	dex
+L5725:	clc
+	adc     _pvy
+	txa
+	adc     _pvy+1
+	tax
+	cpx     #$80
+	ldx     #$00
+	bcc     L5A9E
+;
+; cy1 = pry >> 4;
+;
+	lda     _pry
+	lsr     a
+	lsr     a
+	lsr     a
+	lsr     a
+	sta     _cy1
+;
+; cm_two_points_horizontal ();
+;
+	jsr     _cm_two_points_horizontal
+;
+; if ((at1 & 8) || (at2 & 8)) {
+;
+	lda     _at1
+	and     #$08
+	bne     L5A9B
+	lda     _at2
+	and     #$08
+	beq     L5A9C
+;
+; pgotten = pvy = 0;
+;
+L5A9B:	ldx     #$00
+	txa
+	sta     _pvy
+	sta     _pvy+1
+	sta     _pgotten
+;
+; pry = (cy1 + 1) << 4;
+;
+	lda     _cy1
+	clc
+	adc     #$01
+	asl     a
+	asl     a
+	asl     a
+	asl     a
+	sta     _pry
+;
+; py = pry << FIX_BITS;
+;
+	jsr     aslax4
+	sta     _py
+	stx     _py+1
+;
+; } else if ((at1 & 2) || (at2 & 2)) {
+;
+	jmp     L5761
+L5A9C:	lda     _at1
+	and     #$02
+	bne     L5A9D
+	lda     _at2
+	and     #$02
+	jeq     L5761
+;
+; if (pctj > 2) pj = 0;
+;
+L5A9D:	lda     _pctj
+	cmp     #$03
+	ldx     #$00
+	jcc     L5AA7
+	stx     _pj
+;
+; } else if (pvy + pgtmy > 0) {
+;
+	jmp     L5AA7
+L5A9E:	lda     _pgtmy
+	bpl     L5744
+	dex
+L5744:	clc
+	adc     _pvy
+	pha
+	txa
+	adc     _pvy+1
+	tax
+	pla
+	cmp     #$01
+	txa
+	sbc     #$00
+	bvs     L5745
+	eor     #$80
+L5745:	asl     a
+	ldx     #$00
+	bcc     L5AA7
+;
+; cy1 = (pry + 15) >> 4;
+;
+	lda     _pry
+	clc
+	adc     #$0F
+	bcc     L5749
+	inx
+L5749:	jsr     shrax4
+	sta     _cy1
+;
+; cm_two_points_horizontal ();
+;
+	jsr     _cm_two_points_horizontal
+;
+; if (((pry - 1) & 15) < 4 && ((at1 & 12) || (at2 & 12))) {
+;
+	lda     _pry
+	sec
+	sbc     #$01
+	and     #$0F
+	cmp     #$04
+	bcs     L5AA5
+	lda     _at1
+	ldx     #$00
+	and     #$0C
+	bne     L5AA4
+	lda     _at2
+	and     #$0C
+	beq     L5AA5
+;
+; pgotten = pvy = 0;
+;
+L5AA4:	txa
+	sta     _pvy
+	sta     _pvy+1
+	sta     _pgotten
+;
+; pry = (cy1 - 1) << 4;
+;
+	lda     _cy1
+	sec
+	sbc     #$01
+	asl     a
+	asl     a
+	asl     a
+	asl     a
+	sta     _pry
+;
+; py = pry << FIX_BITS;
+;
+	jsr     aslax4
+	sta     _py
+	stx     _py+1
+;
+; } else if ((at1 & 2) || (at2 & 2)) {
+;
+	jmp     L5761
+L5AA5:	lda     _at1
+	and     #$02
+	bne     L5AA6
+	lda     _at2
+	and     #$02
+	beq     L5761
+;
+; pvy = PLAYER_VY_SINK;
+;
+L5AA6:	ldx     #$00
+	lda     #$02
+	sta     _pvy
+	stx     _pvy+1
+;
+; cy1 = (pry + 16) >> 4;
+;
+L5761:	ldx     #$00
+L5AA7:	lda     _pry
+	clc
+	adc     #$10
+	bcc     L576B
+	inx
+L576B:	jsr     shrax4
+	sta     _cy1
+;
+; cm_two_points_horizontal ();
+;
+	jsr     _cm_two_points_horizontal
+;
+; ppossee = ((at1 & 14) || (at2 & 14));
+;
+	lda     _at1
+	and     #$0E
+	bne     L5AA8
+	lda     _at2
+	and     #$0E
+	beq     L5AA9
+L5AA8:	lda     #$01
+L5AA9:	sta     _ppossee
+;
+; pslip = (ppossee && ((at1 & 16) || (at2 & 16)));
+;
+	lda     _ppossee
+	beq     L577B
+	lda     _at1
+	and     #$10
+	bne     L5AAA
+	lda     _at2
+	and     #$10
+	beq     L577B
+L5AAA:	lda     #$01
+L577B:	sta     _pslip
+;
+; if (pad & PAD_A) {
+;
+	lda     _pad
+	and     #$01
+	jeq     L5AB2
+;
+; if (!pjb) {
+;
+	lda     _pjb
+	bne     L5784
+;
+; pjb = 1;
+;
+	lda     #$01
+	sta     _pjb
+;
+; if (!pj) {
+;
+	lda     _pj
+	bne     L5784
+;
+; if (pgotten || ppossee || phit) {
+;
+	lda     _pgotten
+	bne     L5AAE
+	lda     _ppossee
+	bne     L5AAE
+	lda     _phit
+	beq     L5784
+;
+; pj = 1; pctj = 0; 
+;
+L5AAE:	lda     #$01
+	sta     _pj
+	lda     #$00
+	sta     _pctj
+;
+; pvy = -PLAYER_VY_JUMP_INITIAL;
+;
+	ldx     #$FF
+	lda     #$F0
+	sta     _pvy
+	stx     _pvy+1
+;
+; if (pj) {
+;
+L5784:	lda     _pj
+	beq     L5AB3
+;
+; rda = PLAYER_AY_JUMP - (pctj >> 2) - (pctj >> 3);
+;
+	lda     #$08
+	jsr     pusha0
+	lda     _pctj
+	lsr     a
+	lsr     a
+	jsr     tossuba0
+	jsr     pushax
+	lda     _pctj
+	lsr     a
+	lsr     a
+	lsr     a
+	jsr     tossuba0
+	sta     _rda
+;
+; pvy -= (rda > 1 ? rda : 1);
+;
+	cmp     #$02
+	bcc     L5AAF
+	lda     _rda
+	jmp     L5798
+L5AAF:	lda     #$01
+L5798:	eor     #$FF
+	sec
+	adc     _pvy
+	sta     _pvy
+	lda     #$FF
+	adc     _pvy+1
+	sta     _pvy+1
+;
+; if (pvy < -PLAYER_VY_JUMP_MAX) pvy = -PLAYER_VY_JUMP_MAX;
+;
+	lda     _pvy
+	cmp     #$C0
+	lda     _pvy+1
+	sbc     #$FF
+	bvc     L579C
+	eor     #$80
+L579C:	bpl     L5AB0
+	ldx     #$FF
+	lda     #$C0
+	sta     _pvy
+	stx     _pvy+1
+;
+; pctj ++; if (pctj == PLAYER_VY_JUMP_A_STEPS) pj = 0;
+;
+L5AB0:	lda     _pctj
+	clc
+	adc     #$01
+	sta     _pctj
+	cmp     #$10
+	bne     L5AB3
+	lda     #$00
+;
+; } else {
+;
+	jmp     L5A94
+;
+; pjb = 0;
+;
+L5AB2:	sta     _pjb
+;
+; pj = 0;
+;
+L5A94:	sta     _pj
+;
+; if (pad & PAD_LEFT) {
+;
+L5AB3:	lda     _pad
+	and     #$40
+	beq     L5AB5
+;
+; pfacing = PFACING_LEFT;
+;
+	lda     #$16
+	sta     _pfacing
+;
+; ppressingh = 1;
+;
+	lda     #$01
+	sta     _ppressingh
+;
+; if (pvx > -PLAYER_VX_MAX) pvx -= (pslip ? PLAYER_AX_SLIP : PLAYER_AX);
+;
+	lda     _pvx
+	cmp     #$E1
+	lda     _pvx+1
+	sbc     #$FF
+	bvs     L57B1
+	eor     #$80
+L57B1:	jpl     L57E5
+	lda     _pslip
+	beq     L5AB4
+	lda     #$01
+	jmp     L57B7
+L5AB4:	lda     #$04
+L57B7:	eor     #$FF
+	sec
+	adc     _pvx
+	sta     _pvx
+	lda     #$FF
+	adc     _pvx+1
+;
+; } else if (pad & PAD_RIGHT) {
+;
+	jmp     L5A95
+L5AB5:	lda     _pad
+	and     #$80
+	beq     L5AB8
+;
+; pfacing = PFACING_RIGHT;
+;
+	lda     #$00
+	sta     _pfacing
+;
+; ppressingh = 1;
+;
+	lda     #$01
+	sta     _ppressingh
+;
+; if (pvx < PLAYER_VX_MAX) pvx += (pslip ? PLAYER_AX_SLIP : PLAYER_AX);
+;
+	lda     _pvx
+	cmp     #$20
+	lda     _pvx+1
+	sbc     #$00
+	bvc     L57C2
+	eor     #$80
+L57C2:	jpl     L57E5
+	lda     _pslip
+	beq     L5AB6
+	lda     #$01
+	jmp     L57C8
+L5AB6:	lda     #$04
+L57C8:	clc
+	adc     _pvx
+	sta     _pvx
+	lda     #$00
+	adc     _pvx+1
+;
+; } else {
+;
+	jmp     L5A95
+;
+; ppressingh = 0;
+;
+L5AB8:	sta     _ppressingh
+;
+; if (pvx > 0) {
+;
+	lda     _pvx
+	cmp     #$01
+	lda     _pvx+1
+	sbc     #$00
+	bvs     L57CF
+	eor     #$80
+L57CF:	bpl     L57CD
+;
+; pvx -= (pslip ? PLAYER_RX_SLIP : PLAYER_RX); if (pvx < 0) pvx = 0;
+;
+	lda     _pslip
+	beq     L5AB9
+	lda     #$00
+	jmp     L57D5
+L5AB9:	lda     #$04
+L57D5:	eor     #$FF
+	sec
+	adc     _pvx
+	sta     _pvx
+	lda     #$FF
+	adc     _pvx+1
+	sta     _pvx+1
+	ldx     _pvx+1
+	cpx     #$80
+	bcc     L57E5
+;
+; } else if (pvx < 0) {
+;
+	jmp     L5ACB
+L57CD:	ldx     _pvx+1
+	cpx     #$80
+	bcc     L57E5
+;
+; pvx += (pslip ? PLAYER_RX_SLIP : PLAYER_RX); if (pvx > 0) pvx = 0;
+;
+	lda     _pslip
+	beq     L5ABA
+	lda     #$00
+	jmp     L57E3
+L5ABA:	lda     #$04
+L57E3:	clc
+	adc     _pvx
+	sta     _pvx
+	lda     #$00
+	adc     _pvx+1
+	sta     _pvx+1
+	lda     _pvx
+	cmp     #$01
+	lda     _pvx+1
+	sbc     #$00
+	bvs     L57E7
+	eor     #$80
+L57E7:	bpl     L57E5
+L5ACB:	lda     #$00
+	sta     _pvx
+L5A95:	sta     _pvx+1
+;
+; px += pvx;
+;
+L57E5:	lda     _pvx
+	clc
+	adc     _px
+	sta     _px
+	lda     _pvx+1
+	adc     _px+1
+	sta     _px+1
+;
+; if (px < 0) {
+;
+	ldx     _px+1
+	cpx     #$80
+	bcc     L57EC
+;
+; px += (256 << FIX_BITS);
+;
+	lda     #$00
+	clc
+	adc     _px
+	sta     _px
+	lda     #$10
+	adc     _px+1
+	sta     _px+1
+;
+; n_pant --; SCR_BUFFER_PTR_UPD;
+;
+	lda     _n_pant
+	sec
+	sbc     #$01
+;
+; } else if (px >= (256 << FIX_BITS)) {
+;
+	jmp     L5AD7
+L57EC:	lda     _px
+	cmp     #$00
+	lda     _px+1
+	sbc     #$10
+	bvs     L57FE
+	eor     #$80
+L57FE:	bpl     L57FB
+;
+; px -= (256 << FIX_BITS);
+;
+	lda     _px
+	sec
+	sbc     #$00
+	sta     _px
+	lda     _px+1
+	sbc     #$10
+	sta     _px+1
+;
+; n_pant ++; SCR_BUFFER_PTR_UPD;
+;
+	lda     _n_pant
+	clc
+	adc     #$01
+L5AD7:	sta     _n_pant
+	and     #$01
+	beq     L5809
+	lda     #$C0
+L5809:	clc
+	adc     #<(_scr_buffer)
+	sta     _scr_buffer_ptr
+	lda     #$00
+	adc     #>(_scr_buffer)
+	sta     _scr_buffer_ptr+1
+;
+; prx = px >> FIX_BITS;
+;
+L57FB:	lda     _px
+	ldx     _px+1
+	jsr     asrax4
+	sta     _prx
+;
+; cy1 = pry >> 4;
+;
+	lda     _pry
+	lsr     a
+	lsr     a
+	lsr     a
+	lsr     a
+	sta     _cy1
+;
+; cy2 = (pry + 15) >> 4;
+;
+	ldx     #$00
+	lda     _pry
+	clc
+	adc     #$0F
+	bcc     L5812
+	inx
+L5812:	jsr     shrax4
+	sta     _cy2
+;
+; if (pvx < 0) {
+;
+	ldx     _pvx+1
+	cpx     #$80
+	bcc     L5813
+;
+; cx1 = prx >> 4;
+;
+	lda     _prx
+	lsr     a
+	lsr     a
+	lsr     a
+	lsr     a
+	sta     _cx1
+;
+; cm_two_points_vertical ();
+;
+	jsr     _cm_two_points_vertical
+;
+; if ((at1 & 8) || (at2 & 8)) {
+;
+	lda     _at1
+	and     #$08
+	bne     L5ABD
+	lda     _at2
+	and     #$08
+	beq     L582E
+;
+; pvx = 0;
+;
+L5ABD:	ldx     #$00
+	txa
+	sta     _pvx
+	sta     _pvx+1
+;
+; prx = (cx1 + 1) << 4;
+;
+	lda     _cx1
+	clc
+	adc     #$01
+	asl     a
+	asl     a
+	asl     a
+	asl     a
+;
+; } else if (pvx > 0) {
+;
+	jmp     L5AD1
+L5813:	lda     _pvx
+	cmp     #$01
+	lda     _pvx+1
+	sbc     #$00
+	bvs     L5828
+	eor     #$80
+L5828:	bpl     L582E
+;
+; cx1 = (prx + 7) >> 4;
+;
+	ldx     #$00
+	lda     _prx
+	clc
+	adc     #$07
+	bcc     L582C
+	inx
+L582C:	jsr     shrax4
+	sta     _cx1
+;
+; cm_two_points_vertical ();
+;
+	jsr     _cm_two_points_vertical
+;
+; if ((at1 & 8) || (at2 & 8)) {
+;
+	lda     _at1
+	and     #$08
+	bne     L5ABE
+	lda     _at2
+	and     #$08
+	beq     L582E
+;
+; pvx = 0;
+;
+L5ABE:	ldx     #$00
+	txa
+	sta     _pvx
+	sta     _pvx+1
+;
+; prx = ((cx1 - 1) << 4) + 8;
+;
+	lda     _cx1
+	sec
+	sbc     #$01
+	asl     a
+	asl     a
+	asl     a
+	asl     a
+	clc
+	adc     #$08
+L5AD1:	sta     _prx
+;
+; px = prx << FIX_BITS;
+;
+	jsr     aslax4
+	sta     _px
+	stx     _px+1
+;
+; if (ppossee || pgotten) {
+;
+L582E:	lda     _ppossee
+	bne     L583E
+	lda     _pgotten
+	beq     L5AC7
+;
+; if (ABS (pvx) > PLAYER_VX_MIN && (!pslip || ppressingh)) {
+;
+L583E:	ldx     _pvx+1
+	cpx     #$80
+	bcc     L5844
+	lda     _pvx
+	ldx     _pvx+1
+	jsr     negax
+	jmp     L5847
+L5844:	lda     _pvx
+	ldx     _pvx+1
+L5847:	cmp     #$11
+	txa
+	sbc     #$00
+	bvs     L584B
+	eor     #$80
+L584B:	asl     a
+	lda     #$00
+	bcc     L5A97
+	lda     _pslip
+	beq     L5AC4
+	lda     _ppressingh
+	beq     L5A97
+;
+; pfr = PCELL_WALK_BASE + ((prx >> 4) & 3);
+;
+L5AC4:	lda     _prx
+	lsr     a
+	lsr     a
+	lsr     a
+	lsr     a
+	and     #$03
+	clc
+	adc     #$01
+;
+; } else pfr = PCELL_STANDING;
+;
+	jmp     L5A97
+;
+; pfr = PCELL_AIRBORNE;
+;
+L5AC7:	lda     #$15
+L5A97:	sta     _pfr
+;
+; px_world = (n_pant << 8) | prx;
+;
+	lda     _prx
+	sta     _px_world
+	lda     _n_pant
+	sta     _px_world+1
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ player_render (void)
+; ---------------------------------------------------------------
+
+.segment	"ROM2"
+
+.proc	_player_render: near
+
+.segment	"ROM2"
+
+;
+; if (half_life || !pflickers) oam_index = oam_meta_spr (
+;
+	lda     _half_life
+	bne     L5860
+	lda     _pflickers
+	beq     L5860
+	rts
+;
+; px_world - cam_pos,
+;
+L5860:	jsr     decsp3
+	lda     _px_world
+	sec
+	sbc     _cam_pos
+	pha
+	lda     _px_world+1
+	sbc     _cam_pos+1
+	pla
+	ldy     #$02
+	sta     (sp),y
+;
+; SPRITE_ADJUST + pry,
+;
+	lda     _pry
+	clc
+	adc     #$FF
+	pha
+	lda     #$00
+	adc     #$FF
+	pla
+	dey
+	sta     (sp),y
+;
+; oam_index,
+;
+	lda     _oam_index
+	dey
+	sta     (sp),y
+;
+; spr_pl [pfacing + pfr]
+;
+	ldx     #$00
+	lda     _pfacing
+	clc
+	adc     _pfr
+	bcc     L5AD8
+	inx
+L5AD8:	stx     tmp1
+	asl     a
+	rol     tmp1
+	clc
+	adc     #<(_spr_pl)
+;
+; );
+;
+	sta     ptr1
+;
+; spr_pl [pfacing + pfr]
+;
+	lda     tmp1
+	adc     #>(_spr_pl)
+;
+; );
+;
+	sta     ptr1+1
+	iny
+	lda     (ptr1),y
+	tax
+	dey
+	lda     (ptr1),y
+	jsr     _oam_meta_spr
+	sta     _oam_index
 ;
 ; }
 ;
@@ -22547,9 +24251,9 @@ L57C8:	sta     _cyaux
 ;
 ; gpint = col_idx << 2;
 ;
-	ldx     #$00
 	lda     _col_idx
-	jsr     aslax2
+	ldx     _col_idx+1
+	jsr     shlax2
 	sta     _gpint
 	stx     _gpint+1
 ;
@@ -22586,20 +24290,25 @@ L57C8:	sta     _cyaux
 	and     #$1F
 	sta     _rdc
 ;
-; if (!state_ctr) {
-;
-	lda     _state_ctr
-	jne     L57CF
-;
-; gp_addr = ((col_idx & 8) ? NAMETABLE_B : NAMETABLE_A) + 0x03c0 + (col_idx & 0x7);
+; rdd = (col_idx & 8);
 ;
 	lda     _col_idx
 	and     #$08
-	beq     L5635
+	sta     _rdd
+;
+; if (!state_ctr) {
+;
+	lda     _state_ctr
+	jne     L5AE0
+;
+; gp_addr = (rdd ? NAMETABLE_B : NAMETABLE_A) + 0x03c0 + (col_idx & 0x7);
+;
+	lda     _rdd
+	beq     L587C
 	ldx     #$24
-	jmp     L57CB
-L5635:	ldx     #$20
-L57CB:	lda     #$00
+	jmp     L5ADC
+L587C:	ldx     #$20
+L5ADC:	lda     #$00
 	clc
 	adc     #$C0
 	sta     ptr1
@@ -22611,9 +24320,9 @@ L57CB:	lda     #$00
 	clc
 	adc     ptr1
 	ldx     ptr1+1
-	bcc     L57D3
+	bcc     L5AE2
 	inx
-L57D3:	sta     _gp_addr
+L5AE2:	sta     _gp_addr
 	stx     _gp_addr+1
 ;
 ; gp_gen = (unsigned char *) col_ptr;
@@ -22630,15 +24339,15 @@ L57D3:	sta     _gp_addr
 ;
 ; rda = *gp_gen ++;
 ;
-L563E:	lda     _gp_gen
+L5885:	lda     _gp_gen
 	ldx     _gp_gen+1
 	sta     regsave
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5643
+	bcc     L588A
 	inx
-L5643:	sta     _gp_gen
+L588A:	sta     _gp_gen
 	stx     _gp_gen+1
 	ldy     #$00
 	lda     (regsave),y
@@ -22658,9 +24367,9 @@ L5643:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L564A
+	bcc     L5891
 	inx
-L564A:	sta     _gp_gen
+L5891:	sta     _gp_gen
 	stx     _gp_gen+1
 	ldy     #$00
 	lda     (regsave),y
@@ -22682,9 +24391,9 @@ L564A:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5651
+	bcc     L5898
 	inx
-L5651:	sta     _gp_gen
+L5898:	sta     _gp_gen
 	stx     _gp_gen+1
 	ldy     #$00
 	lda     (regsave),y
@@ -22706,9 +24415,9 @@ L5651:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5658
+	bcc     L589F
 	inx
-L5658:	sta     _gp_gen
+L589F:	sta     _gp_gen
 	stx     _gp_gen+1
 	ldy     #$00
 	lda     (regsave),y
@@ -22730,9 +24439,9 @@ L5658:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L565E
+	bcc     L58A5
 	inx
-L565E:	sta     _gp_ul
+L58A5:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr+1
 	ldy     #$00
@@ -22746,9 +24455,9 @@ L565E:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5663
+	bcc     L58AA
 	inx
-L5663:	sta     _gp_ul
+L58AA:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr
 	sta     (regsave),y
@@ -22761,9 +24470,9 @@ L5663:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5668
+	bcc     L58AF
 	inx
-L5668:	sta     _gp_ul
+L58AF:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _rdt
 	sta     (regsave),y
@@ -22774,49 +24483,49 @@ L5668:	sta     _gp_ul
 	clc
 	adc     _gp_addr
 	sta     _gp_addr
-	bcc     L566C
+	bcc     L58B3
 	inc     _gp_addr+1
 ;
 ; } while (-- gpit);
 ;
-L566C:	dec     _gpit
+L58B3:	dec     _gpit
 	lda     _gpit
 	tax
-	jne     L563E
+	jne     L5885
 ;
-; col_v_offset = 0;
+; col_v_offset = scr_v_offset = 0;
 ;
+	sta     _scr_v_offset
 	sta     _col_v_offset
 	sta     _col_v_offset+1
 ;
 ; } else if (state_ctr < 7) {
 ;
-	jmp     L57D2
-L57CF:	lda     _state_ctr
+	jmp     L5AE1
+L5AE0:	lda     _state_ctr
 	cmp     #$07
-	jcs     L57D0
+	jcs     L5AE1
 ;
-; gp_addr = ((col_idx & 8) ? NAMETABLE_B : NAMETABLE_A) + rdc + col_v_offset;
+; gp_addr = (rdd ? NAMETABLE_B : NAMETABLE_A) + rdc + col_v_offset;
 ;
-	lda     _col_idx
-	and     #$08
-	beq     L5677
+	lda     _rdd
+	beq     L58BE
 	ldx     #$24
-	jmp     L57CC
-L5677:	ldx     #$20
-L57CC:	lda     #$00
+	jmp     L5ADD
+L58BE:	ldx     #$20
+L5ADD:	lda     #$00
 	clc
 	adc     _rdc
-	bcc     L57CD
+	bcc     L5ADE
 	inx
 	clc
-L57CD:	adc     _col_v_offset
+L5ADE:	adc     _col_v_offset
 	sta     _gp_addr
 	txa
 	adc     _col_v_offset+1
 	sta     _gp_addr+1
 ;
-; gp_gen = (unsigned char *) (col_ptr + (state_ctr << 2) - 4);
+; gp_aux = (unsigned char *) (col_ptr + (state_ctr << 2) - 4);
 ;
 	ldx     #$00
 	lda     _state_ctr
@@ -22830,9 +24539,14 @@ L57CD:	adc     _col_v_offset
 	pla
 	sec
 	sbc     #$04
-	bcs     L567F
+	bcs     L58C6
 	dex
-L567F:	sta     _gp_gen
+L58C6:	sta     _gp_aux
+	stx     _gp_aux+1
+;
+; gp_gen = gp_aux;
+;
+	sta     _gp_gen
 	stx     _gp_gen+1
 ;
 ; rda = *gp_gen ++; rdb = *gp_gen ++;
@@ -22841,9 +24555,9 @@ L567F:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5682
+	bcc     L58CB
 	inx
-L5682:	sta     _gp_gen
+L58CB:	sta     _gp_gen
 	stx     _gp_gen+1
 	ldy     #$00
 	lda     (regsave),y
@@ -22854,9 +24568,9 @@ L5682:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5685
+	bcc     L58CE
 	inx
-L5685:	sta     _gp_gen
+L58CE:	sta     _gp_gen
 	stx     _gp_gen+1
 	lda     (regsave),y
 	sta     _rdb
@@ -22869,9 +24583,9 @@ L5685:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5687
+	bcc     L58D0
 	inx
-L5687:	sta     _gp_ul
+L58D0:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr+1
 	ora     #$40
@@ -22885,9 +24599,9 @@ L5687:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L568C
+	bcc     L58D5
 	inx
-L568C:	sta     _gp_ul
+L58D5:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr
 	sta     (regsave),y
@@ -22900,9 +24614,9 @@ L568C:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5691
+	bcc     L58DA
 	inx
-L5691:	sta     _gp_ul
+L58DA:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     #$04
 	sta     (regsave),y
@@ -22915,9 +24629,9 @@ L5691:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5694
+	bcc     L58DD
 	inx
-L5694:	sta     _gp_ul
+L58DD:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_0,y
@@ -22932,9 +24646,9 @@ L5694:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5699
+	bcc     L58E2
 	inx
-L5699:	sta     _gp_ul
+L58E2:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_1,y
@@ -22949,9 +24663,9 @@ L5699:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L569E
+	bcc     L58E7
 	inx
-L569E:	sta     _gp_ul
+L58E7:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_0,y
@@ -22966,9 +24680,9 @@ L569E:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56A3
+	bcc     L58EC
 	inx
-L56A3:	sta     _gp_ul
+L58EC:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_1,y
@@ -22981,20 +24695,20 @@ L56A3:	sta     _gp_ul
 	clc
 	adc     _gp_addr
 	sta     _gp_addr
-	bcc     L56A9
+	bcc     L58F2
 	inc     _gp_addr+1
 ;
 ; UPDATE = MSB (gp_addr) | NT_UPD_HORZ;
 ;
-L56A9:	lda     _gp_ul
+L58F2:	lda     _gp_ul
 	ldx     _gp_ul+1
 	sta     regsave
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56AB
+	bcc     L58F4
 	inx
-L56AB:	sta     _gp_ul
+L58F4:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr+1
 	ora     #$40
@@ -23008,9 +24722,9 @@ L56AB:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56B0
+	bcc     L58F9
 	inx
-L56B0:	sta     _gp_ul
+L58F9:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr
 	sta     (regsave),y
@@ -23023,9 +24737,9 @@ L56B0:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56B5
+	bcc     L58FE
 	inx
-L56B5:	sta     _gp_ul
+L58FE:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     #$04
 	sta     (regsave),y
@@ -23038,9 +24752,9 @@ L56B5:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56B8
+	bcc     L5901
 	inx
-L56B8:	sta     _gp_ul
+L5901:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_2,y
@@ -23055,9 +24769,9 @@ L56B8:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56BD
+	bcc     L5906
 	inx
-L56BD:	sta     _gp_ul
+L5906:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_3,y
@@ -23072,9 +24786,9 @@ L56BD:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56C2
+	bcc     L590B
 	inx
-L56C2:	sta     _gp_ul
+L590B:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_2,y
@@ -23089,9 +24803,9 @@ L56C2:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56C7
+	bcc     L5910
 	inx
-L56C7:	sta     _gp_ul
+L5910:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_3,y
@@ -23104,20 +24818,20 @@ L56C7:	sta     _gp_ul
 	clc
 	adc     _gp_addr
 	sta     _gp_addr
-	bcc     L56CD
+	bcc     L5916
 	inc     _gp_addr+1
 ;
 ; rda = *gp_gen ++; rdb = *gp_gen;
 ;
-L56CD:	lda     _gp_gen
+L5916:	lda     _gp_gen
 	ldx     _gp_gen+1
 	sta     regsave
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56D0
+	bcc     L5919
 	inx
-L56D0:	sta     _gp_gen
+L5919:	sta     _gp_gen
 	stx     _gp_gen+1
 	lda     (regsave),y
 	sta     _rda
@@ -23136,9 +24850,9 @@ L56D0:	sta     _gp_gen
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56D4
+	bcc     L591D
 	inx
-L56D4:	sta     _gp_ul
+L591D:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr+1
 	ora     #$40
@@ -23152,9 +24866,9 @@ L56D4:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56D9
+	bcc     L5922
 	inx
-L56D9:	sta     _gp_ul
+L5922:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr
 	sta     (regsave),y
@@ -23167,9 +24881,9 @@ L56D9:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56DE
+	bcc     L5927
 	inx
-L56DE:	sta     _gp_ul
+L5927:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     #$04
 	sta     (regsave),y
@@ -23182,9 +24896,9 @@ L56DE:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56E1
+	bcc     L592A
 	inx
-L56E1:	sta     _gp_ul
+L592A:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_0,y
@@ -23199,9 +24913,9 @@ L56E1:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56E6
+	bcc     L592F
 	inx
-L56E6:	sta     _gp_ul
+L592F:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_1,y
@@ -23216,9 +24930,9 @@ L56E6:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56EB
+	bcc     L5934
 	inx
-L56EB:	sta     _gp_ul
+L5934:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_0,y
@@ -23233,9 +24947,9 @@ L56EB:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56F0
+	bcc     L5939
 	inx
-L56F0:	sta     _gp_ul
+L5939:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_1,y
@@ -23248,20 +24962,20 @@ L56F0:	sta     _gp_ul
 	clc
 	adc     _gp_addr
 	sta     _gp_addr
-	bcc     L56F6
+	bcc     L593F
 	inc     _gp_addr+1
 ;
 ; UPDATE = MSB (gp_addr) | NT_UPD_HORZ;
 ;
-L56F6:	lda     _gp_ul
+L593F:	lda     _gp_ul
 	ldx     _gp_ul+1
 	sta     regsave
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56F8
+	bcc     L5941
 	inx
-L56F8:	sta     _gp_ul
+L5941:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr+1
 	ora     #$40
@@ -23275,9 +24989,9 @@ L56F8:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L56FD
+	bcc     L5946
 	inx
-L56FD:	sta     _gp_ul
+L5946:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     _gp_addr
 	sta     (regsave),y
@@ -23290,9 +25004,9 @@ L56FD:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5702
+	bcc     L594B
 	inx
-L5702:	sta     _gp_ul
+L594B:	sta     _gp_ul
 	stx     _gp_ul+1
 	lda     #$04
 	sta     (regsave),y
@@ -23305,9 +25019,9 @@ L5702:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5705
+	bcc     L594E
 	inx
-L5705:	sta     _gp_ul
+L594E:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_2,y
@@ -23322,9 +25036,9 @@ L5705:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L570A
+	bcc     L5953
 	inx
-L570A:	sta     _gp_ul
+L5953:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rda
 	lda     _main_ts_tmaps_3,y
@@ -23339,9 +25053,9 @@ L570A:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L570F
+	bcc     L5958
 	inx
-L570F:	sta     _gp_ul
+L5958:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_2,y
@@ -23356,90 +25070,88 @@ L570F:	sta     _gp_ul
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5714
+	bcc     L595D
 	inx
-L5714:	sta     _gp_ul
+L595D:	sta     _gp_ul
 	stx     _gp_ul+1
 	ldy     _rdb
 	lda     _main_ts_tmaps_3,y
 	ldy     #$00
 	sta     (regsave),y
 ;
-; col_v_offset += 128;  
+; col_v_offset += 128;
 ;
 	lda     #$80
 	clc
 	adc     _col_v_offset
 	sta     _col_v_offset
-	jcc     L57D2
+	bcc     L5963
 	inc     _col_v_offset+1
 ;
-; } else {
+; gp_gen = gp_aux;
 ;
-	jmp     L57D2
+L5963:	lda     _gp_aux
+	sta     _gp_gen
+	lda     _gp_aux+1
+	sta     _gp_gen+1
 ;
-; gp_aux = scr_buffer + ((col_idx & 8) ? 192 : 0) + ((col_idx & 0x7) << 1);
+; gp_aux = scr_buffer + (rdd ? 192 : 0) + ((col_idx & 0x7) << 1) + scr_v_offset;
 ;
-L57D0:	lda     _col_idx
-	and     #$08
-	beq     L5722
+	lda     _rdd
+	beq     L596B
 	lda     #$C0
-L5722:	clc
+L596B:	clc
 	adc     #<(_scr_buffer)
 	sta     ptr1
-	lda     #$00
+	tya
 	adc     #>(_scr_buffer)
 	sta     ptr1+1
 	lda     _col_idx
 	ldx     #$00
 	and     #$07
 	asl     a
-	bcc     L57CE
+	bcc     L5ADF
 	inx
 	clc
-L57CE:	adc     ptr1
-	sta     _gp_aux
+L5ADF:	adc     ptr1
+	pha
 	txa
 	adc     ptr1+1
-	sta     _gp_aux+1
+	tax
+	pla
+	clc
+	adc     _scr_v_offset
+	bcc     L5ADA
+	inx
+L5ADA:	sta     _gp_aux
+	stx     _gp_aux+1
 ;
-; gp_gen = (unsigned char *) col_ptr;
+; *gp_aux ++ = *gp_gen ++; *gp_aux = *gp_gen ++; gp_aux += 15;
 ;
-	lda     _col_ptr
-	sta     _gp_gen
-	lda     _col_ptr+1
-	sta     _gp_gen+1
-;
-; gpit = 12; do {
-;
-	lda     #$0C
-	sta     _gpit
-;
-; *gp_aux ++ = *gp_gen;
-;
-L572A:	lda     _gp_aux
-	ldx     _gp_aux+1
 	sta     regsave
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L572E
+	bcc     L5970
 	inx
-L572E:	sta     _gp_aux
+L5970:	sta     _gp_aux
 	stx     _gp_aux+1
 	lda     regsave
 	ldx     regsave+1
 	jsr     pushax
 	lda     _gp_gen
-	sta     ptr1
-	lda     _gp_gen+1
-	sta     ptr1+1
+	ldx     _gp_gen+1
+	sta     regsave
+	stx     regsave+1
+	clc
+	adc     #$01
+	bcc     L5972
+	inx
+L5972:	sta     _gp_gen
+	stx     _gp_gen+1
 	ldy     #$00
-	lda     (ptr1),y
+	lda     (regsave),y
 	jsr     staspidx
-;
-; *gp_aux = *gp_gen ++;
-;
 	lda     _gp_aux
 	ldx     _gp_aux+1
 	jsr     pushax
@@ -23449,31 +25161,69 @@ L572E:	sta     _gp_aux
 	stx     regsave+1
 	clc
 	adc     #$01
-	bcc     L5732
+	bcc     L5975
 	inx
-L5732:	sta     _gp_gen
+L5975:	sta     _gp_gen
 	stx     _gp_gen+1
 	ldy     #$00
 	lda     (regsave),y
 	jsr     staspidx
-;
-; gp_aux += 15;
-;
 	lda     #$0F
 	clc
 	adc     _gp_aux
 	sta     _gp_aux
-	bcc     L5735
+	bcc     L5978
 	inc     _gp_aux+1
 ;
-; } while (-- gpit);
+; *gp_aux ++ = *gp_gen ++; *gp_aux = *gp_gen;
 ;
-L5735:	dec     _gpit
-	bne     L572A
+L5978:	lda     _gp_aux
+	ldx     _gp_aux+1
+	sta     regsave
+	stx     regsave+1
+	clc
+	adc     #$01
+	bcc     L597A
+	inx
+L597A:	sta     _gp_aux
+	stx     _gp_aux+1
+	lda     regsave
+	ldx     regsave+1
+	jsr     pushax
+	lda     _gp_gen
+	ldx     _gp_gen+1
+	sta     regsave
+	stx     regsave+1
+	clc
+	adc     #$01
+	bcc     L597C
+	inx
+L597C:	sta     _gp_gen
+	stx     _gp_gen+1
+	ldy     #$00
+	lda     (regsave),y
+	jsr     staspidx
+	lda     _gp_aux
+	ldx     _gp_aux+1
+	jsr     pushax
+	lda     _gp_gen
+	sta     ptr1
+	lda     _gp_gen+1
+	sta     ptr1+1
+	ldy     #$00
+	lda     (ptr1),y
+	jsr     staspidx
+;
+; scr_v_offset += 32;
+;
+	lda     #$20
+	clc
+	adc     _scr_v_offset
+	sta     _scr_v_offset
 ;
 ; state_ctr = (state_ctr + 1) & 7;
 ;
-L57D2:	lda     _state_ctr
+L5AE1:	lda     _state_ctr
 	clc
 	adc     #$01
 	and     #$07
@@ -23617,8 +25367,8 @@ L57D2:	lda     _state_ctr
 	lda     _cam_pos_old
 	ldx     _cam_pos_old+1
 	jsr     tosicmp
-	bmi     L5756
-	beq     L5756
+	bmi     L59A1
+	beq     L59A1
 ;
 ; col_idx = (cam_pos >> 5) + 9;
 ;
@@ -23628,17 +25378,19 @@ L57D2:	lda     _state_ctr
 	jsr     asrax1
 	clc
 	adc     #$09
+	bcc     L59AE
+	inx
 ;
 ; } else if (cam_pos < cam_pos_old) {
 ;
-	jmp     L57D6
-L5756:	lda     _cam_pos
+	jmp     L59AE
+L59A1:	lda     _cam_pos
 	cmp     _cam_pos_old
 	lda     _cam_pos+1
 	sbc     _cam_pos_old+1
-	bvc     L57D4
+	bvc     L5AE3
 	eor     #$80
-L57D4:	bpl     L575E
+L5AE3:	bpl     L59A9
 ;
 ; col_idx = (cam_pos >> 5) - 1;
 ;
@@ -23648,7 +25400,10 @@ L57D4:	bpl     L575E
 	jsr     asrax1
 	sec
 	sbc     #$01
-L57D6:	sta     _col_idx
+	bcs     L59AE
+	dex
+L59AE:	sta     _col_idx
+	stx     _col_idx+1
 ;
 ; scroll_paint_chunk ();
 ;
@@ -23656,7 +25411,7 @@ L57D6:	sta     _col_idx
 ;
 ; cam_pos_old = cam_pos;
 ;
-L575E:	lda     _cam_pos
+L59A9:	lda     _cam_pos
 	sta     _cam_pos_old
 	lda     _cam_pos+1
 	sta     _cam_pos_old+1
@@ -23686,14 +25441,14 @@ L575E:	lda     _cam_pos
 	jsr     asrax1
 	sta     _cx1
 	lda     _cx1
-	beq     L57D7
+	beq     L5AE6
 	sec
 	sbc     #$01
 	sta     _cx1
 ;
 ; cx2 = cx1 + 10;
 ;
-L57D7:	lda     _cx1
+L5AE6:	lda     _cx1
 	clc
 	adc     #$0A
 	sta     _cx2
@@ -23701,36 +25456,48 @@ L57D7:	lda     _cx1
 ; for (col_idx = cx1; col_idx <= cx2; col_idx ++) {
 ;
 	lda     _cx1
-L57D9:	sta     _col_idx
+	sta     _col_idx
+	lda     #$00
+	sta     _col_idx+1
+L59BC:	lda     _col_idx
 	sec
 	sbc     _cx2
-	bcc     L5774
-	bne     L5772
+	sta     tmp1
+	lda     _col_idx+1
+	sbc     #$00
+	ora     tmp1
+	bcc     L59BF
+	bne     L59BD
 ;
 ; scroll_draw_one_chunk_completely ();
 ;
-L5774:	jsr     _scroll_draw_one_chunk_completely
+L59BF:	jsr     _scroll_draw_one_chunk_completely
 ;
 ; for (col_idx = cx1; col_idx <= cx2; col_idx ++) {
 ;
 	lda     _col_idx
+	ldx     _col_idx+1
 	clc
 	adc     #$01
-	jmp     L57D9
+	bcc     L59C4
+	inx
+L59C4:	sta     _col_idx
+	stx     _col_idx+1
+	jmp     L59BC
 ;
 ; }
 ;
-L5772:	rts
+L59BD:	rts
 
 .endproc
 
 ; ---------------------------------------------------------------
-; void __near__ test_scroller (void)
+; void __near__ game_init (void)
 ; ---------------------------------------------------------------
 
 .segment	"CODE"
 
-.proc	_test_scroller: near
+.proc	_game_init: near
 
 .segment	"CODE"
 
@@ -23749,37 +25516,281 @@ L5772:	rts
 	txa
 	jsr     _tokumaru_lzss
 ;
+; tokumaru_lzss (main_ss_patterns_c, 4096);
+;
+	lda     #<(_main_ss_patterns_c)
+	ldx     #>(_main_ss_patterns_c)
+	jsr     pushax
+	ldx     #$10
+	lda     #$00
+	jsr     _tokumaru_lzss
+;
+; level = 3; n_pant = 9;
+;
+	lda     #$03
+	sta     _level
+	lda     #$09
+	sta     _n_pant
+;
+; bankswitch (2);
+;
+	lda     #$02
+	jsr     _bankswitch
+;
+; player_init ();
+;
+	jmp     _player_init
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ game_strip_setup (void)
+; ---------------------------------------------------------------
+
+.segment	"CODE"
+
+.proc	_game_strip_setup: near
+
+.segment	"CODE"
+
+;
+; base_pant = (level << 4) + (level << 2); // * 20 
+;
+	ldx     #$00
+	lda     _level
+	jsr     aslax4
+	sta     ptr1
+	stx     ptr1+1
+	ldx     #$00
+	lda     _level
+	jsr     aslax2
+	clc
+	adc     ptr1
+	sta     _base_pant
+	txa
+	adc     ptr1+1
+;
+; map_ptr = map_0 + (base_pant << 7) + (base_pant << 6); // * 192
+;
+	ldx     #$00
+	lda     _base_pant
+	jsr     aslax4
+	jsr     aslax3
+	clc
+	adc     #<(_map_0)
+	sta     ptr1
+	txa
+	adc     #>(_map_0)
+	sta     ptr1+1
+	ldx     #$00
+	lda     _base_pant
+	jsr     aslax4
+	jsr     aslax2
+	clc
+	adc     ptr1
+	sta     _map_ptr
+	txa
+	adc     ptr1+1
+	sta     _map_ptr+1
+;
+; px_world = (n_pant << 8) | prx;
+;
+	lda     _prx
+	sta     _px_world
+	lda     _n_pant
+	sta     _px_world+1
+;
+; section_x0 = 0; section_x1 = 4864; // 320*16-256
+;
+	lda     #$00
+	sta     _section_x0
+	sta     _section_x0+1
+	ldx     #$13
+	sta     _section_x1
+	stx     _section_x1+1
+;
+; section = (signed int *) sections [level]; gpit = 1; while (section [gpit] < 5120) {
+;
+	tax
+	lda     _level
+	asl     a
+	bcc     L5AEC
+	inx
+	clc
+L5AEC:	adc     #<(_sections)
+	sta     ptr1
+	txa
+	adc     #>(_sections)
+	sta     ptr1+1
+	ldy     #$01
+	lda     (ptr1),y
+	sta     _section+1
+	dey
+	lda     (ptr1),y
+	sta     _section
+	ldx     #$00
+	lda     #$01
+	sta     _gpit
+	jmp     L5AF1
+;
+; if (px_world < section [gpit]) {
+;
+L59EB:	lda     _px_world
+	ldx     _px_world+1
+	jsr     pushax
+	ldx     #$00
+	lda     _gpit
+	asl     a
+	bcc     L5AED
+	inx
+	clc
+L5AED:	adc     _section
+	sta     ptr1
+	txa
+	adc     _section+1
+	sta     ptr1+1
+	ldy     #$01
+	lda     (ptr1),y
+	tax
+	dey
+	lda     (ptr1),y
+	jsr     tosicmp
+	bpl     L59F1
+;
+; section_x1 = section [gpit] - 256;
+;
+	ldx     #$00
+	lda     _gpit
+	asl     a
+	bcc     L5AEE
+	inx
+	clc
+L5AEE:	adc     _section
+	sta     ptr1
+	txa
+	adc     _section+1
+	sta     ptr1+1
+	ldy     #$01
+	lda     (ptr1),y
+	tax
+	dey
+	lda     (ptr1),y
+	dex
+	sta     _section_x1
+	stx     _section_x1+1
+;
+; break;
+;
+	jmp     _camera_do
+;
+; section_x0 = section [gpit];
+;
+L59F1:	ldx     #$00
+	lda     _gpit
+	asl     a
+	bcc     L5AEF
+	inx
+	clc
+L5AEF:	adc     _section
+	sta     ptr1
+	txa
+	adc     _section+1
+	sta     ptr1+1
+	ldy     #$01
+	lda     (ptr1),y
+	sta     _section_x0+1
+	dey
+	lda     (ptr1),y
+	sta     _section_x0
+;
+; gpit ++;
+;
+	lda     _gpit
+	clc
+	adc     #$01
+	sta     _gpit
+;
+; section = (signed int *) sections [level]; gpit = 1; while (section [gpit] < 5120) {
+;
+	ldx     #$00
+L5AF1:	lda     _gpit
+	asl     a
+	bcc     L5AF0
+	inx
+	clc
+L5AF0:	adc     _section
+	sta     ptr1
+	txa
+	adc     _section+1
+	sta     ptr1+1
+	iny
+	lda     (ptr1),y
+	tax
+	dey
+	lda     (ptr1),y
+	cmp     #$00
+	txa
+	sbc     #$14
+	bvc     L59F0
+	eor     #$80
+L59F0:	jmi     L59EB
+;
+; camera_do ();
+;
+	jmp     _camera_do
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ game_loop (void)
+; ---------------------------------------------------------------
+
+.segment	"CODE"
+
+.proc	_game_loop: near
+
+.segment	"CODE"
+
+;
+; bankswitch (1);
+;
+	lda     #$01
+	jsr     _bankswitch
+;
 ; pal_bg (mypal_game_bg0);
 ;
 	lda     #<(_mypal_game_bg0)
 	ldx     #>(_mypal_game_bg0)
 	jsr     _pal_bg
 ;
-; bankswitch (0);
+; pal_spr (mypal_game_fg0);
 ;
-	lda     #$00
+	lda     #<(_mypal_game_fg0)
+	ldx     #>(_mypal_game_fg0)
+	jsr     _pal_spr
+;
+; bankswitch (2);
+;
+	lda     #$02
 	jsr     _bankswitch
 ;
-; pal_bright (4);
+; game_strip_setup ();
 ;
-	lda     #$04
-	jsr     _pal_bright
+	jsr     _game_strip_setup
 ;
 ; ppu_on_all ();
 ;
 	jsr     _ppu_on_all
 ;
-; cam_pos = 0;
+; scroll (cam_pos & 0x1ff, 448);
 ;
-	lda     #$00
-	sta     _cam_pos
-	sta     _cam_pos+1
-;
-; scroll (0, 464);
-;
-	jsr     push0
+	lda     _cam_pos+1
+	and     #$01
+	tax
+	lda     _cam_pos
+	jsr     pushax
 	ldx     #$01
-	lda     #$D0
+	lda     #$C0
 	jsr     _scroll
 ;
 ; set_vram_update (update_list);
@@ -23788,20 +25799,59 @@ L5772:	rts
 	ldx     #>(_update_list)
 	jsr     _set_vram_update
 ;
+; bankswitch (0);
+;
+	lda     #$00
+	jsr     _bankswitch
+;
 ; scroll_draw_screen ();
 ;
 	jsr     _scroll_draw_screen
 ;
-; cam_pos ++;
+; bankswitch (2);
 ;
-L578F:	lda     _cam_pos
-	ldx     _cam_pos+1
-	clc
-	adc     #$01
-	bcc     L5794
-	inx
-L5794:	sta     _cam_pos
-	stx     _cam_pos+1
+	lda     #$02
+	jsr     _bankswitch
+;
+; SCR_BUFFER_PTR_UPD;
+;
+	lda     _n_pant
+	and     #$01
+	beq     L5A17
+	lda     #$C0
+L5A17:	clc
+	adc     #<(_scr_buffer)
+	sta     _scr_buffer_ptr
+	lda     #$00
+	adc     #>(_scr_buffer)
+	sta     _scr_buffer_ptr+1
+;
+; fade_in ();
+;
+	jsr     _fade_in
+;
+; half_life = 0;
+;
+	lda     #$00
+	sta     _half_life
+;
+; game_res = 0;
+;
+	tax
+	sta     _game_res
+;
+; while (!game_res) {
+;
+	jmp     L5A20
+;
+; half_life = 1 - half_life;
+;
+L5AF5:	lda     #$01
+	sec
+	sbc     _half_life
+	sta     _half_life
+	txa
+	sbc     #$00
 ;
 ; gp_ul = update_list;
 ;
@@ -23810,25 +25860,73 @@ L5794:	sta     _cam_pos
 	lda     #>(_update_list)
 	sta     _gp_ul+1
 ;
+; oam_index = 4;
+;
+	lda     #$04
+	sta     _oam_index
+;
+; pad0 = pad_poll (0);
+;
+	lda     #$00
+	jsr     _pad_poll
+	sta     _pad0
+;
+; bankswitch (2);
+;
+	lda     #$02
+	jsr     _bankswitch
+;
+; player_move ();
+;
+	jsr     _player_move
+;
+; camera_do ();
+;
+	jsr     _camera_do
+;
+; player_render ();
+;
+	jsr     _player_render
+;
+; if (px_world < section_x0 || px_world > section_x1 + 256) game_res = 3;
+;
+	lda     _px_world
+	cmp     _section_x0
+	lda     _px_world+1
+	sbc     _section_x0+1
+	bvc     L5AF2
+	eor     #$80
+L5AF2:	bmi     L5AF6
+	lda     _px_world
+	ldx     _px_world+1
+	jsr     pushax
+	lda     _section_x1
+	ldx     _section_x1+1
+	inx
+	jsr     tosicmp
+	beq     L5AF8
+	bmi     L5AF8
+L5AF6:	lda     #$03
+	sta     _game_res
+;
+; bankswitch (0);
+;
+L5AF8:	lda     #$00
+	jsr     _bankswitch
+;
 ; scroll_to ();
 ;
 	jsr     _scroll_to
 ;
-; scroll (cam_pos & 0x1ff, 464);
+; bankswitch (2);
 ;
-	lda     _cam_pos+1
-	and     #$01
-	tax
-	lda     _cam_pos
-	jsr     pushax
-	ldx     #$01
-	lda     #$D0
-	jsr     _scroll
+	lda     #$02
+	jsr     _bankswitch
 ;
-; *((unsigned char*)0x2001) = 0x1e;
+; oam_hide_rest (oam_index);
 ;
-	lda     #$1E
-	sta     $2001
+	lda     _oam_index
+	jsr     _oam_hide_rest
 ;
 ; *gp_ul = NT_UPD_EOF;
 ;
@@ -23840,18 +25938,55 @@ L5794:	sta     _cam_pos
 	ldy     #$00
 	sta     (ptr1),y
 ;
+; *((unsigned char*)0x2001) = 0x1e;
+;
+	lda     #$1E
+	sta     $2001
+;
+; scroll (cam_pos & 0x1ff, 448);
+;
+	lda     _cam_pos+1
+	and     #$01
+	tax
+	lda     _cam_pos
+	jsr     pushax
+	ldx     #$01
+	lda     #$C0
+	jsr     _scroll
+;
 ; ppu_wait_nmi ();
 ;
 	jsr     _ppu_wait_nmi
 ;
 ; *((unsigned char*)0x2001) = 0x1f;
 ;
+	ldx     #$00
 	lda     #$1F
 	sta     $2001
 ;
-; while (1) {
+; while (!game_res) {
 ;
-	jmp     L578F
+L5A20:	lda     _game_res
+	jeq     L5AF5
+;
+; fade_out ();
+;
+	jsr     _fade_out
+;
+; oam_hide_rest (0);
+;
+	lda     #$00
+	jsr     _oam_hide_rest
+;
+; set_vram_update (0);
+;
+	ldx     #$00
+	txa
+	jsr     _set_vram_update
+;
+; ppu_off ();
+;
+	jmp     _ppu_off
 
 .endproc
 
@@ -23871,11 +26006,11 @@ L5794:	sta     _cam_pos
 	jsr     _ppu_system
 	stx     tmp1
 	ora     tmp1
-	beq     L57A7
+	beq     L5A51
 	lda     #$3C
-	jmp     L57DA
-L57A7:	lda     #$32
-L57DA:	sta     _ticks
+	jmp     L5AF9
+L5A51:	lda     #$32
+L5AF9:	sta     _ticks
 ;
 ; halfticks = ticks >> 1;
 ;
@@ -23910,23 +26045,74 @@ L57DA:	sta     _ticks
 	lda     #$00
 	jsr     _pal_bright
 ;
-; map_ptr = map_0;
+; game_init ();
 ;
-	lda     #<(_map_0)
-	sta     _map_ptr
-	lda     #>(_map_0)
-	sta     _map_ptr+1
+	jsr     _game_init
 ;
-; cam_pos = (n_pant << 8) | prx;
+; game_loop ();
 ;
-	lda     _prx
-	sta     _cam_pos
-	lda     _n_pant
-	sta     _cam_pos+1
+L5A63:	jsr     _game_loop
 ;
-; test_scroller ();
+; switch (game_res) {
 ;
-	jmp     _test_scroller
+	lda     _game_res
+;
+; }
+;
+	cmp     #$01
+	beq     L5AFA
+	cmp     #$02
+	beq     L5AFB
+	jmp     L5A63
+;
+; level --;
+;
+L5AFA:	lda     _level
+	sec
+	sbc     #$01
+	sta     _level
+;
+; py = 3072; pvy = -PLAYER_VY_JUMP_MAX; pvx = 0;
+;
+	ldx     #$0C
+	lda     #$00
+	sta     _py
+	stx     _py+1
+	ldx     #$FF
+	lda     #$C0
+	sta     _pvy
+	stx     _pvy+1
+	lda     #$00
+	sta     _pvx
+	sta     _pvx+1
+;
+; break;
+;
+	jmp     L5A63
+;
+; level ++;
+;
+L5AFB:	lda     _level
+	clc
+	adc     #$01
+	sta     _level
+;
+; pvx = pvy = 0;
+;
+	lda     #$00
+	sta     _pvy
+	sta     _pvy+1
+	sta     _pvx
+	sta     _pvx+1
+;
+; py = 0;
+;
+	sta     _py
+	sta     _py+1
+;
+; break;
+;
+	jmp     L5A63
 
 .endproc
 

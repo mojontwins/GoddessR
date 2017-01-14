@@ -564,3 +564,15 @@ El cálculo de scr_buffer_ptr lo puedo meter en una macro.
     n_pant ++; SCR_BUFFER_PTR_UPD;
 
 Etc...
+
+~~
+
+Probando más cosas veo que el relleno del buffer de colisión es demasiado lento. Se ve un saltaco, dura más del doble que el resto de las cosas que se hacen.
+
+Tengo que replantearlo. Aunque ahora estoy ansioso por montar el puto motor de movimiento, y el tiempo se acaba hoy. Ar.
+
+He desenrollado y no se nota mucho, pero a lo mejor puedo distribuir por ahi partiendo las 12 lineas entre el resto de mierdas que se hacen... de alguna manera.
+
+~~
+
+Mejor así. He balanceado la carga. Creo que puedo optimizar algo los cáclulos aún, pero ahora casi todos los frames ocupan lo mismo excepto el 8º que vuelve a no durar nada. Lo dejamos por ahora.
