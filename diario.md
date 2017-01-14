@@ -27,16 +27,16 @@ El quid está en dividir los enemigos por pantalla. Estaré procesando 6 enemigo
 Se entiendeo que cam_x_module es la parte LSB de cam_x (o sea, cam_x & 0xff).
 
 Para los 3 primeros, en la pantalla de la izquierda:
-	- Si en_x < cam_x_module -> NO
-	- Si en_x >= cam_x_module -> SI
+    - Si en_x < cam_x_module -> NO
+    - Si en_x >= cam_x_module -> SI
 
-	spr_x = en_x - cam_x_module;
+    spr_x = en_x - cam_x_module;
 
 Para los 3 últimos, en la pantalla de la derecha:
-	- Si en_x <= cam_x_module - 16 -> SI
-	- Si en_x > cam_x_module - 16 -> NO
+    - Si en_x <= cam_x_module - 16 -> SI
+    - Si en_x > cam_x_module - 16 -> NO
 
-	spr_x = 256 - cam_x_module + en_x
+    spr_x = 256 - cam_x_module + en_x
 
 Lo dejo aquí apuntadico.
 
@@ -66,22 +66,22 @@ Antes de escribir nada, he pensado en una forma mucho mejor para almacenar metat
 
 mkts.exe está modificado para el parámetro deinterlace en todos los targets (aunque el scripting de SMS es algo que aún tengo que probar... Cuando llegue el momento ~ quizá deba escribir scripts para toda la conversión que se hace en yun pero ya). Ahora tengo que hacer el exporter del mapa. Lo malo es que lo chulo del mapa eran las estrellicas y las estrellicas se ponían a vuelo. Voy a pensar en qué hacer. Primero de todo, la forma de modificar el mapa en tiempo real era que, al ir a imprimir el tile "t"...
 
-	if (t == 0) {
-		rda = rand8 ();
-		if (level) {
-			t = (rda & 31) == 1 ? t = 45 + (rand8 () & 1) : 44;
-		} else {
-			if ((rda & 15) < 7) t = 40 + ((n_pant + rdx + rdy + rdy) & 3);
-		}
-	} else if (t == 10) {
-		if (map_buff [rda - 16] != 10) t = 16;
-	}
+    if (t == 0) {
+        rda = rand8 ();
+        if (level) {
+            t = (rda & 31) == 1 ? t = 45 + (rand8 () & 1) : 44;
+        } else {
+            if ((rda & 15) < 7) t = 40 + ((n_pant + rdx + rdy + rdy) & 3);
+        }
+    } else if (t == 10) {
+        if (map_buff [rda - 16] != 10) t = 16;
+    }
 
 "level" se calcula así:
 
-	level = (n_pant == 0 || n_pant == 60 || 
-		(n_pant >= 57 && n_pant <= 59) ||
-		(n_pant >= 76 && n_pant <= 79) );
+    level = (n_pant == 0 || n_pant == 60 || 
+        (n_pant >= 57 && n_pant <= 59) ||
+        (n_pant >= 76 && n_pant <= 79) );
 
 Voy a necesitar un preprocesador del .map de entrada para introducir todos esos cambios. También tengo que introducir el offset, eso lo puedo hacer de entrada, y deshacerlo en el conversor, que es lo suyo. Nada de cuadrados negros como primer tile, qué atraso.
 
@@ -163,48 +163,48 @@ Hoy he estado a otras cosas, pero voy a apuntar unos cuantos hechos que me servi
 - A la hora de actualizar cosas en la pantalla (por ejemplo, chack chacks): n_pant & 1 ? NAMETABLE_B : NAMETABLE_A
 - Actualizamos levemente los cálculos de pongpong
 
-	// Calculate memory address of current column [col_idx * 24]
-	gpint = col_idx << 2;
-	// 24 = 12 * 2 = (4*3)*2
-	col_ptr = map_ptr + ((gpint + gpint + gpint) << 1);
+    // Calculate memory address of current column [col_idx * 24]
+    gpint = col_idx << 2;
+    // 24 = 12 * 2 = (4*3)*2
+    col_ptr = map_ptr + ((gpint + gpint + gpint) << 1);
 
-	// VRAM address
-	rdc = gpint & 31;
+    // VRAM address
+    rdc = gpint & 31;
 
-	// which nametable?
-	if (col_idx & 8) {
-		col_adr = NAMETABLE_B + (TOP_ADJUST << 5) + rdc;
-		col_attr_adr = NAMETABLE_B + ((TOP_ADJUST >> 2) << 3) + 0x03c0 + (rdc >> 2);
-	} else {
-		col_adr = NAMETABLE_A + (TOP_ADJUST << 5) + rdc;
-		col_attr_adr = NAMETABLE_A + ((TOP_ADJUST >> 2) << 3) + 0x03c0 + (rdc >> 2);
-	}
+    // which nametable?
+    if (col_idx & 8) {
+        col_adr = NAMETABLE_B + (TOP_ADJUST << 5) + rdc;
+        col_attr_adr = NAMETABLE_B + ((TOP_ADJUST >> 2) << 3) + 0x03c0 + (rdc >> 2);
+    } else {
+        col_adr = NAMETABLE_A + (TOP_ADJUST << 5) + rdc;
+        col_attr_adr = NAMETABLE_A + ((TOP_ADJUST >> 2) << 3) + 0x03c0 + (rdc >> 2);
+    }
 
 Parece que no pero me he quitado de enmedio unos cuantos desplazamientos de 16 bits. Además, TOP_ADJUST será 0, otra cosa que me ahorro. Y atención qué tontería cómo calculo la dirección de los atributos. ¿Cómo no me he dado cuenta de esto antes?
 
-	// Calculate memory address of current column [col_idx * 24]
-	gpint = col_idx << 2;
-	// 24 = 12 * 2 = (4*3)*2
-	col_ptr = map_ptr + ((gpint + gpint + gpint) << 1);
+    // Calculate memory address of current column [col_idx * 24]
+    gpint = col_idx << 2;
+    // 24 = 12 * 2 = (4*3)*2
+    col_ptr = map_ptr + ((gpint + gpint + gpint) << 1);
 
-	// VRAM address
-	rdc = gpint & 31;
+    // VRAM address
+    rdc = gpint & 31;
 
-	// which nametable?
-	if (col_idx & 8) {
-		col_adr = NAMETABLE_B + rdc;
-		col_attr_adr = NAMETABLE_B + 0x03c0 + (col_idx & 0x7);
-	} else {
-		col_adr = NAMETABLE_A + rdc;
-		col_attr_adr = NAMETABLE_A + 0x03c0 + (col_idx & 0x7);
-	}
+    // which nametable?
+    if (col_idx & 8) {
+        col_adr = NAMETABLE_B + rdc;
+        col_attr_adr = NAMETABLE_B + 0x03c0 + (col_idx & 0x7);
+    } else {
+        col_adr = NAMETABLE_A + rdc;
+        col_attr_adr = NAMETABLE_A + 0x03c0 + (col_idx & 0x7);
+    }
 
 Mecano y me queda. Refollúo, he ahorrado un montón sobre pongpong. Y con la organización de los metatiles, más [en realidad esto no es del todo correcto - pongpong no usa metatiles mapeados, sino compuestos por patrones sucesivos; con la nueva organización podré tener el lujo de los metatiles mapeados sin impacto].
 
 Hemos dicho que en los seis primeros tiempos (por ejemplo) pintaremos 6 cachos de 4x4 patrones. El offset vertical debería ir en una variable aparte y ciclarse así tras pintar cada cacho.
 
-	col_v_offset += 128;
-	if (col_v_offset == 768) col_v_offset = 0;
+    col_v_offset += 128;
+    if (col_v_offset == 768) col_v_offset = 0;
 
 O mejor, col_v_offset se incrementa en 32 tras cada 4 patrones en linea. La linea de comprobación final tampoco sería necesaria: en el tiempo 7, al calcular los atributos, puede ponerse a 0 sin problema.
 
@@ -219,8 +219,8 @@ Hoy me he casao así que no me da mucho tiempo de nada, pero quiero apuntar esto
 
 Yo tengo que exportar arrays para estos cuatro tiles:
 
-A B 
-C D
+    A B 
+    C D
 
 Que además es el orden de los colores en el atributo, así que genial.
 
@@ -228,99 +228,100 @@ Que además es el orden de los colores en el atributo, así que genial.
 
 Al final del día he escrito la función que pinta un chunk y que utilizaré para scrollear. Ha quedado así tras algun afeite más:
 
-void scroll_paint_chunk (void) {
-	// Calculate memory address of current column [col_idx * 24]
-	gpint = col_idx << 2;
-	// 24 = 12 * 2 = (4*3)*2
-	col_ptr = map_ptr + ((gpint + gpint + gpint) << 1);
+    void scroll_paint_chunk (void) {
+        // Calculate memory address of current column [col_idx * 24]
+        gpint = col_idx << 2;
+        // 24 = 12 * 2 = (4*3)*2
+        col_ptr = map_ptr + ((gpint + gpint + gpint) << 1);
 
-	// VRAM address
-	rdc = gpint & 31;
+        // VRAM address
+        rdc = gpint & 31;
 
-	if (!state_ctr) {
-		// State 0: fetch & paint attrs.
-	
-		// which nametable?
-		gp_addr = ((col_idx & 8) ? NAMETABLE_B : NAMETABLE_A) + 0x03c0 + (col_idx & 0x7);
-		gp_gen = (unsigned char *) col_ptr;
+        if (!state_ctr) {
+            // State 0: fetch & paint attrs.
+        
+            // which nametable?
+            gp_addr = ((col_idx & 8) ? NAMETABLE_B : NAMETABLE_A) + 0x03c0 + (col_idx & 0x7);
+            gp_gen = (unsigned char *) col_ptr;
 
-		gpit = 6; while (gpit --) {
-			rda = *gp_gen ++;
-			rdt = attr_lookup_0_0 [rda];
-			rda = *gp_gen ++;
-			rdt += attr_lookup_0_1 [rda];
-			rda = *gp_gen ++;
-			rdt += attr_lookup_0_2 [rda];
-			rda = *gp_gen ++;
-			rdt += attr_lookup_0_3 [rda];
-			*gp_ul ++ = MSB (gp_addr);
-			*gp_ul ++ = LSB (gp_addr);
-			*gp_ul ++= rdt;
-			gp_addr += 8;
-		}
+            gpit = 6; while (gpit --) {
+                rda = *gp_gen ++;
+                rdt = attr_lookup_0_0 [rda];
+                rda = *gp_gen ++;
+                rdt += attr_lookup_0_1 [rda];
+                rda = *gp_gen ++;
+                rdt += attr_lookup_0_2 [rda];
+                rda = *gp_gen ++;
+                rdt += attr_lookup_0_3 [rda];
+                *gp_ul ++ = MSB (gp_addr);
+                *gp_ul ++ = LSB (gp_addr);
+                *gp_ul ++= rdt;
+                gp_addr += 8;
+            }
 
-		col_v_offset = 0;
-	} else if (state_ctr < 7) {
-		// State 1..6: draw patterns. 4x4 chunk
+            col_v_offset = 0;
+        } else if (state_ctr < 7) {
+            // State 1..6: draw patterns. 4x4 chunk
 
-		// which nametable?
-		gp_addr = ((col_idx & 8) ? NAMETABLE_B : NAMETABLE_A) + rdc + col_v_offset;
-		gp_gen = (unsigned char *) (col_ptr + (state_ctr << 2) - 4);
-		
-		// Two metatiles
-		rda = *gp_gen ++; rdb = *gp_gen ++;
-		
-		*gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
-		*gp_ul ++ = LSB (gp_addr);
-		*gp_ul ++ = 4;
-		*gp_ul ++ = main_ts_tmaps_0 [rda];
-		*gp_ul ++ = main_ts_tmaps_1 [rda];
-		*gp_ul ++ = main_ts_tmaps_0 [rdb];
-		*gp_ul ++ = main_ts_tmaps_1 [rdb];
-		
-		gp_addr += 32;
+            // which nametable?
+            gp_addr = ((col_idx & 8) ? NAMETABLE_B : NAMETABLE_A) + rdc + col_v_offset;
+            gp_gen = (unsigned char *) (col_ptr + (state_ctr << 2) - 4);
+            
+            // Two metatiles
+            rda = *gp_gen ++; rdb = *gp_gen ++;
+            
+            *gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
+            *gp_ul ++ = LSB (gp_addr);
+            *gp_ul ++ = 4;
+            *gp_ul ++ = main_ts_tmaps_0 [rda];
+            *gp_ul ++ = main_ts_tmaps_1 [rda];
+            *gp_ul ++ = main_ts_tmaps_0 [rdb];
+            *gp_ul ++ = main_ts_tmaps_1 [rdb];
+            
+            gp_addr += 32;
 
-		*gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
-		*gp_ul ++ = LSB (gp_addr);
-		*gp_ul ++ = 4;
-		*gp_ul ++ = main_ts_tmaps_2 [rda];
-		*gp_ul ++ = main_ts_tmaps_3 [rda];
-		*gp_ul ++ = main_ts_tmaps_2 [rdb];
-		*gp_ul ++ = main_ts_tmaps_3 [rdb];
+            *gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
+            *gp_ul ++ = LSB (gp_addr);
+            *gp_ul ++ = 4;
+            *gp_ul ++ = main_ts_tmaps_2 [rda];
+            *gp_ul ++ = main_ts_tmaps_3 [rda];
+            *gp_ul ++ = main_ts_tmaps_2 [rdb];
+            *gp_ul ++ = main_ts_tmaps_3 [rdb];
 
-		gp_addr += 32;
+            gp_addr += 32;
 
-		// Two metatiles more
-		rda = *gp_gen ++; rdb = *gp_gen ++;
-		
-		*gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
-		*gp_ul ++ = LSB (gp_addr);
-		*gp_ul ++ = 4;
-		*gp_ul ++ = main_ts_tmaps_0 [rda];
-		*gp_ul ++ = main_ts_tmaps_1 [rda];
-		*gp_ul ++ = main_ts_tmaps_0 [rdb];
-		*gp_ul ++ = main_ts_tmaps_1 [rdb];
-		
-		gp_addr += 32;
+            // Two metatiles more
+            rda = *gp_gen ++; rdb = *gp_gen ++;
+            
+            *gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
+            *gp_ul ++ = LSB (gp_addr);
+            *gp_ul ++ = 4;
+            *gp_ul ++ = main_ts_tmaps_0 [rda];
+            *gp_ul ++ = main_ts_tmaps_1 [rda];
+            *gp_ul ++ = main_ts_tmaps_0 [rdb];
+            *gp_ul ++ = main_ts_tmaps_1 [rdb];
+            
+            gp_addr += 32;
 
-		*gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
-		*gp_ul ++ = LSB (gp_addr);
-		*gp_ul ++ = 4;
-		*gp_ul ++ = main_ts_tmaps_2 [rda];
-		*gp_ul ++ = main_ts_tmaps_3 [rda];
-		*gp_ul ++ = main_ts_tmaps_2 [rdb];
-		*gp_ul ++ = main_ts_tmaps_3 [rdb];
+            *gp_ul ++ = MSB (gp_addr) | NT_UPD_HORZ;
+            *gp_ul ++ = LSB (gp_addr);
+            *gp_ul ++ = 4;
+            *gp_ul ++ = main_ts_tmaps_2 [rda];
+            *gp_ul ++ = main_ts_tmaps_3 [rda];
+            *gp_ul ++ = main_ts_tmaps_2 [rdb];
+            *gp_ul ++ = main_ts_tmaps_3 [rdb];
 
-		// Next chunk at
-		col_v_offset += 128;		
-	} else {
-		// State 7: extra painting?
-		// It may be necessary for custom stuff in this game.
-		// Open / closed gates for instance.
-	}
+            // Next chunk at
+            col_v_offset += 128;        
+        } else {
+            // State 7: extra painting?
+            // It may be necessary for custom stuff in this game.
+            // Open / closed gates for instance.
+        }
 
-	state_ctr = (state_ctr + 1) & 7;
-}
+        state_ctr = (state_ctr + 1) & 7;
+    }
+
 Bella, bella cual culo de un camella. Ya la probaré. Pero seguro que ocupa menos rasters que la original ¡y hace bastante más!
 
 Además me ha sobrado un estado, el 7º, para cosas especiales que pueda necesitar, como por ejemplo pintar modificaciones al mapa (puerta abierta, cancelas del final).
@@ -329,51 +330,51 @@ Además me ha sobrado un estado, el 7º, para cosas especiales que pueda necesit
 
 Para ponerme cojonudo:
 
-	*gp_ul ++ = main_ts_tmaps_0 [rda];
+    *gp_ul ++ = main_ts_tmaps_0 [rda];
 
 Genera:
 
-	lda     _gp_ul
-	ldx     _gp_ul+1
-	sta     regsave
-	stx     regsave+1
-	clc
-	adc     #$01
-	bcc     L4463
-	inx
-L4463:	sta     _gp_ul
-	stx     _gp_ul+1
-	ldy     _rda
-	lda     _main_ts_tmaps_0,y
-	ldy     #$00
-	sta     (regsave),y
+        lda     _gp_ul
+        ldx     _gp_ul+1
+        sta     regsave
+        stx     regsave+1
+        clc
+        adc     #$01
+        bcc     L4463
+        inx
+    L4463:  sta     _gp_ul
+        stx     _gp_ul+1
+        ldy     _rda
+        lda     _main_ts_tmaps_0,y
+        ldy     #$00
+        sta     (regsave),y
 
 Mientras que:
 
-	*gp_ul ++ = *(main_ts_tmaps_0 + rda);
+    *gp_ul ++ = *(main_ts_tmaps_0 + rda);
 
 Genera:
 
-	lda     _gp_ul
-	ldx     _gp_ul+1
-	sta     regsave
-	stx     regsave+1
-	clc
-	adc     #$01
-	bcc     L4463
-	inx
-L4463:	sta     _gp_ul
-	stx     _gp_ul+1
-	lda     _rda
-	sta     ptr1
-	tya
-	clc
-	adc     #>(_main_ts_tmaps_0)
-	sta     ptr1+1
-	ldy     #<(_main_ts_tmaps_0)
-	lda     (ptr1),y
-	ldy     #$00
-	sta     (regsave),y
+        lda     _gp_ul
+        ldx     _gp_ul+1
+        sta     regsave
+        stx     regsave+1
+        clc
+        adc     #$01
+        bcc     L4463
+        inx
+    L4463:  sta     _gp_ul
+        stx     _gp_ul+1
+        lda     _rda
+        sta     ptr1
+        tya
+        clc
+        adc     #>(_main_ts_tmaps_0)
+        sta     ptr1+1
+        ldy     #<(_main_ts_tmaps_0)
+        lda     (ptr1),y
+        ldy     #$00
+        sta     (regsave),y
 
 Por eso me he quedado con la primera opción. Fíjate qué curioso, en SDCC sale mejor la segunda.
 
@@ -394,13 +395,13 @@ La cosa es que tengo que ver como convertir n_pant:prx en MSB/LSB del mismo núm
 
 ¡Ay, pues no! ¡cc65 optimiza esto de puta madre!
 
-;
-; cam_pos = (n_pant << 8) | prx;
-;
-	lda     _prx
-	sta     _cam_pos
-	lda     _n_pant
-	sta     _cam_pos+1
+    ;
+    ; cam_pos = (n_pant << 8) | prx;
+    ;
+        lda     _prx
+        sta     _cam_pos
+        lda     _n_pant
+        sta     _cam_pos+1
 
 Ferpecto :) Una cosa más resuelta.
 
@@ -420,20 +421,20 @@ Veamos, lo suyo sería rellenar un buffer a la vez que se pinta el chunk. Pero �
 
 De entrada tenemos que está organizado por columnas y tiene un byte por tile. Cada 192 bytes del mapa es una pantalla. Si apuntamos el puntero al principio del stripe actual,
 
-	n_pant * 192 = (n_pant * 64) * 3, también n_pant * 64 + n_pant * 128.
+    n_pant * 192 = (n_pant * 64) * 3, también n_pant * 64 + n_pant * 128.
 
 Podemos hacer:
 
-	gpint = n_pant << 6;
-	gpint = gpint + gpint + gpint;
+    gpint = n_pant << 6;
+    gpint = gpint + gpint + gpint;
 
 Aunque también podemos tener un cur_scr_ptr e incrementarlo/decrementarlo en 192 a la vez que n_pant.
 
 En ese caso, un cálculo de attr (x, y) sería
 
-behs [*(cur_scr_ptr + x * 12 + y << 4)];
+    behs [*(cur_scr_ptr + x * 12 + y << 4)];
 
-x * 12 = (x * 4) * 3 = (x * 8) + (x * 4)
+    x * 12 = (x * 4) * 3 = (x * 8) + (x * 4)
 
 Y me ahorro el buffer circular y las mierdas en lata. Lo malo de esto es que sólo puedo usar la colisión para la pantalla actual donde está el jugador. Si en el futuro necesitase colisionar enemigos, debería almacenar el cur_scr_ptr de dicho enemigo en su estructura de datos, y generalizar.
 
@@ -441,32 +442,32 @@ También vamos a dar dos tiles de ajuste como en Lala para que moverse por la pa
 
 Sería algo así:
 
-void cm_two_points (void) {
-	cyaux = cy1 < 2 ? 0 : cy1 - 2; cxaux = cx1 << 2; 
-	at1 = behs [*(cur_scr_ptr + cxaux + cxaux + cxaux + cyaux)];
-	cyaux = cy2 < 2 ? 0 : cy2 - 2; cxaux = cx2 << 2; 
-	at2 = behs [*(cur_scr_ptr + cxaux + cxaux + cxaux + cyaux)];
-}
+    void cm_two_points (void) {
+        cyaux = cy1 < 2 ? 0 : cy1 - 2; cxaux = cx1 << 2; 
+        at1 = behs [*(cur_scr_ptr + cxaux + cxaux + cxaux + cyaux)];
+        cyaux = cy2 < 2 ? 0 : cy2 - 2; cxaux = cx2 << 2; 
+        at2 = behs [*(cur_scr_ptr + cxaux + cxaux + cxaux + cyaux)];
+    }
 
 En realidad las colisiones siempre son para un segmento vertical o uno horizontal, por lo que creo que podríamos simplificar:
 
-void cm_two_points_horizontal (void) {
-	// cy1 == cy2
-	cyaux = cy1 < 2 ? 0 : cy1 - 2; 
-	cxaux = cx1 << 2;
-	at1 = behs [*(cur_scr_ptr + cxaux + cxaux + cxaux + cyaux)];
-	cyaux = cx2 << 2; 
-	at2 = behs [*(cur_scr_ptr + cxaux + cxaux + cxaux + cyaux)];
-}
+    void cm_two_points_horizontal (void) {
+        // cy1 == cy2
+        cyaux = cy1 < 2 ? 0 : cy1 - 2; 
+        cxaux = cx1 << 2;
+        at1 = behs [*(cur_scr_ptr + cxaux + cxaux + cxaux + cyaux)];
+        cyaux = cx2 << 2; 
+        at2 = behs [*(cur_scr_ptr + cxaux + cxaux + cxaux + cyaux)];
+    }
 
-void cm_two_points_vertical (void) {
-	// cx1 == cx2
-	cxaux = cx1 << 2; cxaux = cxaux + cxaux + cxaux;
-	cyaux = cy1 < 2 ? 0 : cy1 - 2; 
-	at1 = behs [*(cur_scr_ptr + cxaux + cyaux)];
-	cyaux = cy2 < 2 ? 0 : cy2 - 2; 
-	at2 = behs [*(cur_scr_ptr + cxaux + cyaux)];
-}
+    void cm_two_points_vertical (void) {
+        // cx1 == cx2
+        cxaux = cx1 << 2; cxaux = cxaux + cxaux + cxaux;
+        cyaux = cy1 < 2 ? 0 : cy1 - 2; 
+        at1 = behs [*(cur_scr_ptr + cxaux + cyaux)];
+        cyaux = cy2 < 2 ? 0 : cy2 - 2; 
+        at2 = behs [*(cur_scr_ptr + cxaux + cyaux)];
+    }
 
 Que serían levemente más rápidas y además me ahorro una asignación antes de la llamada en todos los casos. Creo que merece la pena.
 
