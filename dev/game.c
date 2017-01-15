@@ -56,6 +56,7 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 #include "prg1/main_ts_patterns_c.h"
 #include "prg1/main_ss_patterns_c.h"
 #include "prg1/palettes.h"
+#include "prg1/palette_fx.h"
 
 // ----------------------------------------------------------------------------
 
@@ -117,6 +118,22 @@ void main (void) {
 				level ++;
 				pvx = pvy = 0;
 				py = 0;
+				break;
+			case PLAYER_EXIT_LEFT:
+				px -= (16<<FIX_BITS);
+				if (px < 0) {
+					px += 256<<FIX_BITS;
+					n_pant --;
+				}
+				prx = px >> FIX_BITS;
+				break;
+			case PLAYER_EXIT_RIGHT:
+				px += (16<<FIX_BITS);
+				if (px > 256<<FIX_BITS) {
+					px -= 256<<FIX_BITS;
+					n_pant ++;
+				}
+				prx = px >> FIX_BITS;
 				break;
 		}
 	}

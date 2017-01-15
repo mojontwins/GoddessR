@@ -1,1 +1,0 @@
-start ..\..\utils\fceux\fceux.exe goddessr.nes

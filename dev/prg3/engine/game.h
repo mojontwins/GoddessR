@@ -13,6 +13,9 @@ void game_init (void) {
 
 	bankswitch (2);
 	player_init ();
+
+	c_pal_bg = mypal_game_bg0;
+	c_pal_fg = mypal_game_fg0;
 }
 
 void game_strip_setup (void) {
@@ -37,9 +40,10 @@ void game_strip_setup (void) {
 void game_loop (void) {
 	// Add palette selection logic - later
 	bankswitch (1);
-	pal_bg (mypal_game_bg0);
-	pal_spr (mypal_game_fg0);
-
+	pal_bg (c_pal_bg);
+	pal_spr (c_pal_fg);
+	palfx_init ();
+	
 	// Inits
 	bankswitch (2);
 	game_strip_setup ();
@@ -61,6 +65,7 @@ void game_loop (void) {
 	game_res = 0;
 	while (!game_res) {
 		half_life = 1 - half_life;
+		frame_counter ++;
 		gp_ul = update_list;
 		oam_index = 4;
 
@@ -71,11 +76,15 @@ void game_loop (void) {
 		camera_do ();
 		player_render ();
 
-		if (px_world < section_x0 || px_world > section_x1 + 256) game_res = 3;
+		if (px_world < section_x0) game_res = PLAYER_EXIT_LEFT;
+		else if (px_world > section_x1 + 240) game_res = PLAYER_EXIT_RIGHT;
 
 		bankswitch (0);
 		scroll_to ();
 
+		bankswitch (1);
+		palfx_do ();
+		
 		bankswitch (2);
 		oam_hide_rest (oam_index);
 		*gp_ul = NT_UPD_EOF;

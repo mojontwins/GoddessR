@@ -13,6 +13,33 @@ void player_init (void) {
 	pfacing = pfr = 0;
 }
 
+void player_collision_vertical (void) {
+	cyaux = (cy1 < 2 ? 0 : cy1 - 2) << 4;
+	at1 = behs [*(scr_buffer_ptr + cyaux + cx1)];
+	if (cx2 > 15) {
+		cx2 -= 16;
+		gp_aux = scr_buffer + ((n_pant & 1) ? 0 : 192);
+	} else {
+		gp_aux = scr_buffer_ptr;
+	}
+	at2 = behs [*(gp_aux + cyaux + cx2)];
+}
+
+void player_collision_horizontal (void) {
+	*((unsigned char *)0xf0)=cx1;
+	if (cx1 > 15) {
+		cx1 -= 16;
+		gp_aux = scr_buffer + ((n_pant & 1) ? 0 : 192);
+	} else {
+		gp_aux = scr_buffer_ptr;
+	}
+
+	cyaux = cy1 < 2 ? 0 : cy1 - 2; 
+	at1 = behs [*(gp_aux + (cyaux << 4) + cx1)];
+	cyaux = cy2 < 2 ? 0 : cy2 - 2; 
+	at2 = behs [*(gp_aux + (cyaux << 4) + cx1)];
+}
+
 void player_move (void) {
 	pad = pad0;		// Add ifs.
 
@@ -38,7 +65,7 @@ void player_move (void) {
 
 	if (pvy + pgtmy < 0) {
 		cy1 = pry >> 4;
-		cm_two_points_horizontal ();
+		player_collision_vertical ();
 		if ((at1 & 8) || (at2 & 8)) {
 			pgotten = pvy = 0;
 			pry = (cy1 + 1) << 4;
@@ -48,7 +75,7 @@ void player_move (void) {
 		}
 	} else if (pvy + pgtmy > 0) {
 		cy1 = (pry + 15) >> 4;
-		cm_two_points_horizontal ();
+		player_collision_vertical ();
 		if (((pry - 1) & 15) < 4 && ((at1 & 12) || (at2 & 12))) {
 			pgotten = pvy = 0;
 			pry = (cy1 - 1) << 4;
@@ -58,8 +85,8 @@ void player_move (void) {
 		}
 	}
 	cy1 = (pry + 16) >> 4;
-	cm_two_points_horizontal ();
-	ppossee = ((at1 & 14) || (at2 & 14));
+	player_collision_vertical ();
+	ppossee = ((pry & 0xf) == 0) && ((at1 & 14) || (at2 & 14));
 	pslip = (ppossee && ((at1 & 16) || (at2 & 16)));
 
 	// Jump
@@ -123,7 +150,7 @@ void player_move (void) {
 	cy2 = (pry + 15) >> 4;
 	if (pvx < 0) {
 		cx1 = prx >> 4;
-		cm_two_points_vertical ();
+		player_collision_horizontal ();
 		if ((at1 & 8) || (at2 & 8)) {
 			pvx = 0;
 			prx = (cx1 + 1) << 4;
@@ -131,7 +158,7 @@ void player_move (void) {
 		}
 	} else if (pvx > 0) {
 		cx1 = (prx + 7) >> 4;
-		cm_two_points_vertical ();
+		player_collision_horizontal ();
 		if ((at1 & 8) || (at2 & 8)) {
 			pvx = 0;
 			prx = ((cx1 - 1) << 4) + 8;

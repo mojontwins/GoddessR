@@ -576,3 +576,58 @@ He desenrollado y no se nota mucho, pero a lo mejor puedo distribuir por ahi par
 ~~
 
 Mejor así. He balanceado la carga. Creo que puedo optimizar algo los cáclulos aún, pero ahora casi todos los frames ocupan lo mismo excepto el 8º que vuelve a no durar nada. Lo dejamos por ahora.
+
+20170115
+========
+
+Ayer al final terminé de integrar el motor de movimiento de Cheril y además creé todo el flujo de juego (al menos de forma esquelética) y la gestión de niveles y subsecciones de nivel. Todo guay, pero hay un glitch en las colisiones: los puntos de la derecha del bounding box dan problemas cuando se salen de la pantalla. Hay wrap-around y miran los valores correctos de x... pero en la pantalla que no es.
+
+La solución es sencilla: darse cuenta y actualizar el puntero en esos casos, pero lo cierto es que no se me ocurre una forma de integrarlo todo que sea relativamente general e indolente.
+
+~~
+
+Bueno, he aprendido algo más sobre cc65 que viene genial:
+
+    rda = (rdb + 7) >> 4;
+
+aunque rdb sea unsigned char (8 bits), es promocionado a 16 bits al sumarle 7, así que si el resultado es >= 256 al hacer >> 4 dará 16. Yo pensaba que rdb iba a saturar al sumarle 7 (suma de 8 bits). Eso me permite coscarme y mirar donde es:
+
+    void player_collision_vertical (void) {
+        cyaux = (cy1 < 2 ? 0 : cy1 - 2) << 4;
+        at1 = behs [*(scr_buffer_ptr + cyaux + cx1)];
+        if (cx2 > 15) {
+            cx2 -= 16;
+            gp_aux = scr_buffer + ((n_pant & 1) ? 0 : 192);
+        } else {
+            gp_aux = scr_buffer_ptr;
+        }
+        at2 = behs [*(gp_aux + cyaux + cx2)];
+    }
+
+    void player_collision_horizontal (void) {
+        *((unsigned char *)0xf0)=cx1;
+        if (cx1 > 15) {
+            cx1 -= 16;
+            gp_aux = scr_buffer + ((n_pant & 1) ? 0 : 192);
+        } else {
+            gp_aux = scr_buffer_ptr;
+        }
+
+        cyaux = cy1 < 2 ? 0 : cy1 - 2; 
+        at1 = behs [*(gp_aux + (cyaux << 4) + cx1)];
+        cyaux = cy2 < 2 ? 0 : cy2 - 2; 
+        at2 = behs [*(gp_aux + (cyaux << 4) + cx1)];
+    }
+
+Se ve un tanto guarreras. No sé si tendré que hacer recálculos. Además, hay mierda no controlada aún - pero como en este juego no se da, me callo.
+
+    X|·
+
+Con X = obstáculo, | = limite de la pantalla, · = nada, colisionando a la izquierda... undefined. No sé qué pasaría XD
+
+Mañana me pongo con el próximo coco: meter enemigos. Así de entrada cam_pos tiene un MSB que indica la "pantalla", hay que ver la que va entrando y crear al vuelo 3 nuevos en la primera (par) o segunda (impar) mitades de nuestros arrays de 6 posiciones.
+
+Y habrá que pillarlos del level que sea.
+
+Uf, ya me duele la cabeza. Pensaré despacio en esto mañana. Buenas noches.
+

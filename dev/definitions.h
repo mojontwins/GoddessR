@@ -63,3 +63,5 @@
 
 	#define PLAYER_EXIT_TOP				1
 	#define PLAYER_EXIT_BOTTOM 			2
+	#define PLAYER_EXIT_LEFT			3
+	#define PLAYER_EXIT_RIGHT			4
