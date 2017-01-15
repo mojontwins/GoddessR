@@ -13,8 +13,9 @@ El motor debería poder empezar en cualquier sitio del mapa, pero siempre alinea
 
 Si siempre llevo sincronía entre scroll y pantallas, puedo usar el motor de movimiento tal cual con prx y pry como bytes, y px un signed char normal que sólo pueda tomar valores hasta 4096. Así no importa que el mapa tenga 20 pantallas de ancho. Para las colisiones con los malos tengo que idear una estrategia para:
 
-1.- Sólo tener en cuenta los 3 de la pantalla donde está Cheril. Por tanto tengo que llevar un registro de en qué pantalla estoy, y actualizarlo siempre que px se reinicie al llegar a uno u otro bordes.
-2.- Si se está en la misma pantalla, las coordenadas "x" reales son más que suficientes.
+1. Sólo tener en cuenta los 3 de la pantalla donde está Cheril. Por tanto tengo que llevar un registro de en qué pantalla estoy, y actualizarlo siempre que px se reinicie al llegar a uno u otro bordes.
+
+2. Si se está en la misma pantalla, las coordenadas "x" reales son más que suficientes.
 
 El problema, si quiero usar bytes para las coordenadas de los malos, es cómo pintarlos en la pantalla con desplazamiento ajustados al offset de la cámara. Creo que ahora voy a coger el cuaderno y a hacer un par de dibujitos a ver si me aclaro.
 
@@ -27,12 +28,14 @@ El quid está en dividir los enemigos por pantalla. Estaré procesando 6 enemigo
 Se entiendeo que cam_x_module es la parte LSB de cam_x (o sea, cam_x & 0xff).
 
 Para los 3 primeros, en la pantalla de la izquierda:
+
     - Si en_x < cam_x_module -> NO
     - Si en_x >= cam_x_module -> SI
 
     spr_x = en_x - cam_x_module;
 
 Para los 3 últimos, en la pantalla de la derecha:
+
     - Si en_x <= cam_x_module - 16 -> SI
     - Si en_x > cam_x_module - 16 -> NO
 
@@ -50,9 +53,9 @@ He mirado y en el original, Cheril corre como máximo a 2 pixels por frame, pero
 
 Podrá ser así:
 
-1 frame para calcular atributos.
-1 frame para escribir 6 bytes de atributos.
-6 frames para 24x4 patrones = 16 patrones en cada frame, o lo que es lo mismo, un chunk de 4x4 patrones.
+* 1 frame para calcular atributos.
+* 1 frame para escribir 6 bytes de atributos.
+* 6 frames para 24x4 patrones = 16 patrones en cada frame, o lo que es lo mismo, un chunk de 4x4 patrones.
 
 Ahora se me pasa por la cabeza que si pudiese procesar el mapa en chunks de 4x4 el scroller sería de los cojones de sencillo, pero no sé si saldrían demasiados metatiles y ocuparían un huevo. ¡No tengo más que escribir un conversor para comprobarlo!
 
@@ -107,7 +110,7 @@ Bueno, ya tengo todos los tiestos convertidos. Ahora voy a trasladar enemigos y 
 
 Hum. No hago más que dudar sobre el scroller y si no me cogerá el toro. Hay que tener en cuenta que puede ir para ambos lados y que un cambio brusco puede ser heavy.
 
-DA+-------------+BC
+    DA+-------------+BC
 
 O no, es el comecocos de siempre. Por lo general se van a ver 9 chunks, con un cachito de B. Nada más andar a la derecha se empieza a pintar el décimo, que es C, y nada más andar a la izquierda se pintará el menos dos, o sea, D. Si al empezar A y B están pintados da igual adonde vayamos que dará tiempo a que esté la nueva columna antes de llegar. Lo que estoy viendo es que a lo mejor me va a venir mejor guardar el mapa de otra forma, por cachos de 4x4, que son los que actualizaré cada frame, para así sólo tener que incrementar el puntero para el siguiente mientras estoy pintando la columna... aunque la copia a VRAM esta optimizada para columnas. No sé qué hacer, probaré tal y como tenía planteado a ver si va bien de tiempo.
 
