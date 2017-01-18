@@ -93,8 +93,17 @@ extern const unsigned char music_ROM1 [];	// A pointer to the music data @ ROM1.
 
 void main (void) {
 	// Initialization
-	ticks = ppu_system () ? 60 : 50;
+	ntsc = ppu_system ();
+	ticks = ntsc ? 60 : 50;
 	halfticks = ticks >> 1;
+
+	rda = 7;
+
+	rdb = (rda << 1) + rda;
+
+	rda = 9;
+
+	rdc = rda + rda + rda;
 	
 	famitone_init (1, music_ROM1);
 

@@ -64,20 +64,28 @@ void game_loop (void) {
 	// Do
 	game_res = 0;
 	while (!game_res) {
+		*((unsigned char*)0x2001) = 0x1f;
+
 		half_life = 1 - half_life;
 		frame_counter ++;
 		gp_ul = update_list;
-		oam_index = 4;
+		
+		if (!ntsc || fskip_ctr < 5) {
+			pad0 = pad_poll (0);
 
-		pad0 = pad_poll (0);
+			oam_index = 4;
+			bankswitch (2);
+			player_move ();
+			camera_do ();
+			player_render ();
 
-		bankswitch (2);
-		player_move ();
-		camera_do ();
-		player_render ();
+			if (px_world < section_x0) game_res = PLAYER_EXIT_LEFT;
+			else if (px_world > section_x1 + 240) game_res = PLAYER_EXIT_RIGHT;
 
-		if (px_world < section_x0) game_res = PLAYER_EXIT_LEFT;
-		else if (px_world > section_x1 + 240) game_res = PLAYER_EXIT_RIGHT;
+			bankswitch (2);
+			oam_hide_rest (oam_index);
+		}
+		fskip_ctr ++; if (fskip_ctr == 6) fskip_ctr = 0;
 
 		bankswitch (0);
 		scroll_to ();
@@ -85,18 +93,14 @@ void game_loop (void) {
 		bankswitch (1);
 		palfx_do ();
 		
-		bankswitch (2);
-		oam_hide_rest (oam_index);
 		*gp_ul = NT_UPD_EOF;
 		
 		*((unsigned char*)0x2001) = 0x1e;
-
 		scroll (cam_pos & 0x1ff, 448);
 		ppu_wait_nmi ();
-
-		*((unsigned char*)0x2001) = 0x1f;
 	}
 
+	bankswitch (2);
 	fade_out ();
 	oam_hide_rest (0);
 	set_vram_update (0);

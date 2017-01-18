@@ -2,7 +2,7 @@
 
 echo PRG0
 ..\utils\mapcnvchunk.exe ..\map\mapa.MAP prg0\map.h 320 4 0 ..\map\pallist.txt prg0\attr_precalcs.h
-..\utils\mkts.exe in=..\gfx\ts.png pals=..\gfx\palts.png out=work\main_ts_patterns.bin mode=mapped tsmap=prg0\main_ts.h offset=0,0 size=16,4 metasize=2,2 label=main_ts deinterlaced silent
+..\utils\mkts.exe in=..\gfx\ts.png pals=..\gfx\palts.png out=work\main_ts_patterns.bin mode=mapped tsmap=prg0\main_ts.h offset=0,0 size=16,6 metasize=2,2 label=main_ts deinterlaced silent
 
 echo PRG1
 

@@ -13,35 +13,14 @@ void scroll_paint_chunk (void) {
 	rdc = gpint & 31;
 	rdd = (col_idx & 8);
 
-	if (!state_ctr) {
-		// State 0: fetch & paint attrs.
-	
-		// which nametable?
-		gp_addr = (rdd ? NAMETABLE_B : NAMETABLE_A) + 0x03c0 + (col_idx & 0x7);
-		gp_gen = (unsigned char *) col_ptr;
+	scroll_state = SCROLL_STATE_NONE;
 
-		gpit = 6; do {
-			rda = *gp_gen ++;
-			rdt = attr_lookup_0_0 [rda];
-			rda = *gp_gen ++;
-			rdt += attr_lookup_0_1 [rda];
-			rda = *gp_gen ++;
-			rdt += attr_lookup_0_2 [rda];
-			rda = *gp_gen ++;
-			rdt += attr_lookup_0_3 [rda];
-			UPDATE = MSB (gp_addr);
-			UPDATE = LSB (gp_addr);
-			UPDATE= rdt;
-			gp_addr += 8;
-		} while (-- gpit);
-
-		col_v_offset = scr_v_offset = 0;
-	} else if (state_ctr < 7) {
-		// State 1..6: draw patterns. 4x4 chunk
+	if (state_ctr < 6) {
+		// State 0..5: draw patterns. 4x4 chunk
 
 		// which nametable?
 		gp_addr = (rdd ? NAMETABLE_B : NAMETABLE_A) + rdc + col_v_offset;
-		gp_aux = (unsigned char *) (col_ptr + (state_ctr << 2) - 4);
+		gp_aux = (unsigned char *) (col_ptr + (state_ctr << 2));
 		gp_gen = gp_aux;
 		
 		// Two metatiles
@@ -97,15 +76,48 @@ void scroll_paint_chunk (void) {
 		*gp_aux ++ = *gp_gen ++; *gp_aux = *gp_gen ++; gp_aux += 15;
 		*gp_aux ++ = *gp_gen ++; *gp_aux = *gp_gen;
 		scr_v_offset += 32;
+	} else if (state_ctr < 7) {
+		// State 6: fetch & paint attrs.
+	
+		// which nametable?
+		gp_addr = (rdd ? NAMETABLE_B : NAMETABLE_A) + 0x03c0 + (col_idx & 0x7);
+		gp_gen = (unsigned char *) col_ptr;
+
+		gpit = 6; do {
+			rda = *gp_gen ++;
+			rdt = attr_lookup_0_0 [rda];
+			rda = *gp_gen ++;
+			rdt += attr_lookup_0_1 [rda];
+			rda = *gp_gen ++;
+			rdt += attr_lookup_0_2 [rda];
+			rda = *gp_gen ++;
+			rdt += attr_lookup_0_3 [rda];
+			UPDATE = MSB (gp_addr);
+			UPDATE = LSB (gp_addr);
+			UPDATE= rdt;
+			gp_addr += 8;
+		} while (-- gpit);
+
+		col_v_offset = scr_v_offset = 0;
 	} else {
-		// State 7: 
+		// State 7: Free state. We just signal this to the engine
+		// so it can perform other tasks.
+
+		scroll_state = SCROLL_STATE_FREE;
+
+		// The enemies manager needs to know if it should create
+		// enemies, so we raise a couple of bits...
+
+		rda = col_idx & 7;
+		if (rda == 0) scroll_state |= SCROLL_STATE_CHUNK_0;
+		else if (rda == 7) scroll_state |= SCROLL_STATE_CHUNK_7;
 	}
 
 	state_ctr = (state_ctr + 1) & 7;
 }
 
 void scroll_draw_one_chunk_completely (void) {
-	state_ctr = 0;
+	state_ctr = col_v_offset = scr_v_offset = 0;
 	gp_ul = update_list;
 	scroll_paint_chunk ();
 	scroll_paint_chunk ();

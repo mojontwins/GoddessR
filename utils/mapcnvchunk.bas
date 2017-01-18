@@ -1,6 +1,9 @@
 ' MAPCNV NES
 ' Converts a Mappy layer to a suitable-scrollable, Churrera-NES map.
-'
+
+' I'm still using this 'cause it's very functional, but the code
+' is as ugly as it gets. Don't look.
+
 ' Format is:
 ' Map is divided in "MapChunks". 
 ' Each MapChunk is 24 bytes:
@@ -29,7 +32,7 @@ Type OBJ
 	t as integer
 end type
 
-Dim As Integer x, y, xx, yy, f1, f2, i, j, k
+Dim As Integer x, y, xx, yy, f1, f2, i, j, k, ctr
 Dim As Integer wt, hs, rhs, rws
 Dim As String mapFileName, palString, o
 Dim As uByte orgMap(512, 512), d, by
@@ -63,23 +66,24 @@ Open Command (6) For Input as #f1
 	Next i
 Close #f1
 
-	f1 = FreeFile
-	Open Command (7) For Output As #f1
-	Print #f1, "const unsigned char precalc_attr_bits [] = {"
-	For i = 0 To Len (palString) - 1 Step 16
-		For j = 0 To 3
-			Print #f1, "	";
-			For k = 0 To 15
-				Print #f1, "0x" & Hex (pal (i + k) Shl (j + j), 2);
-				If k < 15 Or j < 3 Or i < (Len (palString) - 16) Then
-					Print #f1, ", ";
-				End If
-			Next k
-			Print #f1, ""
-		Next j
+f1 = FreeFile
+Open Command (7) For Output As #f1
+Print #f1, "// Attribute bits lookup tables for " & Command (1)
+Print #f1, "// Copyleft 2017 by The Mojon Twins"
+For j = 0 To 3
+	Print #f1, ""
+	Print #f1, "const unsigned char attr_lookup_" & Command (5) & "_" & j & " [] = {"
+	ctr = 0
+	For i = 0 To Len (palString) - 1
+		If ctr = 0 Then Print #f1, "	";
+		Print #f1, "0x" & Lcase (Hex (pal (i) Shl (j + j), 2)); 
+		If i < len (palString) - 1 Then Print #f1, ", ";
+		ctr = ctr + 1: If ctr = 16 Then ctr = 0: Print #f1, ""
 	Next i
+	If ctr Then Print #f1, ""
 	Print #f1, "};"
-	Close #f1
+Next j
+Close #f1
 
 mapFileName = Command(1)
 wt = Val (Command(3)) - 1
@@ -93,7 +97,7 @@ Open mapFileName For Binary as #f1
 For y = 0 to rhs
 	For x = 0 To wt
 		Get #f1, , d
-		orgMap (y, x) = d-1
+		orgMap (y, x) = d
 	
 	Next x
 Next y

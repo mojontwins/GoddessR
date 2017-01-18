@@ -21,3 +21,6 @@ unsigned char pal_cycle [3];
 // Current palettes
 const unsigned char *c_pal_bg;
 const unsigned char *c_pal_fg;
+
+// Scroll state
+unsigned char scroll_state;

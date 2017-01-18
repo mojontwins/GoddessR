@@ -22,6 +22,8 @@ unsigned char pad0, pad;
 // Game counters
 unsigned char half_life;
 unsigned char frame_counter;
+unsigned char fskip_ctr;
+unsigned char ntsc;
 
 // Scrolling engine
 unsigned int col_idx;

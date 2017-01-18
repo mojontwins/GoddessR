@@ -65,3 +65,10 @@
 	#define PLAYER_EXIT_BOTTOM 			2
 	#define PLAYER_EXIT_LEFT			3
 	#define PLAYER_EXIT_RIGHT			4
+
+// Scroll states
+
+	#define SCROLL_STATE_NONE			0
+	#define SCROLL_STATE_FREE			1
+	#define SCROLL_STATE_CHUNK_0		2
+	#define SCROLL_STATE_CHUNK_7		4

@@ -128,18 +128,18 @@ No paro de cambiar de idea. Pintar un chunk de 4x4 patrones implicaría una actu
 
 Nada, lo de siempre, hasta que no me ponga no lo sabré. Pero igualmente para ver todas estas mierdas necesito un exporter que me saque el mapa en chunks de 2x2 metatiles en vez de columnas. Bueno, en columnas de chunks. O sea, lo que tenía más o menos en pongpong pero que saque bytes y que tenga columnas de 12 de alto. Lo puedo modificar a partir de ahí para máxima velocidad.
 
-00
-11
-22
-33
-44
-55
-66
-77
-88
-99
-AA
-BB
+    00
+    11
+    22
+    33
+    44
+    55
+    66
+    77
+    88
+    99
+    AA
+    BB
 
 Tambien podría probar la forma más sencilla que sería hacer más o menos como Pong Pong pero con la ventaja de que no hay que decodificar los bytes del mapa y que los metatiles están desintercalados.
 
@@ -165,6 +165,7 @@ Hoy he estado a otras cosas, pero voy a apuntar unos cuantos hechos que me servi
 - Si el bit 3 de "chunk N" es 0, está en NAMETABLE_A. Si es 1, en NAMETABLE_B.
 - A la hora de actualizar cosas en la pantalla (por ejemplo, chack chacks): n_pant & 1 ? NAMETABLE_B : NAMETABLE_A
 - Actualizamos levemente los cálculos de pongpong
+
 
     // Calculate memory address of current column [col_idx * 24]
     gpint = col_idx << 2;
@@ -633,4 +634,64 @@ Mañana me pongo con el próximo coco: meter enemigos. Así de entrada cam_pos t
 Y habrá que pillarlos del level que sea.
 
 Uf, ya me duele la cabeza. Pensaré despacio en esto mañana. Buenas noches.
+
+20170116
+========
+
+Ayer se me ocurrió usar el frame libre del scroller para que, si el número del chunk & 7 == 0 o 7 (ver más tarde), emplear para cargar los 3 enemigos correspondientes en el array de enemigos activos.
+
+El array de enemigos activos tiene 6 posiciones: 3 para cada pantalla activa. Como recordaremos, si (n_pant & 1) == 0 (par), pintamos en las tres primeras posiciones del array; si (n_pant & 1) == 1 (impar), lo haremos en las tres siguientes.
+
+Cada vez que "entra" una pantalla debe cargarse la mitad correcta. Al avanzar a la derecha, la pantalla nueva "entra" cuando se pinta su primer chunk (0); al avanzar a la izquierda, lo hace cuando se pinta su último chunk (7).
+
+Lo más sencillo de integrarlo todo es marcar, con un flag, cuando estamos en el "frame libre" del chunk correcto, y usar esto desde el módulo de enemigos.
+
+También voy a reordenar los estados para ahorrar algunos ciclos más, y quiero empezar a rediseñar gráficos. Para ello miraré gráficos de otra gente para inspirarme, aunque tengo ideas.
+
+No va a dar tiempo, veo, pero mola. 
+
+20170118
+========
+
+He estado estos días haciendo gráficos nuevos de fondo y rellenando el mapa de detalles. Joder, lo mola todísimo, pero creo que me he liado tanto con algo que debería haber dejado hasta el final.
+
+No quiero terminar hoy la jornada sin pensar un poco en el motor de enemigos. El tema está en cargar los activos de la pantalla que entra en el array de los enemigos que se actualiza.
+
+Ahora mismo he dejado preparado el scroller para que envíe una señal durante el tiempo 7 (el último) de su máquina de estados si está dibujando el primer o último chunk de una pantalla.
+
+La idea era que si estábamos avanzando a la izquierda y se pinta el chunk 7 de una pantalla creásemos los enemigos de esa pantalla aprovechando el frame con menos carga.
+
+n_pant = chunk & 0xf8, si no me salen mal los cálculos, o MSB cam_pos.
+
+La función enems_load debería obtener en rda, por ejemplo, el n_pant sobre el que tiene que actuar, quizá dentro de la tira o piso actual del mapa (con un offset, vaya).
+
+Si este (rda & 1) == 0, crear los enemigos de rda en las posiciones 0..2 de los arrays de enemigos en pantalla. Si (rda & 1) == 1 deberán ser creados en las posiciones 3..5.
+
+La creación puede ser tal que Yun, o MK2. Vaya, la de siempre. Creo que dará tiempo a hacer algunas asignaciones, ¿no?
+
+Tengo que rehacer el exporter para exportar los valores de los enemigos en cuatro arrays separados en lugar de intercalarlos todos en el mismo array. Hoy se me está haciendo un poco tarde, supongo que lo haré mañana. Así habrá que hacer menos cálculos. Hay que multiplicar por 3. A ver si es más rápido hacer a + (a << 1) o a + a + a. Voy a generar código para ambos.
+
+Peo.
+
+    ;
+    ; rdb = (rda << 1) + rda;
+    ;
+        lda     _rda            4
+        asl     a               2
+        clc                     2
+        adc     _rda            4
+        sta     _rdb            4
+
+    ;
+    ; rdc = rda + rda + rda;
+    ;
+        lda     _rda            4
+        clc                     2
+        adc     _rda            4
+        bcc     L60D7           2+
+        clc                     2
+    L60D7:  adc     _rda        4
+        sta     _rdc            4
+
+Es más rápida la primera.
 
