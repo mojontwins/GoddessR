@@ -846,7 +846,12 @@ Tras extraer los incrementos y meterlos en un array he programado a ciegas el co
             oam_index,
             spr_enems [PEZONS_BASE_SPRID + (PEZON_INCS_IDX [gpit] > PEZON_INCS_FIRST_FALL)];
         );
-        if (PEZON_INCS_IDX [gpit] < PEZON_INCS_MAX) PEZON_INCS_IDX [gpit] ++; else en_state [gpit] = 0;
+        if (PEZON_INCS_IDX [gpit] < PEZON_INCS_MAX) {
+            PEZON_INCS_IDX [gpit] ++; 
+        } else {
+            en_state [gpit] = 0;
+            PEZON_TIMER [gpit] = PEZON_MAX_TIME [gpit];
+        }
     } else {
         if (PEZON_TIMER [gpit]) PEZON_TIMER [gpit] --; else {
             PEZON_INCS_IDX [gpit] = 0;
