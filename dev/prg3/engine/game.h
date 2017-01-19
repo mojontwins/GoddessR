@@ -6,8 +6,9 @@
 void game_init (void) {
 	// Decompress patterns from tileset #1
 	bankswitch (1);
-	tokumaru_lzss (main_ts_patterns_c, 0);
-	tokumaru_lzss (main_ss_patterns_c, 4096);
+	tokumaru_lzss (main_ts_patterns_c,      0);
+	tokumaru_lzss (hex_digit_ts_patterns_c, 3840);	// 240*16
+	tokumaru_lzss (main_ss_patterns_c,      4096);	// 256*16
 
 	level = 3; n_pant = 9;
 
@@ -16,6 +17,11 @@ void game_init (void) {
 
 	c_pal_bg = mypal_game_bg0;
 	c_pal_fg = mypal_game_fg0;
+
+	c_enems_t = enems_t_0;
+	c_enems_yx1 = enems_yx1_0;
+	c_enems_yx2 = enems_mn_0;
+	c_enems_mn = enems_mn_0;
 }
 
 void game_strip_setup (void) {
@@ -55,7 +61,12 @@ void game_loop (void) {
 	bankswitch (0);
 	scroll_draw_screen ();
 
+	// Preload enems
 	bankswitch (2);
+	rda = n_pant; enems_load ();
+	rda = n_pant + 1; enems_load ();
+	cam_pant_old = MSB (cam_pos);
+	
 	SCR_BUFFER_PTR_UPD;
 	fade_in ();
 
@@ -70,11 +81,15 @@ void game_loop (void) {
 		frame_counter ++;
 		gp_ul = update_list;
 		
+		bankswitch (2);
+		enems_preload ();
+
 		if (!ntsc || fskip_ctr < 5) {
 			pad0 = pad_poll (0);
 
 			oam_index = 4;
 			bankswitch (2);
+			enems_do ();
 			player_move ();
 			camera_do ();
 			player_render ();

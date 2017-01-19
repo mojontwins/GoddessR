@@ -669,7 +669,9 @@ Si este (rda & 1) == 0, crear los enemigos de rda en las posiciones 0..2 de los 
 
 La creación puede ser tal que Yun, o MK2. Vaya, la de siempre. Creo que dará tiempo a hacer algunas asignaciones, ¿no?
 
-Tengo que rehacer el exporter para exportar los valores de los enemigos en cuatro arrays separados en lugar de intercalarlos todos en el mismo array. Hoy se me está haciendo un poco tarde, supongo que lo haré mañana. Así habrá que hacer menos cálculos. Hay que multiplicar por 3. A ver si es más rápido hacer a + (a << 1) o a + a + a. Voy a generar código para ambos.
+Tengo que rehacer el exporter para exportar los valores de los enemigos en cuatro arrays separados en lugar de intercalarlos todos en el mismo array. Hoy se me está haciendo un poco tarde, supongo que lo haré mañana. Así habrá que hacer menos cálculos. 
+
+Ahora hay que multiplicar por 3, en vez de por 12, y puedo usar un índice para todos los accesos. A ver si es más rápido hacer a + (a << 1) o a + a + a. Voy a generar código para ambos.
 
 Peo.
 
@@ -695,3 +697,162 @@ Peo.
 
 Es más rápida la primera.
 
+Además viendo como suele actuar el compilador, seguro que si leo en masa los cuatro arrays haciendo así:
+
+    rda = arr1 [i];
+    rdb = arr2 [i];
+    rdc = arr3 [i];
+    rdd = arr4 [i];
+
+El compilador puede generar código molón. En ensamblador, cargaría i en X y usaría direccionamiento absoluto con desplazamiento.
+
+    ldy _i
+    lda (_arr1), Y
+    sta _rda
+    lda (_arr2), Y
+    sta _rda
+    lda (_arr3), Y
+    sta _rda
+    lda (_arr4), Y
+    sta _rda
+
+Si no lo hace así miro de meterlo en linea.
+
+20170119
+========
+
+Voy con los enemigos. Por lo pronto he escrito el conversor. Luego tendré que repasar las notas del goddess original para ver cómo se interpretaban los hotspots que, además, creo recordar que eran contenedores (por lo que habrá que crear una estructura en RAM para todos - al menos para el contenido: 80 bytes).
+
+voy primero a hacer una especie de tester de concepto. Imprimiré en pantalla qué índices del array de enemigos se irían cargando al avanzar por el mapa. Necesito 0123456789ABCDEF en los ts, al principio. Remember que vacío = 255.
+
+~~
+
+Por ahora la precarga de enemigos (bueno, no hago precarga real, sólo he estado imprimiendo qué slots se cargarían y con qué valores, y todo va guay) genera este código, muy feo:
+
+    ;
+    ; rda = c_enems_t [enidx];
+    ;
+    L6640:  lda     _c_enems_t
+        ldx     _c_enems_t+1
+        ldy     _enidx
+        sta     ptr1
+        stx     ptr1+1
+        lda     (ptr1),y
+        sta     _rda
+    ;
+    ; rdb = c_enems_yx1 [enidx];
+    ;
+        lda     _c_enems_yx1
+        ldx     _c_enems_yx1+1
+        ldy     _enidx
+        sta     ptr1
+        stx     ptr1+1
+        lda     (ptr1),y
+        sta     _rdb
+    ;
+    ; rdc = c_enems_yx2 [enidx];
+    ;
+        lda     _c_enems_yx2
+        ldx     _c_enems_yx2+1
+        ldy     _enidx
+        sta     ptr1
+        stx     ptr1+1
+        lda     (ptr1),y
+        sta     _rdc
+    ;
+    ; rdd = c_enems_mn [enidx];
+    ;
+        lda     _c_enems_mn
+        ldx     _c_enems_mn+1
+        ldy     _enidx
+        sta     ptr1
+        stx     ptr1+1
+        lda     (ptr1),y
+        sta     _rdd
+    ;
+
+No mola. ¿Me cargaré mucho esto si meto en linea mi solución? Voy a comprobarlo ;-)
+
+Nah, funciona guay:
+
+    ldy     _enidx
+    lda     (_c_enems_t),y
+    sta     _rda
+    lda     (_c_enems_yx1),y
+    sta     _rdb
+    lda     (_c_enems_yx2),y
+    sta     _rdc
+    lda     (_c_enems_mn),y
+    sta     _rdd
+
+~~
+
+Esto son los tipos de enemigos que manejo en el goddess original. Creo que cambiaré los valores en el .ENE para usar algo más parecido a MK2 (que es más fácil de procesar, entiendo):
+
+Lineares
+1, 2, 3 -> 0x10, 0x11, 0x12
+
+Plataforma
+4 -> 0x23
+
+Homing Fanty
+6 -> 0x30
+
+Pezons
+9 -> 0xC0
+
+Chac chac
+10 -> 0x50
+
+Este cambio es compatible con steady shooters (0x80), monococos (0x90), gyrosaws (0xB0) y catacrocks (0x40)
+
+Voy a pasar un updater custom por el enems antes de seguir.
+
+~~
+
+Me lo apunto: voy a intentar implementar fantis y pezons empleando unicamente enteros. Oh, sí, lo voy a flipar, porque necesito tablas de velocidades precalculadas y jugar con índices en un cacho de código ilegible. Pero molará.
+
+Por ahora he hecho la carga dinámica de los valores de los enemigos y tengo que ver como me sube eso el tiempo empleado.
+
+Lo próximo es meter esto, si cabe, antes del split del escenario.
+
+~~
+
+Bueno, el bucle de proceso fuera de orden de los enemigos está funcionando (aunque no procese nada). La carga está bien balanceada, o casi (hay algunos timbrazos gordos pero espero poder compensar). 
+
+Quiero establecer el split y pintar el marcador (o al menos el esqueleto del mismo) y ver qué cosas de las que hay puedo colocar antes del punto de split. Probablemente tenga que reordenar las tareas del bucle principal.
+
+También me estoy planteando muy pucho pasar de la compensación NTSC/PAL y que simplemente todo vaya más deprisa en NTSC. No sé qué hacer.
+
+~~ 
+
+Voy a mirar el código de los pezones de Goddess y a grabar los incrementos *exactos* en una tabla, pasando de aproximar con mi aplicación mierder.
+
+~
+
+Tras extraer los incrementos y meterlos en un array he programado a ciegas el comportamiento de los pezones, y queda tal que así:
+
+    // Occluding sprite
+    oam_index = oam_meta_spr (
+        en_x1 [gpit], en_y1 [gpit],
+        oam_index,
+        spr_enems [PEZONS_BASE_SPRID + 2]
+    );
+
+    if (en_state [gpit]) {
+        en_y [gpit] += pezon_incs [PEZON_INCS_IDX [gpit]];
+        oam_index = oam_meta_spr (
+            en_x1 [gpit], en_y [gpit],
+            oam_index,
+            spr_enems [PEZONS_BASE_SPRID + (PEZON_INCS_IDX [gpit] > PEZON_INCS_FIRST_FALL)];
+        );
+        if (PEZON_INCS_IDX [gpit] < PEZON_INCS_MAX) PEZON_INCS_IDX [gpit] ++; else en_state [gpit] = 0;
+    } else {
+        if (PEZON_TIMER [gpit]) PEZON_TIMER [gpit] --; else {
+            PEZON_INCS_IDX [gpit] = 0;
+            en_state [gpit] = 1;
+            en_y [gpit] = en_y1 [gpit];
+        }
+    }
+    
+Lo probaría, pero necesito redibujar y cierta infraestructura, y se me hace tarde, así que lo dejaré hasta mañana.

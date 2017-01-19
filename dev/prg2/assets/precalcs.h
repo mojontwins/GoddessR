@@ -20,3 +20,14 @@ const int sections_1 [] = { 0, 2304, 2816, 3328, 4096, 4352, 5120 };
 const int sections_2 [] = { 0, 1024, 2304, 3072, 4352, 5120 };
 const int sections_3 [] = { 0, 256, 2304, 2816, 4096, 5120 };
 const int * const sections [] = { sections_0, sections_1, sections_2, sections_3 };
+
+#define PEZON_INCS_MAX 48
+#define PEZON_INCS_FIRST_FALL 26
+const signed char pezon_incs [] = {
+	-6, -6, -5, -5, -5, -4, -4, -4,
+	-4, -4, -3, -3, -3, -2, -2, -2, 
+	-2, -2, -1, -1, -1, 0, 0, 0, 
+	0, 0, 1, 1, 1, 2, 2, 2, 
+	2, 2, 3, 3, 3, 4, 4, 4, 
+	4, 4, 4, 4, 4, 4, 4, 4
+};

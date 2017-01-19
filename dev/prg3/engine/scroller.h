@@ -104,13 +104,6 @@ void scroll_paint_chunk (void) {
 		// so it can perform other tasks.
 
 		scroll_state = SCROLL_STATE_FREE;
-
-		// The enemies manager needs to know if it should create
-		// enemies, so we raise a couple of bits...
-
-		rda = col_idx & 7;
-		if (rda == 0) scroll_state |= SCROLL_STATE_CHUNK_0;
-		else if (rda == 7) scroll_state |= SCROLL_STATE_CHUNK_7;
 	}
 
 	state_ctr = (state_ctr + 1) & 7;

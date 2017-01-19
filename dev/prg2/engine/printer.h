@@ -26,7 +26,7 @@ void fade_out (void) { fader = 5; while (fader --) { pal_bright (fader); ppu_wai
 
 void fade_in (void) { fader = 5; while (fader --) { pal_bright (4 - fader); ppu_wait_nmi (); } }
 	
-void cls (void) { vram_adr (0x2000); vram_fill (0xff, 0x400); }
+void cls (void) { vram_adr (NAMETABLE_A); vram_fill (0, 0x800); }
 
 void p_t2 (unsigned char x, unsigned char y, unsigned char n) {
 	gp_addr = NAMETABLE_A + (y << 5) + x;
@@ -44,4 +44,13 @@ void p_s (unsigned char x, unsigned char y, unsigned char *s) {
 			y ++; vram_adr (NAMETABLE_A + (y << 5) + x);
 		} else vram_put (rda - 32);
 	}
+}
+
+void debug_p (unsigned char x, unsigned char y, unsigned char n) {
+	gp_addr = NAMETABLE_A + (y << 5) + x;
+	UPDATE = MSB (gp_addr) | NT_UPD_HORZ;
+	UPDATE = LSB (gp_addr);
+	UPDATE = 2;
+	UPDATE = DIGIT (n >> 4);
+	UPDATE = DIGIT (n & 15);
 }

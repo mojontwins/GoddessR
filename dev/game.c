@@ -55,6 +55,7 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 
 #include "prg1/main_ts_patterns_c.h"
 #include "prg1/main_ss_patterns_c.h"
+#include "prg1/hex_digit_ts_patterns_c.h"
 #include "prg1/palettes.h"
 #include "prg1/palette_fx.h"
 
@@ -70,10 +71,12 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 #include "prg2/assets/spritedata.h"
 #include "prg2/assets/metasprites.h"
 #include "prg2/assets/precalcs.h"
+#include "prg2/assets/enems0.h"
 
 #include "prg2/engine/printer.h"
 #include "prg2/engine/camera.h"
 #include "prg2/engine/player.h"
+#include "prg2/engine/enems.h"
 
 // ----------------------------------------------------------------------------
 
@@ -96,14 +99,6 @@ void main (void) {
 	ntsc = ppu_system ();
 	ticks = ntsc ? 60 : 50;
 	halfticks = ticks >> 1;
-
-	rda = 7;
-
-	rdb = (rda << 1) + rda;
-
-	rda = 9;
-
-	rdc = rda + rda + rda;
 	
 	famitone_init (1, music_ROM1);
 

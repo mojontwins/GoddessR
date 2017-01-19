@@ -23,7 +23,7 @@
 	#define DISABLE_SFX_NEXT_FRAME		*((unsigned char*)0x01bf)=1;
 	#define ADD_SIGN2(a,b,v)			((a)==(b))?(0):(((a)>(b))?(v):(-(v)))
 	#define ADD_SIGN(a,v) 				((a)?(((a)>0)?(v):(-(v))):(0))
-	#define DIGIT(n) 					(1+(n))
+	#define DIGIT(n) 					(240+(n))
 	#define UPDATE						*gp_ul++
 	#define SCR_BUFFER_PTR_UPD 			scr_buffer_ptr = scr_buffer + ((n_pant & 1) ? 192 : 0)
 
@@ -72,3 +72,14 @@
 	#define SCROLL_STATE_FREE			1
 	#define SCROLL_STATE_CHUNK_0		2
 	#define SCROLL_STATE_CHUNK_7		4
+
+// Defines for readability
+
+	#define CHAC_CHAC_TIMER				en_x2
+	#define CHAC_CHAC_MAX_TIME 			en_y2
+
+	#define PEZON_TIMER 				en_x2
+	#define PEZON_MAX_TIME 				en_y2
+	#define PEZON_INCS_IDX				en_my
+
+

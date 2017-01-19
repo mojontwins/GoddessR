@@ -22,12 +22,21 @@ copy /b work\palbg0.h + work\palbg1.h + work\palbg2.h + work\palbg3.h + work\pal
 ..\utils\lzsscomp.exe work\main_ts_patterns.bin main_ts_patterns_c.h
 cd ..\gfx
 ..\utils\mkts.exe mode=scripted in=cut_sprites.spt out=..\dev\work\main_ss_patterns.bin silent
+..\utils\mkts.exe mode=chars in=hex.png pals=palts.png out=..\dev\work\hex_digit_ts_patterns.bin silent
 
 cd ..\dev
 ..\utils\lzsscomp.exe work\main_ss_patterns.bin main_ss_patterns_c.h
+..\utils\lzsscomp.exe work\hex_digit_ts_patterns.bin hex_digit_ts_patterns_c.h
 
 move main_ts_patterns_c.h prg1 > nul
 move main_ss_patterns_c.h prg1 > nul
+move hex_digit_ts_patterns_c.h prg1 > nul
+
+echo PRG2
+cd ..\enems
+..\utils\eneexp4.exe enems.ene ..\dev\prg2\assets\enems0.h 0 2
+
+cd ..\dev
 
 echo COMPILING
 

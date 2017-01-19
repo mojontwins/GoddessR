@@ -93,6 +93,8 @@ for y = iVi To iVf Step iVs
 				Case 4: d = &H23
 				Case 6: d = &H33
 				Case 7: d = &H70
+				Case 9: d = &HC0
+				Case 10: d= &H50
 			End Select
 
 			Put #1, , d

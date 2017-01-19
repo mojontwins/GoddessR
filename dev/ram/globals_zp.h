@@ -60,3 +60,15 @@ unsigned char ppressingh, pfr, pflickers;
 signed char pgtmx, pgtmy;
 
 signed int px_world;
+
+// Enems
+unsigned char cam_pant, cam_pant_old;
+const unsigned char *c_enems_t;
+const unsigned char *c_enems_yx1;
+const unsigned char *c_enems_yx2;
+const unsigned char *c_enems_mn;
+unsigned char enidx, en_just_loaded;
+unsigned char en_iter;
+unsigned char en_t [6], en_x1 [6], en_y1 [6], en_x2 [6], en_y2 [6];
+unsigned char en_x [6], en_y [6], en_mx [6], en_my [6], en_state [6];
+
