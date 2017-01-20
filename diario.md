@@ -877,7 +877,7 @@ Gráficos entregagos, ahora voy a modificar el script de recorte que muchos spri
 
 El pezón funciona pero tengo mal el cálculo de los sprites que tengo que mostrar y que entran en el viewport. Algo chungo estoy haciendo, no selecciono bien. Pero va por buen camino :)
 
-~~~
+~~
 
 Arreglé eso, más o menos, porque glitchea. O sea, va bien, pero me da la impresión de que durante un instante mientras scrolleamos los sprites desaparecen. Seguro que hay un caso marginal en el que no se cumple ninguna de las condiciones, tengo que revisarlo.
 
@@ -889,3 +889,8 @@ Ahora hay un par de detalles tonters que me mosquean un poco, pero bueno, poco a
 
 Tendré que refinar un poco el tema este. Son homing fantis: si te vas muy lejos vuelven a casa. Ese "si te vas muy lejos" es un cálculo medianamente costoso, creo que puedo limitarlo a la coordenada X y hacer el fullero. Además, si te sales de la pantalla donde están directamente ya no te verán y quedará menos cantoso. Creo que puede dar el pego... Aunque recuerdo que los metí en Pong Pong y quedaba raro. Bueno, ya veremos.
 
+Qué coño - acabo de ver el tema del glitch: es el frame en el que no proceso los enemigos. Me cago en mi puta calavera. 
+
+Creo que tengo que pasar de eso, hay que pintarlos por lo menos, y pintar es procesar porque va todo unido.
+
+Mira, cojona, si me veo jodido de tiempo de frame ya me pondré a multiplexar luego. Joder.
