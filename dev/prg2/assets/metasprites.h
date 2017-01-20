@@ -27,3 +27,16 @@ const unsigned char * const spr_pl [] = {
 	sspl_0F_b													// AIRBORNE		21
 };
 
+const unsigned char * const spr_en [] = {
+	// First, left/right f1 f2 for linear enemies
+	ssena_00_a, ssena_01_a, ssena_00_b, ssena_01_b, 			// 0: CYCLOPS
+	ssena_02_a, ssena_03_a, ssena_02_b, ssena_03_b, 			// 1: ELEUTERIO
+	ssenb_00, ssenb_01, ssenb_00, ssenb_01,						// 2: GRAY BAT
+	ssenc_00, ssenc_01, ssenc_00, ssenc_01, 					// 3: PLATFORM
+
+	// PEZON_BASE = 16
+	ssenc_02, ssenc_03, ssenc_04, 0, 							// 4: FISH & OCC
+
+	// FANTY_BASE = 20
+	ssenb_02, ssenb_03, ssenb_02, ssenb_03
+};

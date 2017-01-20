@@ -661,7 +661,7 @@ Ahora mismo he dejado preparado el scroller para que envíe una señal durante e
 
 La idea era que si estábamos avanzando a la izquierda y se pinta el chunk 7 de una pantalla creásemos los enemigos de esa pantalla aprovechando el frame con menos carga.
 
-n_pant = chunk & 0xf8, si no me salen mal los cálculos, o MSB cam_pos.
+n_pant = chunk >> 3, si no me salen mal los cálculos, o MSB cam_pos.
 
 La función enems_load debería obtener en rda, por ejemplo, el n_pant sobre el que tiene que actuar, quizá dentro de la tira o piso actual del mapa (con un offset, vaya).
 
@@ -861,3 +861,31 @@ Tras extraer los incrementos y meterlos en un array he programado a ciegas el co
     }
     
 Lo probaría, pero necesito redibujar y cierta infraestructura, y se me hace tarde, así que lo dejaré hasta mañana.
+
+20170120
+========
+
+Más gripón, y 11 días para hacer esto. Creo que pinta mal, me he liao con los gráficos, y ahora me voy a poner a hacer más XD
+
+Bueno, al lío, que tengo poco tiempo y las siestas del churum son jodidamente cortas últimamente.
+
+~~
+
+Gráficos entregagos, ahora voy a modificar el script de recorte que muchos sprites son más grandes. A ver como vamos de patrones :)
+
+~~
+
+El pezón funciona pero tengo mal el cálculo de los sprites que tengo que mostrar y que entran en el viewport. Algo chungo estoy haciendo, no selecciono bien. Pero va por buen camino :)
+
+~~~
+
+Arreglé eso, más o menos, porque glitchea. O sea, va bien, pero me da la impresión de que durante un instante mientras scrolleamos los sprites desaparecen. Seguro que hay un caso marginal en el que no se cumple ninguna de las condiciones, tengo que revisarlo.
+
+También he hecho los enemigos lineales - con colisión. Eso significa que he tenido que añadir infraestructuras para leer los buffers temporales desde el módulo de enemigos y está funcionando guay.
+
+He apañado también las transiciones laterales aunque si me sobra sitio y ciclos puede que las ajuste más, pero por ahora me vale. 
+
+Ahora hay un par de detalles tonters que me mosquean un poco, pero bueno, poco a poco. A ver qué tal se me dan los fantis de lógica entera e incrementos precalculados. Generaré la tabla y empezaré a probar. Supuestamente tenemos un índice que se incrementa cuando aceleramos y decrementa cuando deceleramos. El incremento 0 está en el centro de la tabla, así que eso debe ser nuestra "velocidad 0". Luego saturamos por ambos lados si nos vamos a salir de la tabla y poco más. Debería estar chupado. Y me va a venir de puta madre para el Yun de master.
+
+Tendré que refinar un poco el tema este. Son homing fantis: si te vas muy lejos vuelven a casa. Ese "si te vas muy lejos" es un cálculo medianamente costoso, creo que puedo limitarlo a la coordenada X y hacer el fullero. Además, si te sales de la pantalla donde están directamente ya no te verán y quedará menos cantoso. Creo que puede dar el pego... Aunque recuerdo que los metí en Pong Pong y quedaba raro. Bueno, ya veremos.
+

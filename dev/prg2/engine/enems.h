@@ -31,7 +31,10 @@ void enems_load (void) {
 
 		enidx ++;
 
+*((unsigned char *) (0xf8 + gpit)) = rdc; 
+	
 		en_t [gpit] = rda; rdt = rda & 0xf0;
+		en_s [gpit] = (rda & 0xf) << 2;
 		
 		en_x [gpit] = en_x1 [gpit] = rdb << 4;
 		en_y [gpit] = en_y1 [gpit] = rdb & 0xf0;
@@ -88,17 +91,69 @@ void enems_preload (void) {
 }
 
 void enems_do (void) {
-	// Mux a bit the load. If we created enemies, don't process them
-	// this frame.
-	if (en_just_loaded) {
-		en_just_loaded = 0; return;
-	}
-
-	// Now, out of order.
+	// Out of order.
 	gpit = en_iter; en_iter ++; if (en_iter == 6) en_iter = 0;
-	gpjt = 6; while (gpjt = 0) {
+	gpjt = 6; while (gpjt --) {
 		gpit += 5; if (gpit > 5) gpit -= 6;
 
+		en_scr_buffer_ptr = scr_buffer + (gpit < 3 ? 0 : 192);
 
+		rdt = en_t [gpit] & 0xf0;
+		if (!rdt) continue;
+
+		sprid = 0xff; // this may be removed later
+
+		switch (rdt) {
+			case 0x10:
+			case 0x20:
+				// Linear
+				#include "prg2/engine/enem_mods/enem_linear.h"
+
+				break;
+
+			case 0x30:
+				// Fanty
+
+				break;
+
+			case 0x50:
+				// Chac Chac
+
+				break;
+
+			case 0xC0:
+				// Pezon
+				#include "prg2/engine/enem_mods/enem_pezon_precalc.h"
+				break;
+		}
+
+		// Render
+		rdb = (MSB (cam_pos)) & 1;
+		cam_pos_mod = LSB (cam_pos);
+		if ((rdb && gpit >= 3) || (!rdb && gpit < 3)) {
+			if (sprx >= cam_pos_mod) rdx = sprx - cam_pos_mod; 
+			else sprid = 0xff;
+		} else {
+			if (sprx + 16 < cam_pos_mod) rdx = 256 - cam_pos_mod + sprx;
+			else sprid = 0xff;
+		}
+
+		if (sprid != 0xff) {
+			// Occlude pezons
+			if (rdt == 0xC0) {
+				// Occluding sprite
+				oam_index = oam_meta_spr (
+					rdx, en_y1 [gpit],
+					oam_index,
+					spr_en [PEZONS_BASE_SPRID + 2]
+				);
+			}
+
+			oam_index = oam_meta_spr (
+				rdx, spry,
+				oam_index,
+				spr_en [sprid]
+			);
+		}
 	}
 }

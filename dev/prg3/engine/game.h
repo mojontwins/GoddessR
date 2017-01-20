@@ -20,7 +20,7 @@ void game_init (void) {
 
 	c_enems_t = enems_t_0;
 	c_enems_yx1 = enems_yx1_0;
-	c_enems_yx2 = enems_mn_0;
+	c_enems_yx2 = enems_yx2_0;
 	c_enems_mn = enems_mn_0;
 }
 
@@ -89,13 +89,13 @@ void game_loop (void) {
 
 			oam_index = 4;
 			bankswitch (2);
-			enems_do ();
 			player_move ();
 			camera_do ();
 			player_render ();
+			enems_do ();
 
-			if (px_world < section_x0) game_res = PLAYER_EXIT_LEFT;
-			else if (px_world > section_x1 + 240) game_res = PLAYER_EXIT_RIGHT;
+			if (px_world < section_x0 + 4) game_res = PLAYER_EXIT_LEFT;
+			else if (px_world > section_x1 + 244) game_res = PLAYER_EXIT_RIGHT;
 
 			bankswitch (2);
 			oam_hide_rest (oam_index);

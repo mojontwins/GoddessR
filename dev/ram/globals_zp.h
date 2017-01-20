@@ -33,6 +33,7 @@ unsigned char state_ctr;
 unsigned int col_v_offset;
 
 signed int cam_pos, cam_pos_old;
+unsigned char cam_pos_mod;
 signed int section_x0;
 signed int section_x1;
 
@@ -41,6 +42,7 @@ unsigned char cx1, cx2, cy1, cy2;
 unsigned char cxaux, cyaux;
 unsigned char at1, at2;
 unsigned char *scr_buffer_ptr;
+unsigned char *en_scr_buffer_ptr;
 unsigned char scr_v_offset;
 
 // Dum
@@ -70,5 +72,7 @@ const unsigned char *c_enems_mn;
 unsigned char enidx, en_just_loaded;
 unsigned char en_iter;
 unsigned char en_t [6], en_x1 [6], en_y1 [6], en_x2 [6], en_y2 [6];
-unsigned char en_x [6], en_y [6], en_mx [6], en_my [6], en_state [6];
-
+unsigned char en_x [6], en_y [6], en_state [6], en_s [6];
+signed char en_mx [6], en_my [6];
+unsigned char sprx, spry, sprid;
+unsigned char en_cx, en_cy;

@@ -73,6 +73,11 @@
 	#define SCROLL_STATE_CHUNK_0		2
 	#define SCROLL_STATE_CHUNK_7		4
 
+// Defines for enemies
+
+	#define PEZON_WAIT					50
+	#define PEZONS_BASE_SPRID			16
+
 // Defines for readability
 
 	#define CHAC_CHAC_TIMER				en_x2

@@ -26,7 +26,6 @@ void player_collision_vertical (void) {
 }
 
 void player_collision_horizontal (void) {
-	*((unsigned char *)0xf0)=cx1;
 	if (cx1 > 15) {
 		cx1 -= 16;
 		gp_aux = scr_buffer + ((n_pant & 1) ? 0 : 192);
