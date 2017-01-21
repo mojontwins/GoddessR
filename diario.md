@@ -991,3 +991,28 @@ Hay un shortcut: si recuerdo el anterior cc_it y miro que el col_idx nuevo sea d
 Nah, lo he probado y si hay muchos chac chac glitchea que es un gusto.
 
 Búsqueda lineal y a mamarla.
+
+~~
+
+Todo va muy guay. Lo he subido a Github. Justo después, jugando, me he dado cuenta de un glitch en la creación de enemigos. Ha sido al subir a la pantalla de arriba desde la última pantalla del mapa, y luego avanzar a la izquierda. Hay un murciélago que se convirtió en mono en la pantalla penúltima. Tengo que revisar cómo se inicializa el mapa en los bordes, puede que sea el problema.
+
+Pero hoy me he pegado muuucho rato.
+
+~~
+
+Creo que es esto: 
+
+    rdpant = n_pant; enems_load ();
+    rdpant = n_pant + 1; enems_load ();
+
+Obviamente n_pant + 1 no tiene sentido. Voy a intentar controlarlo.
+
+~~
+
+He puesto esto:
+
+    rdpant = n_pant; enems_load ();
+    rdpant = n_pant < 19 ? n_pant + 1 : n_pant - 1; enems_load ();
+
+Por ahora no lo veo glitchear más. Será cuestión de seguir jugando y verlo. Voy a subirlo a github y me voy a jugar un rato a la consola. Mañana hotspots.
+
