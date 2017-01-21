@@ -77,6 +77,7 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 #include "prg2/engine/camera.h"
 #include "prg2/engine/player.h"
 #include "prg2/engine/enems.h"
+#include "prg2/engine/chac_chac.h"
 
 // ----------------------------------------------------------------------------
 
@@ -87,6 +88,7 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 // CODE segment = PRG3, the fixed segment. Global functions need be here.
 // ############################################################################
 
+#include "prg3/engine/ul_helpers.h"
 #include "prg3/engine/scroller.h"
 #include "prg3/engine/game.h"
 

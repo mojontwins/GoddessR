@@ -10,7 +10,8 @@ void game_init (void) {
 	tokumaru_lzss (hex_digit_ts_patterns_c, 3840);	// 240*16
 	tokumaru_lzss (main_ss_patterns_c,      4096);	// 256*16
 
-	level = 3; n_pant = 9;
+	//level = 3; n_pant = 9;
+	level = 3; n_pant = 16;
 
 	bankswitch (2);
 	player_init ();
@@ -52,6 +53,7 @@ void game_loop (void) {
 	
 	// Inits
 	bankswitch (2);
+	chac_chac_init ();
 	game_strip_setup ();
 
 	// Screen
@@ -91,6 +93,7 @@ void game_loop (void) {
 			bankswitch (2);
 			player_move ();
 			camera_do ();
+			chac_chac_do ();
 			player_render ();
 			enems_do ();
 

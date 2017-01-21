@@ -931,3 +931,63 @@ A examinar valores XD
 Solucionado. El tema era que estaba incrementando siempre aunque no hiciera falta los valores en el estado retreating, con lo que los murciélagos empezaban a pivotar en un loop que podía hacerse infinito. Creo que lo he arreglado.
 
 Ahora habrá que pasar a lo siguiente: ¡hotspots!
+
+~~
+
+Espera, que quedan los chac-chacs.
+
+Se me ha ocurrido que es tontería procesarlos como enemigos. No se mueven (no son sprites, me refiero), actualizan de forma diferente (mediante la update list), no usan la colisión usual (simplemente marcan el buffer como tiles de tipo 1 - algo que por cierto tengo que meter todavía)... Lo suyo es manejarlos aparte.
+
+Me crearé las estructuras necesarias en BSS (que está casi libre) y activaré los chac-chacs cuando se entre en la pantalla y los desactivaré cuando salgan del área visible. Por cierto, voy a meter los precálculos del módulo y parte "entera" de cam_pos en el módulo de manejo de la cámara y así estarán disponibles posteriormente a tutiplen, que los necesito.
+
+También guardaré la ejecución. Cada frame sólo voy a actualizar una (si toca), y solo lo haré si no hemos scrolleado o estamos en el paso 7.
+
+~~
+
+Atención con esto:
+
+    // Chac chac creation. Note there's an increible
+    // shortcut: chac chacks must have X even, Y odd to be
+    // detected!
+    if (rda == CHAC_CHAC_BASE_TILE) {
+        chac_chac_create ();
+        rda = CHAC_CHAC_TOP_SHADOW_TILE;
+    }
+        
+Sorry, asín es.
+
+~~
+
+Ojal guarrada: en printer estoy metiendo una función que actualice un metatile y tal. Necesito los metatiles y sus datos, y estos están en prg0... La función debe colocar prg2 en cuanto acabe o crash. Pero bueno, no pasa nada. La putada es que no puedo leer la pantalla, y no quiero tener otro buffer, por lo que esta mierda tendrá que llevar la paleta que ya hay. Es una putada, pero peor es nada. Si queda muy soso cambiaré los gráficos. ¿A quién quiero engañar? Los cambiaré de todos modos.
+
+~~
+
+Lo he hecho muy rápido... ¿Qué me falta? Voy a compilar y a ver.
+
+(no lo he compilado aún) ¡Ah, ya sé! Eliminar los chac chacs. Esto no es tan sencillo, bro.
+
+A ver, cc_x contendrá un número de 0 a 15. cc_pant, un número 0 o 1. voy a dibujar. Hm - espera, que se crean fuera de la pantalla. Al carajo el dibujo. Tiene que ser más sencillo.
+
+Si almaceno el col_idx donde estaba, sólo tengo que eliminarlo cuando este col_idx esté "muy lejos". Si cc_col_idx < col_idx_act - 1 o cc_col_idx > col_idx_act + 9, esto es.
+
+~~
+
+Mayormente las columnas en sí medio van bien, pero la creación parece penca. Algo estoy pasando por alto...
+
+Bueno, por lo pronto tengo el mapa con columnas en Y par. Pero el tema es que no las está eliminando, crea sin sesar.
+
+No, las elimina guay. El problema es que las crea N veces. Seguro que está pintando el mismo tile varias veces o algo (es como las detecto).
+
+Puf - para ver si ya no está creada tendría que hacer una busqueda para que no se repita el col_idx ... Pero eso me duele solo de pensarlo.
+
+Mierder.
+
+~~
+
+Me cago en mi puta calavera. Se me ocurren soluciones, pero todas implican gastar un porrón de RAM, y paso. Búsqueda que te crió.
+
+Hay un shortcut: si recuerdo el anterior cc_it y miro que el col_idx nuevo sea diferente, elimino un montón de casos - a menos que se de que coincida que, al scrollear, en col_idx - 1 y en col_idx + 9 haya chac chacs. Eso se arregla diseñando bien el nivel. Creo que podría funcionar.
+
+Nah, lo he probado y si hay muchos chac chac glitchea que es un gusto.
+
+Búsqueda lineal y a mamarla.

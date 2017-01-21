@@ -57,12 +57,6 @@ void enems_load (void) {
 				en_mx [gpit] = en_my [gpit] = 0;
 				break;
 
-			case 0x50:
-				// Chac Chac
-				CHAC_CHAC_TIMER [gpit] = CHAC_CHAC_MAX_TIME [gpit] = rdd << 4;
-				en_x [gpit] >>= 4; en_y [gpit] >>= 4;
-				break;
-
 			case 0xC0:
 				// Pezons
 				PEZON_TIMER [gpit] = PEZON_MAX_TIME [gpit] = PEZON_WAIT + (rdd << 3); 
@@ -114,11 +108,6 @@ void enems_do (void) {
 				#include "prg2/engine/enem_mods/enem_fanty_precalc.h"
 				break;
 
-			case 0x50:
-				// Chac Chac
-
-				break;
-
 			case 0xC0:
 				// Pezon
 				#include "prg2/engine/enem_mods/enem_pezon_precalc.h"
@@ -126,9 +115,8 @@ void enems_do (void) {
 		}
 
 		// Render
-		rdb = (MSB (cam_pos)) & 1;
-		cam_pos_mod = LSB (cam_pos);
-		if ((rdb && gpit >= 3) || (!rdb && gpit < 3)) {
+		
+		if ((cam_pos_pant && gpit >= 3) || (!cam_pos_pant && gpit < 3)) {
 			if (sprx >= cam_pos_mod) rdx = sprx - cam_pos_mod; 
 			else sprid = 0xff;
 		} else {

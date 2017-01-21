@@ -54,3 +54,4 @@ void debug_p (unsigned char x, unsigned char y, unsigned char n) {
 	UPDATE = DIGIT (n >> 4);
 	UPDATE = DIGIT (n & 15);
 }
+

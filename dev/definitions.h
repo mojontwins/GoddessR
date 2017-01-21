@@ -84,10 +84,12 @@
 	#define FANTY_ST_RETREATING			2
 	#define FANTY_SIGHT_DISTANCE		96
 
-// Defines for readability
+// Defines for chac chacs
 
-	#define CHAC_CHAC_TIMER				en_x2
-	#define CHAC_CHAC_MAX_TIME 			en_y2
+	#define CHAC_CHAC_MAX 				5
+	#define CHAC_CHAC_BASE_TILE			48		// For detection
+
+// Defines for readability
 
 	#define PEZON_TIMER 				en_x2
 	#define PEZON_MAX_TIME 				en_y2

@@ -3,6 +3,30 @@
 
 // Scrolling stuff. Everything you need is in prg0, so page it in.
 
+void scroll_chac_chac_create (void) {
+	// I could do something prettier but RAM is tight, time is tight
+	// And my ass is NOT tight.
+
+	if (col_idx == cc_col_idx [0] || 
+		col_idx == cc_col_idx [1] || 
+		col_idx == cc_col_idx [2] || 
+		col_idx == cc_col_idx [3] ||
+		col_idx == cc_col_idx [4]) return;
+
+	// Discard?
+	ccit = CHAC_CHAC_MAX; while (ccit --) {
+		if (0 == cc_col_idx [ccit]) {
+			cc_x [ccit] = rdc >> 1;
+			cc_pant [ccit] = (col_idx >> 3) & 1;
+			cc_y [ccit] = rdd + (rdct >> 1);
+			cc_s [ccit] = 0;
+			cc_ctr [ccit] = chac_chac_times [5] + (rand8 () & 0x1f);
+			cc_col_idx [ccit] = col_idx;
+			break;
+		}
+	}
+}
+
 void scroll_paint_chunk (void) {
 	// Calculate memory address of current column [col_idx * 24]
 	gpint = col_idx << 2;
@@ -18,13 +42,21 @@ void scroll_paint_chunk (void) {
 	if (state_ctr < 6) {
 		// State 0..5: draw patterns. 4x4 chunk
 
-		// which nametable?
+		// where to paint
+		rdct = (state_ctr << 2);
 		gp_addr = (rdd ? NAMETABLE_B : NAMETABLE_A) + rdc + col_v_offset;
-		gp_aux = (unsigned char *) (col_ptr + (state_ctr << 2));
+		gp_aux = (unsigned char *) (col_ptr + rdct);
 		gp_gen = gp_aux;
 		
 		// Two metatiles
 		rda = *gp_gen ++; rdb = *gp_gen ++;
+
+		// Chac chac creation. Note there's an increible
+		// shortcut: chac chacks must have X even
+		if (rda == CHAC_CHAC_BASE_TILE) {
+			rdd = 0; scroll_chac_chac_create ();
+			rda = 54;
+		}
 		
 		UPDATE = MSB (gp_addr) | NT_UPD_HORZ;
 		UPDATE = LSB (gp_addr);
@@ -48,6 +80,13 @@ void scroll_paint_chunk (void) {
 
 		// Two metatiles more
 		rda = *gp_gen ++; rdb = *gp_gen;
+
+		// Chac chac creation. Note there's an increible
+		// shortcut: chac chacks must have X even
+		if (rda == CHAC_CHAC_BASE_TILE) {
+			rdd = 1; scroll_chac_chac_create ();
+			rda = 54;
+		}
 		
 		UPDATE = MSB (gp_addr) | NT_UPD_HORZ;
 		UPDATE = LSB (gp_addr);
@@ -138,7 +177,7 @@ void scroll_to (void) {
 	} else if (cam_pos < cam_pos_old) {
 		col_idx = (cam_pos >> 5) - 1;
 		scroll_paint_chunk ();
-	}
+	} else scroll_state = SCROLL_STATE_FREE;
 
 	cam_pos_old = cam_pos;
 }

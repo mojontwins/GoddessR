@@ -41,3 +41,14 @@ const signed char fanty_incs [] = {
 const signed char fanty_retreat_incs [] = {
 	1, 0, 0, 0
 };
+
+const unsigned char chac_chac_tiles_0 [] = { 48, 50, 53, 50, 48, 54 };
+const unsigned char chac_chac_tiles_1 [] = { 54, 54, 52, 54, 54, 54 };
+const unsigned char chac_chac_tiles_2 [] = { 49, 51, 53, 51, 49, 54 };
+const unsigned char chac_chac_times [] = { 16, 1, 50, 2, 2, 120 };
+
+const unsigned int nt_tile_offsets_y [] = {
+	0, 64, 128, 192,
+	256, 320, 384, 448, 
+	512, 576, 640, 704
+};

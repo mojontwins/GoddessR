@@ -5,7 +5,7 @@
 
 // General
 unsigned char rda, rdb, rdc, rdd, rdct, rdt;
-unsigned char rdx, rdy, rdpant;
+unsigned char rdx, rdy, rdpant, ccit;
 signed char rds;
 
 unsigned char gpit, gpjt;
@@ -24,7 +24,6 @@ unsigned char pad0, pad;
 unsigned char half_life;
 unsigned char frame_counter;
 unsigned char fskip_ctr;
-unsigned char ntsc;
 
 // Scrolling engine
 unsigned int col_idx;
@@ -34,7 +33,7 @@ unsigned char state_ctr;
 unsigned int col_v_offset;
 
 signed int cam_pos, cam_pos_old;
-unsigned char cam_pos_mod;
+unsigned char cam_pos_mod, cam_pos_pant;
 
 // Collision detection
 unsigned char cx1, cx2, cy1, cy2;
