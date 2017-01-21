@@ -894,3 +894,40 @@ Qué coño - acabo de ver el tema del glitch: es el frame en el que no proceso l
 Creo que tengo que pasar de eso, hay que pintarlos por lo menos, y pintar es procesar porque va todo unido.
 
 Mira, cojona, si me veo jodido de tiempo de frame ya me pondré a multiplexar luego. Joder.
+
+20170121
+========
+
+Ayer me acosté con la sensación de que los sprites más grandes y la animación penca quedaban fatal. He intercalado frames entre los que hay y voy a ver si me sigue dando la tabla de patrones para sprites. Quería dejarme algo para otro tipo de enemigos pero creo que tendré que ser creativo cuando llegue el momento.
+
+~~
+
+Ok - no he gastado demasiado y ha quedado BASTANTE mejor. Ya estoy contento, tras una hora de mover pixels. Ahora voy a programar los fantis. Primero, como en el otro caso, me generaré toda la tabla de incrementos simulando el comportamiento del motor real (aceleración hasta el máximo, y valores negados para el contrario).
+
+~~
+
+Veamos, he generado una tabla de 16 incrementos. Esto harán que, en 16 frames, se llegue de 0 pixels por frame a 1 pixel por frame. Más o menos. Según lo veo es muy rápido, pero veamos como funciona. Si veo que es muy mal, aumentamos los pasos dividiendo la aceleración.
+
+Tendremos en mx, my las "velocidades", que no son más que índices de la tabla fanty_incs. Podrán valer de -16 a 16, con estas restricciones:
+
+- Si valen -16 o 16, se convierten en -15 o 15.
+- El incremento I según el valor de mx/my será:
+    inc = ADD_SIGN (mx, fanty_incs [ABS (mx)])
+
+UF! Veamos qué tal se da. Es que esto es lo mas rápido con diferencia.
+
+~~
+
+Más o menos parece que funciona ¡a la primera! pero debe haber algo que no controlo bien porque los fantys nunca se quedan estacionados en modo idle cuando salgo de la "pantalla" virtual. Hm...
+
+Y de tiempo van guay. Obviamente son mas pesados que otros tipos de enemigos pero el motor podrá mover tres sin toser.
+
+Hm... no. En determinadas circunstancias se quedan TOPI. TOPILLAOS.
+
+A examinar valores XD
+
+~~
+
+Solucionado. El tema era que estaba incrementando siempre aunque no hiciera falta los valores en el estado retreating, con lo que los murciélagos empezaban a pivotar en un loop que podía hacerse infinito. Creo que lo he arreglado.
+
+Ahora habrá que pasar a lo siguiente: ¡hotspots!

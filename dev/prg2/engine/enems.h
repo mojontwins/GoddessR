@@ -4,11 +4,12 @@
 // Enems routines
 
 void enems_load (void) {
-	gpit = (rda & 1) ? 3 : 0; gpjt = 3 + gpit;
-	rda += base_pant;
+	gpit = (rdpant & 1) ? 3 : 0; gpjt = 3 + gpit;
+	rda = rdpant + base_pant;
 	enidx = (rda << 1) + rda;
 
 	for (; gpit < gpjt; gpit ++) {
+		en_p [gpit] = rdpant;
 		
 		// cc65 could do better, so:
 		
@@ -29,12 +30,10 @@ void enems_load (void) {
 		__asm__ ("lda (%v), y", c_enems_mn);
 		__asm__ ("sta %v", rdd);
 
-		enidx ++;
-
-*((unsigned char *) (0xf8 + gpit)) = rdc; 
+		enidx ++; 
 	
 		en_t [gpit] = rda; rdt = rda & 0xf0;
-		en_s [gpit] = (rda & 0xf) << 2;
+		en_s [gpit] = (rda & 0xf) << 3;
 		
 		en_x [gpit] = en_x1 [gpit] = rdb << 4;
 		en_y [gpit] = en_y1 [gpit] = rdb & 0xf0;
@@ -82,8 +81,8 @@ void enems_preload (void) {
 
 	if (cam_pant == cam_pant_old) return;
 
-	if (cam_pant > cam_pant_old) rda = cam_pant + 1;
-	else rda = cam_pant;	
+	if (cam_pant > cam_pant_old) rdpant = cam_pant + 1;
+	else rdpant = cam_pant;	
 
 	cam_pant_old = cam_pant;
 
@@ -108,12 +107,11 @@ void enems_do (void) {
 			case 0x20:
 				// Linear
 				#include "prg2/engine/enem_mods/enem_linear.h"
-
 				break;
 
 			case 0x30:
 				// Fanty
-
+				#include "prg2/engine/enem_mods/enem_fanty_precalc.h"
 				break;
 
 			case 0x50:
@@ -150,7 +148,7 @@ void enems_do (void) {
 			}
 
 			oam_index = oam_meta_spr (
-				rdx, spry,
+				rdx, spry + SPRITE_ADJUST,
 				oam_index,
 				spr_en [sprid]
 			);

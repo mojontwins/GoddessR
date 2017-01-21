@@ -1,6 +1,7 @@
 Dim As Integer enf_y, enf_vy, en_y, en_y_old, steps
 Dim As String incs, coor
 Print "precalculating pezon."
+Print "original uses (-)8.6 fixed point math."
 
 enf_y = 240 Shl 6
 enf_vy = -384 ' PEZON_THRUST

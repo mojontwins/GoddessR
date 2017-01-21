@@ -24,3 +24,5 @@ const unsigned char *c_pal_fg;
 
 // Scroll state
 unsigned char scroll_state;
+signed int section_x0;
+signed int section_x1;

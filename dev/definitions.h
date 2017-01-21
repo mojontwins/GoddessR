@@ -76,7 +76,13 @@
 // Defines for enemies
 
 	#define PEZON_WAIT					50
-	#define PEZONS_BASE_SPRID			16
+	#define PEZONS_BASE_SPRID			32
+
+	#define FANTY_BASE_SPRID			36
+	#define FANTY_ST_IDLE				0
+	#define FANTY_ST_PURSUING			1
+	#define FANTY_ST_RETREATING			2
+	#define FANTY_SIGHT_DISTANCE		96
 
 // Defines for readability
 
@@ -86,5 +92,6 @@
 	#define PEZON_TIMER 				en_x2
 	#define PEZON_MAX_TIME 				en_y2
 	#define PEZON_INCS_IDX				en_my
+
 
 

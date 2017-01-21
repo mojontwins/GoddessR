@@ -1,7 +1,7 @@
 // Precalculated pezon
 // Copyleft 2017 by The Mojon Twins
 
-// Needs PEZON_INCS_MAX and pezon_incs
+// Needs PEZON_INCS_MAX, PEZON_INCS_FIRST_FALL and pezon_incs
 
 	if (en_state [gpit]) {
 		en_y [gpit] += pezon_incs [PEZON_INCS_IDX [gpit]];

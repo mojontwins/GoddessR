@@ -31,3 +31,13 @@ const signed char pezon_incs [] = {
 	2, 2, 3, 3, 3, 4, 4, 4, 
 	4, 4, 4, 4, 4, 4, 4, 4
 };
+
+#define FANTY_INCS_MAX 16
+const signed char fanty_incs [] = {
+	0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1
+};
+
+#define FANTY_RETREAT_INCS_MAX 4
+const signed char fanty_retreat_incs [] = {
+	1, 0, 0, 0
+};

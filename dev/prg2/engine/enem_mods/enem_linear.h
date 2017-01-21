@@ -50,6 +50,6 @@
 
 	sprx = en_x [gpit]; spry = en_y [gpit];
 	sprid = en_s [gpit] + (en_mx [gpit] == 0 ?
-		((en_my [gpit] < 0 ? 2 : 0) + ((en_y [gpit] >> 4) & 1)) :
-		((en_mx [gpit] < 0 ? 2 : 0) + ((en_x [gpit] >> 4) & 1)));
+		((en_my [gpit] < 0 ? 4 : 0) + ((en_y [gpit] >> 2) & 3)) :
+		((en_mx [gpit] < 0 ? 4 : 0) + ((en_x [gpit] >> 2) & 3)));
 	

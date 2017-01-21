@@ -63,8 +63,8 @@ void game_loop (void) {
 
 	// Preload enems
 	bankswitch (2);
-	rda = n_pant; enems_load ();
-	rda = n_pant + 1; enems_load ();
+	rdpant = n_pant; enems_load ();
+	rdpant = n_pant + 1; enems_load ();
 	cam_pant_old = MSB (cam_pos);
 	
 	SCR_BUFFER_PTR_UPD;
