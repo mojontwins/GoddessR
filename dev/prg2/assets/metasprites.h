@@ -44,3 +44,16 @@ const unsigned char * const spr_en [] = {
 	// FANTY_BASE = 36
 	ssenb_03, ssenb_04, ssenb_05, ssenb_04
 };
+
+const unsigned char * const spr_it [] = {
+	0,
+	ssit_00, ssit_01, ssit_02, ssit_03,
+	ssit_04, ssit_05, ssit_06, ssit_07
+};
+
+const unsigned char spr_empty [] = {
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0x80
+};

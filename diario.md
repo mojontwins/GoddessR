@@ -1016,3 +1016,109 @@ He puesto esto:
 
 Por ahora no lo veo glitchear más. Será cuestión de seguir jugando y verlo. Voy a subirlo a github y me voy a jugar un rato a la consola. Mañana hotspots.
 
+~~
+
+Pero me apetece divagar un poco sobre los hotspots. A nivel de sprites y mierdas serían igual que los enemigos, mismos cálculos, bla bla, solo que más sencillos. Sólo hay un por pantalla. La precarga necesita menos valores. 
+
+Los hotspots están vacíos, contienen objetos, o sirven de detectores. Todo tiene que ver con el valor que almacenan. En teoría puedo poner y dejar objetos en los hotspots.
+
+- Un objeto correcto que se deje en un templo debe quedarse fijado y no poder cogerse de nuevo.
+- Determinados contenidos hacen que mostremos el cuadrado de linea discontinua: hotspot sin objeto, detector.
+- El hotspot de vida y el de la calavera se pueden coger y deben desaparecer para siempre.
+
+El quid está en como codificar:
+
+- Hotspots que se cogen, actúan y desaparecen (vida, calavera).
+- Hotspots de detección (teletransportador, templos, recarga de superpoderes).
+- Hotspots contenedores para piedra, papel, tijeras y llave.
+
+Podemos hacer 0xff sea "sin objeto". Si no llevas nada, llevarás "0xff". Si interactúas con un hotspot que tenga un objeto recogiscible, se intercambia este 0xff con el código del objeto.
+
+Si ponemos corazon = 1, Calavera = 2, Piedra = 4, Papel = 5, Tijeras = 6, Llave = 7 los puedo hacer coincidir con el sprite_id.
+
+Al tocar un hotspot, primero detecto 1 o 2, y actúo y pongo el hotspot a 0, que es desactivado total.
+
+Si no era 1 o 2, miro si es 5, 6, 7 o 8. En ese caso intercambio el objeto que llevamos con el que hay en el hotspot (intercambio los valores).
+
+Todo esto me cabe en 3 bits, por lo que puedo codificar el resto levantando bits.
+
+- bit 3 a 1: es el templo donde se utiliza el objeto correspondiente con el bit 3 a 0, en orden templos de tijeras, piedra, papel, cerrojo. 
+- bit 4 a 1: el objeto que tiene no se puede coger.
+
+Por tanto, seguimos detectando así. Si no se cumple nada de lo anterior, ver si (hst & 8) (bit 3 = 1) y que no sea que (hst & 16) (bit 4 = 0). En este caso, si hst & 7 == objeto en el inventario, le levantamos el bit 4 al hotspot, le bajamos el 3 y hacemos la animación e historias necesarias.
+
+Si no se cumple nada, vemos si es recarga o teletransportador, con códigos especiales.
+
+A la hora de pintar:
+
+- Si es 0, nada.
+- Si es < 8, el sprite que corresponda.
+- Si es el cerrojo, el sprite cerrojo! <-especial
+- Si tiene el bit 4 a 1 se muestra el sprite que sea hst & 7.
+- En otro caso, caja vacía.
+
+Con esto puedo hacer rápido el soporte básico. Luego ya veremos las animaciones y las historias, que eso trae más cola.
+
+Tendré que modificar los valores del mapa.
+
+    - CORAZON: 01
+    - CALAVERA: 02
+    - PIEDRA: 04
+    - TEMPLO TIJERAS: 4 + 8 = 0C
+    - PAPEL: 05
+    - TEMPLO PIEDRA: 5 + 8 = 0D
+    - TIJERAS: 06
+    - TEMPLO PAPEL: 6 + 8 = 0E
+    - LLAVE: 07
+    - CERROJO: 7 + 8 = 0F
+    - TELETRANSPORTE: 20
+    - RECARGA PODER: 21
+    - FINAL: 22
+
+Ok - puestos. Agur.
+
+20170122
+========
+
+Voy a hacer una implementación de la base necesaria: copia a RAM, creación al vuelo del sprite, etc. Y luego me hago un cafel.
+
+~~
+
+Bueno, ya se muestran los hotspots. Ahora es el momento en el que me tengo que poner con las colisiones. Y me temo que para ello tendremos que reorganizar un par de cosas, como el orden en el que se pintan los sprites, para que las plataformas verticales no den "saltitos". Haré lo de siempre: sacaré al sprite del protagonista de oam_index, lo pinto siempre fijo en oam_index = 4, e inicializo oam_index para el resto en 28 en vez de en 4. Sí, si alguien lee esto, no se ha enterado de un carajo.
+
+~~
+
+Vamos con la colisión de los enemigos y plataformas. Empezaré por las plataformas, pero antes algo de infraestructura: reorganizo el código para que se salte el enemigo lo antes posible: 
+
+- Si tras moverlo sprid = 0xff, no se muestra, no interactúa.
+- Si tras calcular el clipping (si aparece en pantalla o no) está fuera, no interactúa.
+- Si está en una pantalla diferente al jugador, no interactúa.
+
+Si hemos llegado hasta aquí el enemigo se ha pintado y está en la misma pantalla que el jugador, por lo que podrá colisionar.
+
+El orden de comprobación de la colisión (por caja) debe intentar quitarse de encima todo lo antes posible. Es mejor comprobar primer X y luego Y, porque las pantallas son más anchas que altas, y es más probable que coincidan Y pero no X que coincidan X pero no Y. Es una chorrez, pero puede eliminar muchos ciclos en la mayoría de los casos. Personalmente siempre hago estas mierdas.
+
+Ojezno, además: en este punto puedo usar sprx y spry para colisionar porque ya contienen las coordenadas correctas del sprite. 
+
+~~
+
+Bueno, eso que yo llamo "die & respawn" desde tiempos de Ninjajar! ya está implementado. Ahora faltaría detectar los tiles que te matan. Lo más fácil en este juego es mirar el punto central de Cheril. Creo que funcionará y es lo más tonto de hacer. Ojal: no voy a controlar la condición de salirme de la pantalla y tener que bla bla bla como la colisión con el escenario. No hace falta ser tan precisos. Las condiciones en las que te vas a topar con un tile que mata harán que si no te da en el frame A te de en el A+1, vaya, que caerse a la lava y darse con un chac chac no son cosas que requieran una precisión milimétrica.
+
+~~
+
+Bueno, pues ya están las colisiones andando. Ahora podemos hacer otras cosas que son necesarias:
+
+- Colisiones con hotspots y lógica.
+- Hud y sprite 0 hit.
+
+Las colisiones con hotspots + lógica llevarán luego la implementación de las animaciones: activar templo y teletransportarse.
+
+Además tendré que ver qué voy a hacer con el cerrojo. Se abre la llave y debería modificarse al vuelo el escenario. Eso es tarea para colocar en algún sitio pero aún no he pensado como hacerlo y no me quiero liar a meter mierda sin pensar que luego todo se caga.
+
+Además he optimizado el cálculo del índice del buffer de colisiones a saco con una tontería, y además me planteo hacer que el buffer no contenga tiles sino comportamientos directamente, ahorrando aún más ciclos, pero eso por ahora no es necesario y prefiero dejarlo así por lo que pueda pasar (puede que lo necesite).
+
+Tengo que pensar también como voy a hacer para renderizar la escena de las puertas abriéndose. Quizá iniciando el motor de forma especial en un bucle alternativo que solo cargue la zona, dibuje las puertas, y poco más.
+
+Otra cosa que hay que hacer es pintar las puertas en el templo si están cerradas. Llevo toda la mañana pensando que quizá lo suyo sería generalizar los chac chacs para que se encargasen de todos estos manejos de nametable. Le daré más vueltas.
+
+Son las 13:30 y llevo un montón de rato aquí, creo que lo dejo porque trabajo mejor despejado y me apetece escribir a máquina.

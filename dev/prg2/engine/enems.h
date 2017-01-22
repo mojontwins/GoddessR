@@ -67,22 +67,6 @@ void enems_load (void) {
 	en_just_loaded = 1;
 }
 
-void enems_preload (void) {
-	// loads 3 enems to the right spot in the arrays
-	// rda == n_pant
-
-	cam_pant = MSB (cam_pos);
-
-	if (cam_pant == cam_pant_old) return;
-
-	if (cam_pant > cam_pant_old) rdpant = cam_pant + 1;
-	else rdpant = cam_pant;	
-
-	cam_pant_old = cam_pant;
-
-	enems_load ();
-}
-
 void enems_do (void) {
 	// Out of order.
 	gpit = en_iter; en_iter ++; if (en_iter == 6) en_iter = 0;
@@ -115,31 +99,69 @@ void enems_do (void) {
 		}
 
 		// Render
+
+		if (sprid == 0xff) continue;
 		
 		if ((cam_pos_pant && gpit >= 3) || (!cam_pos_pant && gpit < 3)) {
 			if (sprx >= cam_pos_mod) rdx = sprx - cam_pos_mod; 
-			else sprid = 0xff;
+			else continue; 
 		} else {
 			if (sprx + 16 < cam_pos_mod) rdx = 256 - cam_pos_mod + sprx;
-			else sprid = 0xff;
+			else continue; 
 		}
 
-		if (sprid != 0xff) {
-			// Occlude pezons
-			if (rdt == 0xC0) {
-				// Occluding sprite
-				oam_index = oam_meta_spr (
-					rdx, en_y1 [gpit],
-					oam_index,
-					spr_en [PEZONS_BASE_SPRID + 2]
-				);
-			}
-
+		// Occlude pezons
+		if (rdt == 0xC0) {
+			// Occluding sprite
 			oam_index = oam_meta_spr (
-				rdx, spry + SPRITE_ADJUST,
+				rdx, en_y1 [gpit],
 				oam_index,
-				spr_en [sprid]
+				spr_en [PEZONS_BASE_SPRID + 2]
 			);
+		}
+
+		oam_index = oam_meta_spr (
+			rdx, spry + SPRITE_ADJUST,
+			oam_index,
+			spr_en [sprid]
+		);
+
+		// Collision
+
+		if (n_pant != en_p [gpit]) continue;
+
+		// With platforms
+		if (rdt == 0x20) {
+			if (prx + 9 >= sprx && prx <= sprx + 17 && !(pj && pvy <= 0)) {
+				// Horizontal
+				if (en_mx [gpit]) {
+					if (pry + 18 >= spry && pry + 12 <= spry) {
+						pgotten = 1;
+						pgtmx = en_mx [gpit] << (FIX_BITS - en_state [gpit]);
+						pry = spry - 16; py = pry << FIX_BITS;
+						pvy = 0;
+					}
+				}
+
+				// Vertical
+				if (
+					(en_my [gpit] < 0 && pry + 17 >= spry && pry + 12 <= spry) ||
+					(en_my [gpit] > 0 && pry + 16 + en_my [gpit] >= spry && pry + 12 <= spry)
+				) {
+					pgotten = 1;
+					pgtmy = en_my [gpit] << (FIX_BITS - en_state [gpit]);
+					pry = spry - 16; py = pry << FIX_BITS;
+					pvy = 0;
+				}
+			}
+			continue;
+		}
+
+		if (pflickers || ppodewwwr) return;
+
+		// With plain enemies
+		if (CL (prx, pry, sprx, spry)) {
+			phit = 1;
 		}
 	}
 }

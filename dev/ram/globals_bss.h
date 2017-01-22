@@ -34,3 +34,16 @@ unsigned char cc_x [CHAC_CHAC_MAX], cc_y [CHAC_CHAC_MAX];
 unsigned char cc_pant [CHAC_CHAC_MAX], cc_s [CHAC_CHAC_MAX];
 unsigned char cc_ctr [CHAC_CHAC_MAX];
 unsigned int cc_col_idx [CHAC_CHAC_MAX];
+
+// Level info
+unsigned char level;
+unsigned char base_pant;
+const signed int *section;
+unsigned char game_res;
+
+// Hotspots
+unsigned char hrt [MAX_PANTS];
+unsigned char hrx [2], hry [2], hrp [2];
+
+// Safe respawn
+unsigned char safe_prx, safe_pry, safe_n_pant, safe_level;

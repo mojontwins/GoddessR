@@ -7,14 +7,21 @@ void player_reset_movement (void) {
 	pvx = pvy = 0;
 }
 
+void player_register_safe_spot (void) {
+	safe_prx = prx; safe_pry = pry;
+	safe_n_pant = n_pant; safe_level = level;
+}
+
 void player_init (void) {
 	prx = (4 << 4); px = prx << FIX_BITS;
 	pry = (6 << 4); py = pry << FIX_BITS;
 	pfacing = pfr = 0;
+	player_register_safe_spot ();
+	player_reset_movement ();
 }
 
 void player_collision_vertical (void) {
-	cyaux = (cy1 < 2 ? 0 : cy1 - 2) << 4;
+	cyaux = cy1 < 32 ? 0 : cy1 - 32;
 	at1 = behs [*(scr_buffer_ptr + cyaux + cx1)];
 	if (cx2 > 15) {
 		cx2 -= 16;
@@ -33,14 +40,17 @@ void player_collision_horizontal (void) {
 		gp_aux = scr_buffer_ptr;
 	}
 
-	cyaux = cy1 < 2 ? 0 : cy1 - 2; 
-	at1 = behs [*(gp_aux + (cyaux << 4) + cx1)];
-	cyaux = cy2 < 2 ? 0 : cy2 - 2; 
-	at2 = behs [*(gp_aux + (cyaux << 4) + cx1)];
+	cyaux = cy1 < 32 ? 0 : cy1 - 32; 
+	at1 = behs [*(gp_aux + cyaux + cx1)];
+	cyaux = cy2 < 32 ? 0 : cy2 - 32; 
+	at2 = behs [*(gp_aux + cyaux + cx1)];
 }
 
 void player_move (void) {
 	pad = pad0;		// Add ifs.
+
+	// Timers and stuff
+	if (pflickers) pflickers --;
 
 	// Vertical
 
@@ -63,27 +73,27 @@ void player_move (void) {
 	cx2 = (prx + 7) >> 4;
 
 	if (pvy + pgtmy < 0) {
-		cy1 = pry >> 4;
+		cy1 = pry & 0xf0;
 		player_collision_vertical ();
 		if ((at1 & 8) || (at2 & 8)) {
 			pgotten = pvy = 0;
-			pry = (cy1 + 1) << 4;
+			pry = cy1 + 16;
 			py = pry << FIX_BITS;
 		} else if ((at1 & 2) || (at2 & 2)) {
 			if (pctj > 2) pj = 0;
 		}
 	} else if (pvy + pgtmy > 0) {
-		cy1 = (pry + 15) >> 4;
+		cy1 = (pry + 15) & 0xf0;
 		player_collision_vertical ();
 		if (((pry - 1) & 15) < 4 && ((at1 & 12) || (at2 & 12))) {
 			pgotten = pvy = 0;
-			pry = (cy1 - 1) << 4;
+			pry = cy1 - 16;
 			py = pry << FIX_BITS;
 		} else if ((at1 & 2) || (at2 & 2)) {
 			pvy = PLAYER_VY_SINK;
 		}
 	}
-	cy1 = (pry + 16) >> 4;
+	cy1 = (pry + 16) & 0xf0;
 	player_collision_vertical ();
 	ppossee = ((pry & 0xf) == 0) && ((at1 & 14) || (at2 & 14));
 	pslip = (ppossee && ((at1 & 16) || (at2 & 16)));
@@ -97,6 +107,7 @@ void player_move (void) {
 					pj = 1; pctj = 0; 
 					pvy = -PLAYER_VY_JUMP_INITIAL;
 					//sfx_play (SFX_JUMP, SC_PLAYER);
+					if (ppossee) player_register_safe_spot ();
 				}
 			} 
 		}
@@ -132,6 +143,7 @@ void player_move (void) {
 
 	// Move
 	px += pvx;
+	if (pgotten) px += pgtmx;
 
 	// Detect virtual screen flix and stuff
 	if (px < 0) {
@@ -145,9 +157,9 @@ void player_move (void) {
 	prx = px >> FIX_BITS;
 
 	// Collision
-	cy1 = pry >> 4;
-	cy2 = (pry + 15) >> 4;
-	if (pvx < 0) {
+	cy1 = pry & 0xf0;
+	cy2 = (pry + 15) & 0xf0;
+	if (pvx + pgtmx < 0) {
 		cx1 = prx >> 4;
 		player_collision_horizontal ();
 		if ((at1 & 8) || (at2 & 8)) {
@@ -155,7 +167,7 @@ void player_move (void) {
 			prx = (cx1 + 1) << 4;
 			px = prx << FIX_BITS;
 		}
-	} else if (pvx > 0) {
+	} else if (pvx + pgtmx > 0) {
 		cx1 = (prx + 7) >> 4;
 		player_collision_horizontal ();
 		if ((at1 & 8) || (at2 & 8)) {
@@ -164,6 +176,20 @@ void player_move (void) {
 			px = prx << FIX_BITS;
 		}
 	}
+
+	// Detect evil tile
+	if (prx < 252) // Safe. 
+		cx1 = (prx + 4) >> 4;
+		/*
+		cy1 = (pry + 8) >> 4;
+		cyaux = (cy1 < 2 ? 0 : cy1 - 2) << 4;
+		*/
+		// this is faster:
+		cy1 = (pry + 8) & 0xf0;
+		cyaux = (cy1 < 32 ? 0 : cy1 - 32);
+		if (behs [*(scr_buffer_ptr + cyaux + cx1)] & 1) {
+			phit = 1;
+		}
 
 	// Calc cell
 	if (ppossee || pgotten) {
@@ -174,14 +200,22 @@ void player_move (void) {
 		pfr = PCELL_AIRBORNE;
 	}
 
+	// Real world pixel coordinate
 	px_world = (n_pant << 8) | prx;
+
+	// Important
+	pgtmx = pgtmy = pgotten = 0;
 }
 
 void player_render (void) {
-	if (half_life || !pflickers) oam_index = oam_meta_spr (
+	if (half_life || !pflickers) oam_meta_spr (
 		px_world - cam_pos,
 		SPRITE_ADJUST + pry,
-		oam_index,
-		spr_pl [pfacing + pfr]
-	);
+		4,
+		spr_pl [pfacing + pfr]); 
+	else oam_meta_spr (
+		px_world - cam_pos,
+		SPRITE_ADJUST + pry,
+		4,
+		spr_empty);
 }

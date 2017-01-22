@@ -10,8 +10,7 @@ void game_init (void) {
 	tokumaru_lzss (hex_digit_ts_patterns_c, 3840);	// 240*16
 	tokumaru_lzss (main_ss_patterns_c,      4096);	// 256*16
 
-	//level = 3; n_pant = 9;
-	level = 3; n_pant = 16;
+	level = LEVEL_INI; n_pant = SCR_INI;
 
 	bankswitch (2);
 	player_init ();
@@ -23,6 +22,11 @@ void game_init (void) {
 	c_enems_yx1 = enems_yx1_0;
 	c_enems_yx2 = enems_yx2_0;
 	c_enems_mn = enems_mn_0;
+
+	c_hotspots_yx = hotspots_yx_0;
+	c_hotspots_t = hotspots_t_0;
+
+	hotspots_init ();
 }
 
 void game_strip_setup (void) {
@@ -42,6 +46,23 @@ void game_strip_setup (void) {
 	}
 
 	camera_do ();
+}
+
+void game_stuff_preload (void) {
+	// loads 3 enems & 1 hotspot to the right spot in the arrays
+	// rda == n_pant
+
+	cam_pant = MSB (cam_pos);
+
+	if (cam_pant == cam_pant_old) return;
+
+	if (cam_pant > cam_pant_old) rdpant = cam_pant + 1;
+	else rdpant = cam_pant;	
+
+	cam_pant_old = cam_pant;
+
+	enems_load ();
+	hotspots_load ();
 }
 
 void game_loop (void) {
@@ -65,14 +86,16 @@ void game_loop (void) {
 
 	// Preload enems
 	bankswitch (2);
-	rdpant = n_pant; enems_load ();
-	rdpant = n_pant < 19 ? n_pant + 1 : n_pant - 1; enems_load ();
+	rdpant = n_pant; 
+	enems_load (); hotspots_load ();
+	rdpant = n_pant < 19 ? n_pant + 1 : n_pant - 1; 
+	enems_load (); hotspots_load ();
 	cam_pant_old = MSB (cam_pos);
 	
 	SCR_BUFFER_PTR_UPD;
 	fade_in ();
 
-	half_life = 0;
+	half_life = phit = 0;
 
 	// Do
 	game_res = 0;
@@ -84,18 +107,19 @@ void game_loop (void) {
 		gp_ul = update_list;
 		
 		bankswitch (2);
-		enems_preload ();
+		game_stuff_preload ();
 
 		if (!ntsc || fskip_ctr < 5) {
 			pad0 = pad_poll (0);
 
-			oam_index = 4;
+			oam_index = 28;
 			bankswitch (2);
 			player_move ();
 			camera_do ();
 			chac_chac_do ();
-			player_render ();
 			enems_do ();
+			player_render ();
+			hotspots_do ();
 
 			if (px_world < section_x0 + 4) game_res = PLAYER_EXIT_LEFT;
 			else if (px_world > section_x1 + 244) game_res = PLAYER_EXIT_RIGHT;
@@ -116,6 +140,13 @@ void game_loop (void) {
 		*((unsigned char*)0x2001) = 0x1e;
 		scroll (cam_pos & 0x1ff, 448);
 		ppu_wait_nmi ();
+
+		if (phit) {
+			// sfx_play (SFX_ENEMY_HIT, SC_PLAYER);
+			music_stop ();
+			delay (ticks);
+			game_res = PLAYER_KILLED;
+		}
 	}
 
 	bankswitch (2);

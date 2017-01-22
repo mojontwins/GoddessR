@@ -77,6 +77,7 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 #include "prg2/engine/camera.h"
 #include "prg2/engine/player.h"
 #include "prg2/engine/enems.h"
+#include "prg2/engine/hotspots.h"
 #include "prg2/engine/chac_chac.h"
 
 // ----------------------------------------------------------------------------
@@ -140,6 +141,15 @@ void main (void) {
 					n_pant ++;
 				}
 				prx = px >> FIX_BITS;
+				break;
+			case PLAYER_KILLED:
+				prx = safe_prx; px = prx << FIX_BITS;
+				pry = safe_pry; py = pry << FIX_BITS;
+				n_pant = safe_n_pant;
+				level = safe_level;
+				player_reset_movement ();
+				pflickers = ticks + ticks + ticks;
+				// One life less logics go here
 				break;
 		}
 	}

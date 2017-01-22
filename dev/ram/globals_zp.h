@@ -44,10 +44,7 @@ unsigned char *en_scr_buffer_ptr;
 unsigned char scr_v_offset;
 
 // Dum
-unsigned char n_pant, base_pant;
-unsigned char level;
-const signed int *section;
-unsigned char game_res;
+unsigned char n_pant;
 
 // Player 
 unsigned char prx, pry;
@@ -56,7 +53,7 @@ signed int pvx, pvy;
 unsigned char pgotten, pfacing, psprid;
 unsigned char ppossee, pslip, phit;
 unsigned char pj, pjb, pctj;
-unsigned char ppressingh, pfr, pflickers;
+unsigned char ppressingh, pfr, pflickers, ppodewwwr;
 signed char pgtmx, pgtmy;
 
 signed int px_world;
@@ -74,3 +71,7 @@ unsigned char en_x [6], en_y [6], en_state [6], en_s [6], en_p [6];
 signed char en_mx [6], en_my [6];
 unsigned char sprx, spry, sprid;
 unsigned char en_cx, en_cy;
+
+// Hotspots
+const unsigned char *c_hotspots_yx;
+const unsigned char *c_hotspots_t;

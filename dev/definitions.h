@@ -27,6 +27,14 @@
 	#define UPDATE						*gp_ul++
 	#define SCR_BUFFER_PTR_UPD 			scr_buffer_ptr = scr_buffer + ((n_pant & 1) ? 192 : 0)
 
+// Map properties
+
+	#define MAP_W						20
+	#define MAP_H 						4
+	#define MAX_PANTS					MAP_W*MAP_H
+	#define LEVEL_INI					3
+	#define SCR_INI						9
+
 // Player movement values
 
 	#define PLAYER_VY_FALLING_MAX		64
@@ -65,6 +73,7 @@
 	#define PLAYER_EXIT_BOTTOM 			2
 	#define PLAYER_EXIT_LEFT			3
 	#define PLAYER_EXIT_RIGHT			4
+	#define PLAYER_KILLED				5
 
 // Scroll states
 
