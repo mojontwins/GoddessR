@@ -56,8 +56,6 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 #include "prg1/main_ts_patterns_c.h"
 #include "prg1/main_ss_patterns_c.h"
 #include "prg1/chars_ts_patterns_c.h"
-#include "prg1/palettes.h"
-#include "prg1/palette_fx.h"
 
 // ----------------------------------------------------------------------------
 
@@ -73,7 +71,9 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 #include "prg2/assets/precalcs.h"
 #include "prg2/assets/enems0.h"
 #include "prg2/assets/hud_rle.h"
+#include "prg2/assets/palettes.h"
 
+#include "prg2/engine/palette_fx.h"
 #include "prg2/engine/printer.h"
 #include "prg2/engine/camera.h"
 #include "prg2/engine/player.h"
@@ -154,6 +154,21 @@ void main (void) {
 				player_reset_movement ();
 				pflickers = ticks + ticks + ticks;
 				// One life less logics go here
+				break;
+			case PLAYER_TELEPORT:
+				level = HUB_LEVEL; n_pant = HUB_SCR;
+				prx = HUB_X << 4; px = prx << FIX_BITS;
+				pry = HUB_Y << 4; py = pry << FIX_BITS;
+				guay_ct = ticks;
+				break;
+
+			//
+
+			case PLAYER_DEBUG:
+				// Custom here
+				level = 0; n_pant = 0;
+				prx = 32; px = prx << FIX_BITS;
+				pry = 64; py = pry << FIX_BITS;
 				break;
 		}
 	}

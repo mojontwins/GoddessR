@@ -23,8 +23,12 @@ const unsigned char * const spr_pl [] = {
 	sspl_08_b, sspl_09_b, sspl_0A_b,							// TURN AROUND	9
 	sspl_0B_b, sspl_0C_b, sspl_0D_b,							// CROUCHS		12
 	sspl_0C_b, sspl_0B_b, sspl_0A_b,							// BACK UP		15
-	sspl_09_b, sspl_08_b, sspl_0F_b,							// WIN POSE		18
-	sspl_0F_b													// AIRBORNE		21
+	sspl_09_b, sspl_08_b, sspl_0E_b,							// WIN POSE		18
+	sspl_0F_b,													// AIRBORNE		21
+
+	// 44 = TELEPORT DANCE
+	sspld_00, sspld_01, sspld_02, sspld_03,
+	sspld_04, sspld_05, sspld_06, sspld_07
 };
 
 const unsigned char * const spr_en [] = {
@@ -42,7 +46,10 @@ const unsigned char * const spr_en [] = {
 	ssenc_02, ssenc_03, ssenc_04, 0, 							// 4: FISH & OCC
 
 	// FANTY_BASE = 36
-	ssenb_03, ssenb_04, ssenb_05, ssenb_04
+	ssenb_03, ssenb_04, ssenb_05, ssenb_04,
+
+	// MISC... 40
+	ssenc_05													// NO
 };
 
 const unsigned char * const spr_it [] = {

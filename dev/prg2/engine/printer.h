@@ -4,7 +4,7 @@
 // Printing routines
 
 void split_and_wait (void) {
-	split (cam_pos & 0x1ff, SCROLL_Y);ppu_wait_nmi ();
+	split (cam_pos & 0x1ff, SCROLL_Y); ppu_wait_nmi ();
 }
 
 void fade_out_split (void) {
@@ -47,4 +47,8 @@ void p_s (unsigned char x, unsigned char y, unsigned char *s) {
 			y ++; vram_adr (NAMETABLE_A + (y << 5) + x);
 		} else vram_put (rda - 32);
 	}
+}
+
+void fx_flash (const unsigned char *pal) {
+	c_pal_back = pal; ct_flash = 4;		
 }

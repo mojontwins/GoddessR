@@ -51,7 +51,7 @@ unsigned char prx, pry;
 signed int px, py;
 signed int pvx, pvy;
 unsigned char pgotten, pfacing, psprid;
-unsigned char ppossee, pslip, phit;
+unsigned char ppossee, pslip, psignal;
 unsigned char pj, pjb, pctj;
 unsigned char ppressingh, pfr, pflickers, ppodewwwr;
 signed char pgtmx, pgtmy;

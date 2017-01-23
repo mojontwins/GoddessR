@@ -35,6 +35,10 @@
 	#define MAX_PANTS					MAP_W*MAP_H
 	#define LEVEL_INI					3
 	#define SCR_INI						9
+	#define HUB_LEVEL					1
+	#define HUB_SCR 					9
+	#define HUB_X						0xA
+	#define HUB_Y						0x5
 
 // Player movement values
 
@@ -62,11 +66,14 @@
 	#define PCELL_STANDING 				0
 	#define PCELL_WALK_BASE				1
 	#define PCELL_SUPERHERO				5
-	#define PCELL_TURN_AROUND			9
-	#define PCELL_CROUCHS				12
-	#define PCELL_BACK_UP				15
-	#define PCELL_WIN_POSE				18
+	#define PCELL_TURN_AROUND_BASE		9
+	#define PCELL_CROUCHS_BASE			12
+	#define PCELL_BACK_UP_BASE			15
+	#define PCELL_WIN_BASE				18
+	#define PCELL_WIN_POSE				20
 	#define PCELL_AIRBORNE				21
+
+	#define ENCELL_NO					40
 
 // Game states
 
@@ -75,6 +82,8 @@
 	#define PLAYER_EXIT_LEFT			3
 	#define PLAYER_EXIT_RIGHT			4
 	#define PLAYER_KILLED				5
+	#define PLAYER_TELEPORT 			6
+	#define PLAYER_DEBUG				0xff
 
 // Scroll states
 

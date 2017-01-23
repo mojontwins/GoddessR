@@ -1149,3 +1149,29 @@ Joder con la amnesia, lo de los enemigos no era viable porque necesito que se pr
 
 De todos modos he movido código y voy a ver qué sucede.
 
+~~
+
+Parece que mejora, pero si fuera necesario, tiraré de multiplexión ;-)
+
+20170123
+========
+
+Voy a revisar cómo hacía las animaciones en el Goddess original & Peste (no tan peste) a ver si me convence. 
+
+~~
+
+Apuntes:
+
+- Todas las animaciones se gestionan en player_move y no detienen el motor.
+- Necesito fx_flash (pal_to_return_to);
+- El "NO!" se activa del tirón, en cuanto se ve que no se puede interactuar con el hotspot. 
+- Al recargar poderes, sonido FT! (lo tengo que meter en el set o buscar equivalente, es el 3)
+- Al activar teleportador, ponemos tt_ct a 1. tt_ct parece ser el contador de una animación. La animación parece guardarse en un array que finaliza en 0xff. Cada valor del array SF, con F los frames (0 se cambia por 20) y S el número del sprite (0 == primer sprite de la animación de girar)
+- use_ct se activa al comprobar que se puede usar un objeto, lo dejo para luego.
+
+Medio me convence, voy a hacerlo (que no copiarlo). Necesito antes infraestructura y mierdas, pero debería tenerlo rápido.
+
+~~
+
+Toneladas de infraestructura, recargas y teletransportaciones hechas. Podría haber empezado por coger objetos... Bueno, eso lo siguiente. Ahora a Github.
+

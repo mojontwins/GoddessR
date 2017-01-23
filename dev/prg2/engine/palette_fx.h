@@ -1,6 +1,16 @@
 
 void palfx_do (void) {
-	if ((frame_counter & 15) == 0) {
+	if (ct_flash) {
+		if (ct_flash == 4) {
+			pal_bg (mypal_light_bg);
+			pal_spr (mypal_light_fg);
+		}
+		ct_flash --;
+		if (ct_flash == 0) {
+			pal_bg (c_pal_back);
+			pal_spr (c_pal_fg);
+		}
+	} else if ((frame_counter & 15) == 0) {
 		gpit = pal_cycle [2]; 
 		pal_cycle [2] = pal_cycle [1]; 
 		pal_cycle [1] = pal_cycle [0]; 

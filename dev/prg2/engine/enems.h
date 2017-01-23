@@ -160,7 +160,7 @@ void enems_do (void) {
 
 		// With plain enemies
 		if (CL (prx, pry, sprx, spry)) {
-			phit = 1;
+			psignal = PLAYER_KILLED;
 		}
 	}
 }

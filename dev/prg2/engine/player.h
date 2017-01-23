@@ -47,12 +47,28 @@ void player_collision_horizontal (void) {
 }
 
 void player_move (void) {
-	pad = pad0;		// Add ifs.
-
 	// Timers and stuff
 	if (pflickers) pflickers --;
 
 	// Vertical
+	if (guay_ct) {
+		guay_ct --;
+	} else if (tt_ct) {
+		if (fr_ct) fr_ct --; else {
+			if (0xff != (rda = tt_anim [tt_ct ++])) {
+				if (0 == (fr_ct = rda & 0x0f)) fr_ct = 20;
+				pfr = 44 + (rda >> 4);
+				if ((rand8 () & 3) == 0) {
+					// sfx_play (SFX_FLASH, SC_LEVEL);
+					fx_flash (mypal_reds);
+				}
+			} else {
+				psignal = PLAYER_TELEPORT;
+			}
+		}
+	} else if (use_ct) {
+
+	} else pad = pad0;
 
 	// Gravity
 	if (!pgotten) {
@@ -103,7 +119,7 @@ void player_move (void) {
 		if (!pjb) {
 			pjb = 1;
 			if (!pj) {
-				if (pgotten || ppossee || phit) {
+				if (pgotten || ppossee) {
 					pj = 1; pctj = 0; 
 					pvy = -PLAYER_VY_JUMP_INITIAL;
 					//sfx_play (SFX_JUMP, SC_PLAYER);
@@ -188,12 +204,15 @@ void player_move (void) {
 		cy1 = (pry + 8) & 0xf0;
 		cyaux = (cy1 < 32 ? 0 : cy1 - 32);
 		if (*(scr_buffer_ptr + cyaux + cx1) & 1) {
-			phit = 1;
+			psignal = PLAYER_KILLED;
 		}
 
 	// Calc cell
-	if (ppossee || pgotten) {
-		if (ABS (pvx) > PLAYER_VX_MIN && (!pslip || ppressingh)) {
+	if (tt_ct) {
+	} else if (ppossee || pgotten) {
+		if (guay_ct) 
+			pfr = PCELL_WIN_POSE;
+		else if (ABS (pvx) > PLAYER_VX_MIN && (!pslip || ppressingh)) {
 			pfr = PCELL_WALK_BASE + ((prx >> 4) & 3);
 		} else pfr = PCELL_STANDING;
 	} else {
@@ -208,14 +227,23 @@ void player_move (void) {
 }
 
 void player_render (void) {
+	rdx = px_world - cam_pos;
+	rdy = SPRITE_ADJUST + pry;
 	if (half_life || !pflickers) oam_meta_spr (
-		px_world - cam_pos,
-		SPRITE_ADJUST + pry,
+		rdx, rdy,
 		4,
 		spr_pl [pfacing + pfr]); 
 	else oam_meta_spr (
-		px_world - cam_pos,
-		SPRITE_ADJUST + pry,
+		rdx, rdy,
 		4,
 		spr_empty);
+
+	if (no_ct) {
+		no_ct --;
+		oam_index = oam_meta_spr (
+			rdx + 2, rdy - 24,
+			oam_index,
+			spr_en [ENCELL_NO] 
+		);
+	}
 }

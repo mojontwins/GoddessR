@@ -28,6 +28,8 @@ void game_init (void) {
 	c_hotspots_t = hotspots_t_0;
 
 	hotspots_init ();
+
+	guay_ct = 0;
 }
 
 void game_strip_setup (void) {
@@ -68,13 +70,12 @@ void game_stuff_preload (void) {
 
 void game_loop (void) {
 	// Add palette selection logic - later
-	bankswitch (1);
+	bankswitch (2);
 	pal_bg (c_pal_bg);
 	pal_spr (c_pal_fg);
 	palfx_init ();
 	
 	// Inits
-	bankswitch (2);
 	chac_chac_init ();
 	game_strip_setup ();
 	hud_and_split_setup ();
@@ -97,7 +98,7 @@ void game_loop (void) {
 	SCR_BUFFER_PTR_UPD;
 	fade_in_split ();
 
-	half_life = phit = 0;
+	no_ct = tt_ct = use_ct = half_life = psignal = 0;
 
 	if (!music_on) {
 		music_play (MUSIC_INGAME_BASE + stage);
@@ -111,10 +112,8 @@ void game_loop (void) {
 		frame_counter ++;
 		gp_ul = update_list;
 
-		bankswitch (1);
-		palfx_do ();
-		
 		bankswitch (2);
+		palfx_do ();
 		
 		pad0 = pad_poll (0);
 
@@ -126,7 +125,6 @@ void game_loop (void) {
 
 		if (!ntsc || fskip_ctr < 5) {
 			oam_index = 28;
-			bankswitch (2);
 			player_move ();
 			camera_do ();
 			chac_chac_do ();
@@ -134,8 +132,6 @@ void game_loop (void) {
 			player_render ();
 			hotspots_do ();
 			hud_do ();
-
-			bankswitch (2);
 			oam_hide_rest (oam_index);
 		}
 		fskip_ctr ++; if (fskip_ctr == 6) fskip_ctr = 0;
@@ -152,15 +148,19 @@ void game_loop (void) {
 
 		// Exit conditions
 
-		if (phit) {
-			// sfx_play (SFX_ENEMY_HIT, SC_PLAYER);
-			music_pause (1);
-			delay_split (ticks);
-			game_res = PLAYER_KILLED;
+		if (psignal) {
+			if (psignal == PLAYER_KILLED) {
+				// sfx_play (SFX_ENEMY_HIT, SC_PLAYER);
+				music_pause (1);
+				delay_split (ticks);
+			}
+			game_res = psignal;
 		}
 
 		if (px_world < section_x0 + 4) game_res = PLAYER_EXIT_LEFT;
 		else if (px_world > section_x1 + 244) game_res = PLAYER_EXIT_RIGHT;	
+
+		if (pad0 & PAD_SELECT) game_res = PLAYER_DEBUG;
 	}
 
 	bankswitch (2);

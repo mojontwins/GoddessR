@@ -56,3 +56,11 @@ unsigned char oplife, opcharges;
 
 // Music
 unsigned char music_on;
+
+// Counters
+unsigned char no_ct, tt_ct, use_ct, guay_ct;
+unsigned char fr_ct;
+
+// Flash fx
+const unsigned char *c_pal_back;
+unsigned char ct_flash;
