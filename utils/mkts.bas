@@ -21,7 +21,7 @@ Const PLATFORM_SG1000 	= 1
 Const PLATFORM_GB 		= 2
 Const PLATFORM_SMS 		= 3
 
-Dim Shared As Integer verbose, silent, mainIdx, cPoolIndex, tMapsIndex, flipped, upsideDown, clrIdx
+Dim Shared As Integer verbose, silent, mainIdx, cPoolIndex, tMapsIndex, flipped, upsideDown, clrIdx, outputPalList
 Dim Shared As Integer blackiszero, columns, nextPattern, mirrored, simplemeta, supersimplemeta, aseprite, noskipempty, allbg, deinterlaced
 Dim Shared As uByte mainBin (65535), clrBin (65535)
 Dim Shared As String cPool (255)
@@ -305,7 +305,7 @@ Function nesFindColourWithPal (c As Integer, pal () As Integer, wp As Integer) A
 	For i = wp*4 To wp*4+3
 		If pal (i) = c Then res = i: Exit For
 	Next i
-	nesFindColourWithPal = res
+	nesFindColourWithPal = res-wp*4
 End Function
 
 Function smsFindColourWithPal (c As Integer, pal () As Integer, wp As Integer) As Integer
@@ -1832,6 +1832,7 @@ Sub nesDoTmaps (img As Any Ptr, pal () As Integer, xOrg As Integer, yOrg As Inte
 	Dim As Integer shouldClose
 	Dim As Integer firstPoolIndex
 	Dim As Integer mtI
+	Dim As String pallist
 
 	Dim As Integer byteArrays (16, 255)
 
@@ -1869,6 +1870,7 @@ Sub nesDoTmaps (img As Any Ptr, pal () As Integer, xOrg As Integer, yOrg As Inte
 	If wMeta = 4 And hMeta = 4 Then filteredPuts ("+ Writing precalculated pal bytes to " & tsMapFn)
 	
 	tMapsIndex = 0
+	pallist = ""
 
 	For y = y0 To y1 Step vSize
 		If Not deinterlaced Then Print #fOut, "	";
@@ -1877,6 +1879,7 @@ Sub nesDoTmaps (img As Any Ptr, pal () As Integer, xOrg As Integer, yOrg As Inte
 			If wMeta = 2 And hMeta = 2 Then 
 				' 2x2 mode
 				wp = nesFindWhichPal (img, x, y, pal (), tMapsIndex, hSize, vSize)
+				pallist = pallist & wp
 				If deinterlaced Then
 					byteArrays (16, tMapsIndex) = wp
 				Else
@@ -2008,6 +2011,8 @@ Sub nesDoTmaps (img As Any Ptr, pal () As Integer, xOrg As Integer, yOrg As Inte
 		Print #fOut, "};"
 		Print #fOut, ""
 	End If
+
+	If outputPalList Then Puts pallist
 
 	filteredPuts ("+ " & tMapsIndex & " tmaps extracted using " & cPoolIndex & " tiles.")
 	If shouldClose Then Close #fOut Else Print #fOut, ""
@@ -3924,6 +3929,7 @@ Else
 	noskipempty = (sclpGetValue ("noskipempty") <> "")
 	allbg = (sclpGetValue ("allbg") <> "")
 	deinterlaced = (sclpGetValue ("deinterlaced") <> "")
+	outputPalList = (sclpGetValue ("outputpallist") <> "")
 
 	' Do
 

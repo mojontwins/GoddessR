@@ -73,11 +73,10 @@ void enems_do (void) {
 	gpjt = 6; while (gpjt --) {
 		gpit += 5; if (gpit > 5) gpit -= 6;
 
-		en_scr_buffer_ptr = scr_buffer + (gpit < 3 ? 0 : 192);
-
 		rdt = en_t [gpit] & 0xf0;
 		if (!rdt) continue;
 
+		en_scr_buffer_ptr = scr_buffer + (gpit < 3 ? 0 : 192);
 		sprid = 0xff; // this may be removed later
 
 		switch (rdt) {
@@ -114,7 +113,7 @@ void enems_do (void) {
 		if (rdt == 0xC0) {
 			// Occluding sprite
 			oam_index = oam_meta_spr (
-				rdx, en_y1 [gpit],
+				rdx, en_y1 [gpit] + SPRITE_ADJUST + 1,
 				oam_index,
 				spr_en [PEZONS_BASE_SPRID + 2]
 			);
@@ -157,7 +156,7 @@ void enems_do (void) {
 			continue;
 		}
 
-		if (pflickers || ppodewwwr) return;
+		if (pflickers || ppodewwwr) continue;
 
 		// With plain enemies
 		if (CL (prx, pry, sprx, spry)) {

@@ -22,7 +22,7 @@
 				en_mx [gpit] = -en_mx [gpit];
 			} else if (
 				(en_x [gpit] & 0xf) == 0 && 
-				8 == behs [*(en_scr_buffer_ptr + rdy + rdx + (en_mx [gpit] > 0))]
+				8 == *(en_scr_buffer_ptr + rdy + rdx + (en_mx [gpit] > 0))
 			) {
 				en_mx [gpit] = -en_mx [gpit];
 				en_x [gpit] = en_cx;
@@ -40,7 +40,7 @@
 				en_my [gpit] = -en_my [gpit];
 			} else if (
 				(en_y [gpit] & 0xf) == 0 && 
-				8 == behs [*(en_scr_buffer_ptr + rdy + rdx + (en_my [gpit] > 0 ? 16 : 0))]
+				8 == *(en_scr_buffer_ptr + rdy + rdx + (en_my [gpit] > 0 ? 16 : 0))
 			) {
 				en_my [gpit] = -en_my [gpit];
 				en_y [gpit] = en_cy;

@@ -7,11 +7,12 @@ void update_buffered_tile (void); // Sorry
 
 void chac_chac_init (void) {
 	ccit = CHAC_CHAC_MAX; while (ccit --) cc_col_idx [ccit] = 0;
+	cc_total = 0;
 }
 
 void chac_chac_do (void) {
 	// prevent
-	if (scroll_state == SCROLL_STATE_NONE) return;
+	if (scroll_state == SCROLL_STATE_NONE || 0 == cc_total) return;
 
 	ccit = CHAC_CHAC_MAX; while (ccit --) {
 		if (cc_col_idx [ccit]) {
@@ -20,6 +21,7 @@ void chac_chac_do (void) {
 			if (cc_col_idx [ccit] + 1 < gpint ||
 				cc_col_idx [ccit] > gpint + 9) {
 				cc_col_idx [ccit] = 0;
+				cc_total --;
 			} else if (cc_ctr [ccit]) cc_ctr [ccit] --; else {
 				rdd = cc_s [ccit];
 				rdct = cc_pant [ccit]; rdx = cc_x [ccit];

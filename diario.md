@@ -1122,3 +1122,30 @@ Tengo que pensar también como voy a hacer para renderizar la escena de las puer
 Otra cosa que hay que hacer es pintar las puertas en el templo si están cerradas. Llevo toda la mañana pensando que quizá lo suyo sería generalizar los chac chacs para que se encargasen de todos estos manejos de nametable. Le daré más vueltas.
 
 Son las 13:30 y llevo un montón de rato aquí, creo que lo dejo porque trabajo mejor despejado y me apetece escribir a máquina.
+
+~~
+
+Voy a hacer lo básico con los hotspots:
+
+- Coger vida.
+- Coger (intercambiar) un objeto.
+- ¿Usarlo en el templo?
+
+Para ello necesito empezar con la guasa del HUD y de camino hacer el split. Creo que lo he estado demorando mucho. Siempre es bueno colocar algunas tareas antes del split. Tampoco vamos a estar esperando de brazos cruzados ¿no? En otros motores me ha saido muy bien. En Isshokuta, por ejemplo, todo el scroll pasa antes del split. Pero en este juego me temo que va a estar más difícil.
+
+~~
+
+Muchas, muchas cosas metidas, split y música incluidos. Voy a tener que fullear con los sonidos para retrasarlos y cosas así como en pongpong seguro, porque el tiempo de frame se acaba - de hecho hay sitios puntuales donde pierdo 1 frame. Nada grave, solo 1 frame. 
+
+Cuestión de mejorar algunas cosas y dividir carga, pero antes tengo que identificar qué carga debería dividir.
+
+¿Paso de actualizar los enemigos en el frame en el que se crean? ¿Se notará?
+
+Por lo pronto lo primero que voy a hacer es meter directamente behs en el buffer de colisiones.
+
+~~
+
+Joder con la amnesia, lo de los enemigos no era viable porque necesito que se procesen para crear los sprites. Lo que sí puedo hacer es fumarme la deteccion de colisiones. Algo ganaré.
+
+De todos modos he movido código y voy a ver qué sucede.
+

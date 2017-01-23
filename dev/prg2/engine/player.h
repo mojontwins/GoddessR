@@ -22,14 +22,14 @@ void player_init (void) {
 
 void player_collision_vertical (void) {
 	cyaux = cy1 < 32 ? 0 : cy1 - 32;
-	at1 = behs [*(scr_buffer_ptr + cyaux + cx1)];
+	at1 = *(scr_buffer_ptr + cyaux + cx1);
 	if (cx2 > 15) {
 		cx2 -= 16;
 		gp_aux = scr_buffer + ((n_pant & 1) ? 0 : 192);
 	} else {
 		gp_aux = scr_buffer_ptr;
 	}
-	at2 = behs [*(gp_aux + cyaux + cx2)];
+	at2 = *(gp_aux + cyaux + cx2);
 }
 
 void player_collision_horizontal (void) {
@@ -41,9 +41,9 @@ void player_collision_horizontal (void) {
 	}
 
 	cyaux = cy1 < 32 ? 0 : cy1 - 32; 
-	at1 = behs [*(gp_aux + cyaux + cx1)];
+	at1 = *(gp_aux + cyaux + cx1);
 	cyaux = cy2 < 32 ? 0 : cy2 - 32; 
-	at2 = behs [*(gp_aux + cyaux + cx1)];
+	at2 = *(gp_aux + cyaux + cx1);
 }
 
 void player_move (void) {
@@ -187,7 +187,7 @@ void player_move (void) {
 		// this is faster:
 		cy1 = (pry + 8) & 0xf0;
 		cyaux = (cy1 < 32 ? 0 : cy1 - 32);
-		if (behs [*(scr_buffer_ptr + cyaux + cx1)] & 1) {
+		if (*(scr_buffer_ptr + cyaux + cx1) & 1) {
 			phit = 1;
 		}
 

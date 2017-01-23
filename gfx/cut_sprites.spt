@@ -5,6 +5,8 @@ MAPFILE ..\dev\prg2\assets\spritedata.h
 OPEN ss.png
 PALS palss.png
 
+CHARSET 15, 19, 1, 1
+
 LABEL sspl
 METASPRITESET 0, 0, 2, 3, 8, 3, -4, -8 FLIPPED
 

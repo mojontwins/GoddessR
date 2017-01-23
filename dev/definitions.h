@@ -6,8 +6,9 @@
 	#define UPDATE_LIST_SIZE			32
 	#define MSB(x)						((x)>>8)
 	#define LSB(x)						((x)&0xff)
-	#define SPRITE_ADJUST				-1
+	#define SPRITE_ADJUST				3
 	#define FIX_BITS					4
+	#define SCROLL_Y					444
 
 // Handy macros
 
@@ -104,5 +105,7 @@
 	#define PEZON_MAX_TIME 				en_y2
 	#define PEZON_INCS_IDX				en_my
 
+// Music
 
-
+	#define MUSIC_TITLE					0
+	#define MUSIC_INGAME_BASE 			1

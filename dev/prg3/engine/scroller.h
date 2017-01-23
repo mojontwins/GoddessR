@@ -22,6 +22,7 @@ void scroll_chac_chac_create (void) {
 			cc_s [ccit] = 0;
 			cc_ctr [ccit] = chac_chac_times [5] + (rand8 () & 0x1f);
 			cc_col_idx [ccit] = col_idx;
+			cc_total ++;
 			break;
 		}
 	}
@@ -112,8 +113,8 @@ void scroll_paint_chunk (void) {
 		// Write a bit in the collision buffer
 		gp_gen = gp_aux;
 		gp_aux = scr_buffer + (rdd ? 192 : 0) + ((col_idx & 0x7) << 1) + scr_v_offset;
-		*gp_aux ++ = *gp_gen ++; *gp_aux = *gp_gen ++; gp_aux += 15;
-		*gp_aux ++ = *gp_gen ++; *gp_aux = *gp_gen;
+		*gp_aux ++ = behs [*gp_gen ++]; *gp_aux = behs [*gp_gen ++]; gp_aux += 15;
+		*gp_aux ++ = behs [*gp_gen ++]; *gp_aux = behs [*gp_gen];
 		scr_v_offset += 32;
 	} else if (state_ctr < 7) {
 		// State 6: fetch & paint attrs.

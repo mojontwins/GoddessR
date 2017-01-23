@@ -34,8 +34,10 @@ unsigned char cc_x [CHAC_CHAC_MAX], cc_y [CHAC_CHAC_MAX];
 unsigned char cc_pant [CHAC_CHAC_MAX], cc_s [CHAC_CHAC_MAX];
 unsigned char cc_ctr [CHAC_CHAC_MAX];
 unsigned int cc_col_idx [CHAC_CHAC_MAX];
+unsigned char cc_total;
 
 // Level info
+unsigned char stage; 	// Decides palette & music
 unsigned char level;
 unsigned char base_pant;
 const signed int *section;
@@ -47,3 +49,10 @@ unsigned char hrx [2], hry [2], hrp [2];
 
 // Safe respawn
 unsigned char safe_prx, safe_pry, safe_n_pant, safe_level;
+
+// Hud & stats
+unsigned char plife, pcharges, pinv;
+unsigned char oplife, opcharges;
+
+// Music
+unsigned char music_on;

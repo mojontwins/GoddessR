@@ -55,7 +55,7 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 
 #include "prg1/main_ts_patterns_c.h"
 #include "prg1/main_ss_patterns_c.h"
-#include "prg1/hex_digit_ts_patterns_c.h"
+#include "prg1/chars_ts_patterns_c.h"
 #include "prg1/palettes.h"
 #include "prg1/palette_fx.h"
 
@@ -72,6 +72,7 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 #include "prg2/assets/metasprites.h"
 #include "prg2/assets/precalcs.h"
 #include "prg2/assets/enems0.h"
+#include "prg2/assets/hud_rle.h"
 
 #include "prg2/engine/printer.h"
 #include "prg2/engine/camera.h"
@@ -79,6 +80,7 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 #include "prg2/engine/enems.h"
 #include "prg2/engine/hotspots.h"
 #include "prg2/engine/chac_chac.h"
+#include "prg2/engine/hud.h"
 
 // ----------------------------------------------------------------------------
 
@@ -113,6 +115,8 @@ void main (void) {
 
 	// Rehash
 	game_init ();
+
+	music_on = 0;
 
 	while (1) { 	
 		game_loop ();

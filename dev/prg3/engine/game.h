@@ -6,10 +6,11 @@
 void game_init (void) {
 	// Decompress patterns from tileset #1
 	bankswitch (1);
-	tokumaru_lzss (main_ts_patterns_c,      0);
-	tokumaru_lzss (hex_digit_ts_patterns_c, 3840);	// 240*16
-	tokumaru_lzss (main_ss_patterns_c,      4096);	// 256*16
+	tokumaru_lzss (main_ts_patterns_c,  0);
+	tokumaru_lzss (chars_ts_patterns_c, 3584);	// 224*16
+	tokumaru_lzss (main_ss_patterns_c,  4096);	// 256*16
 
+	stage = 0;
 	level = LEVEL_INI; n_pant = SCR_INI;
 
 	bankswitch (2);
@@ -76,10 +77,11 @@ void game_loop (void) {
 	bankswitch (2);
 	chac_chac_init ();
 	game_strip_setup ();
+	hud_and_split_setup ();
 
 	// Screen
 	ppu_on_all ();
-	scroll (cam_pos & 0x1ff, 448);
+	
 	set_vram_update (update_list);
 	bankswitch (0);
 	scroll_draw_screen ();
@@ -88,30 +90,41 @@ void game_loop (void) {
 	bankswitch (2);
 	rdpant = n_pant; 
 	enems_load (); hotspots_load ();
-	rdpant = n_pant < 19 ? n_pant + 1 : n_pant - 1; 
+	rdpant = (n_pant & 1) ? n_pant + 1 : n_pant - 1; 
 	enems_load (); hotspots_load ();
 	cam_pant_old = MSB (cam_pos);
 	
 	SCR_BUFFER_PTR_UPD;
-	fade_in ();
+	fade_in_split ();
 
 	half_life = phit = 0;
+
+	if (!music_on) {
+		music_play (MUSIC_INGAME_BASE + stage);
+		music_on = 1;
+	} else music_pause (0);
 
 	// Do
 	game_res = 0;
 	while (!game_res) {
-		*((unsigned char*)0x2001) = 0x1f;
-
 		half_life = 1 - half_life;
 		frame_counter ++;
 		gp_ul = update_list;
+
+		bankswitch (1);
+		palfx_do ();
 		
 		bankswitch (2);
+		
+		pad0 = pad_poll (0);
+
+		//*((unsigned char*)0x2001) = 0x1e;
+		split (cam_pos & 0x1ff, SCROLL_Y);
+		//*((unsigned char*)0x2001) = 0x1f;
+
 		game_stuff_preload ();
 
 		if (!ntsc || fskip_ctr < 5) {
-			pad0 = pad_poll (0);
-
 			oam_index = 28;
 			bankswitch (2);
 			player_move ();
@@ -120,9 +133,7 @@ void game_loop (void) {
 			enems_do ();
 			player_render ();
 			hotspots_do ();
-
-			if (px_world < section_x0 + 4) game_res = PLAYER_EXIT_LEFT;
-			else if (px_world > section_x1 + 244) game_res = PLAYER_EXIT_RIGHT;
+			hud_do ();
 
 			bankswitch (2);
 			oam_hide_rest (oam_index);
@@ -131,27 +142,30 @@ void game_loop (void) {
 
 		bankswitch (0);
 		scroll_to ();
-
-		bankswitch (1);
-		palfx_do ();
 		
 		*gp_ul = NT_UPD_EOF;
 		
-		*((unsigned char*)0x2001) = 0x1e;
-		scroll (cam_pos & 0x1ff, 448);
+		//*((unsigned char*)0x2001) = 0x1e;
+		bankswitch (2);
 		ppu_wait_nmi ();
+		//*((unsigned char*)0x2001) = 0x1f;
+
+		// Exit conditions
 
 		if (phit) {
 			// sfx_play (SFX_ENEMY_HIT, SC_PLAYER);
-			music_stop ();
-			delay (ticks);
+			music_pause (1);
+			delay_split (ticks);
 			game_res = PLAYER_KILLED;
 		}
+
+		if (px_world < section_x0 + 4) game_res = PLAYER_EXIT_LEFT;
+		else if (px_world > section_x1 + 244) game_res = PLAYER_EXIT_RIGHT;	
 	}
 
 	bankswitch (2);
-	fade_out ();
-	oam_hide_rest (0);
+	fade_out_split ();
+	oam_hide_rest (4);
 	set_vram_update (0);
 	ppu_off ();
 }
