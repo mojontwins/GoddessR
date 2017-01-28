@@ -19,14 +19,23 @@ void player_restore_safe_spot (void) {
 }
 
 void player_init (void) {
-	prx = (4 << 4); px = prx << FIX_BITS;
-	pry = (6 << 4); py = pry << FIX_BITS;
+	if (pcontinues) {
+		prx = (10 << 4); px = prx << FIX_BITS;
+		pry = (4 << 4); py = pry << FIX_BITS;
+	} else {
+		prx = (4 << 4); px = prx << FIX_BITS;
+		pry = (6 << 4); py = pry << FIX_BITS;
+	}
 	pfacing = pfr = 0;
 	player_register_safe_spot ();
 	player_reset_movement ();
 
-	pinv = 7; //0xff;
 	use_ct = 0;
+	pinv = 0;
+	pcharges = 0;
+	plife = 5;
+
+	pvmax = PLAYER_VX_MAX;
 }
 
 void player_collision_vertical (void) {
@@ -81,6 +90,11 @@ void player_move (void) {
 			if (use_ct == 7) {
 				hrt [h_modify_this] = pinv | 0x10;
 				pinv = 0xff;
+				if (gs_this_flag < 3) {
+					stage = 1 + gs_this_flag;
+					c_pal_bg = c_pal_bgs [stage];
+					pal_bg (c_pal_bg);
+				}
 			}
 			if (use_ct == 15) {
 				gs_flags [gs_this_flag] = 1;
@@ -98,9 +112,33 @@ void player_move (void) {
 
 	// Vertical
 
-	// Gravity
-	if (!pgotten) {
-		if (pvy < PLAYER_VY_FALLING_MAX) pvy += PLAYER_G; else pvy = PLAYER_VY_FALLING_MAX;
+	if (ppodewwwr) {
+		ppodewwwr --;
+
+		if (0 == ppodewwwr) {
+			// Deactivate
+			//sfx_play (SFX_PODEWWWR, SC_PLAYER);
+			pvmax = PLAYER_VX_MAX;
+			c_pal_fg = mypal_game_fg0;
+			fx_flash (c_pal_bg);
+		}
+
+		if (pad & PAD_UP) {
+			if (pvy > -pvmax) pvy -= PLAYER_AX;
+		} else if (pad & PAD_DOWN) {
+			if (pvy < pvmax) pvy += PLAYER_AX;
+		} else {
+			if (pvy > 0) {
+				pvy -= PLAYER_RX; if (pvy < 0) pvy = 0;
+			} else if (pvx < 0) {
+				pvy += PLAYER_RX; if (pvy > 0) pvy = 0;
+			}
+		}
+	} else {
+		// Gravity
+		if (!pgotten) {
+			if (pvy < PLAYER_VY_FALLING_MAX) pvy += PLAYER_G; else pvy = PLAYER_VY_FALLING_MAX;
+		}
 	}
 
 	// Move. 
@@ -140,48 +178,45 @@ void player_move (void) {
 	cy1 = (pry + 16) & 0xf0;
 	player_collision_vertical ();
 	ppossee = ((pry & 0xf) == 0) && ((at1 & 14) || (at2 & 14));
-	pslip = (ppossee && ((at1 & 16) || (at2 & 16)));
 
 	// Jump
-	if (pad & PAD_A) {
-		if (!pjb) {
-			pjb = 1;
-			if (!pj) {
-				if (pgotten || ppossee) {
-					pj = 1; pctj = 0; 
-					pvy = -PLAYER_VY_JUMP_INITIAL;
-					//sfx_play (SFX_JUMP, SC_PLAYER);
-					if (ppossee) player_register_safe_spot ();
-				}
-			} 
+	if (0 == ppodewwwr) {
+		if (pad & PAD_A) {
+			if (!pjb) {
+				pjb = 1;
+				if (!pj) {
+					if (pgotten || ppossee) {
+						pj = 1; pctj = 0; 
+						pvy = -PLAYER_VY_JUMP_INITIAL;
+						//sfx_play (SFX_JUMP, SC_PLAYER);
+						if (ppossee) player_register_safe_spot ();
+					}
+				} 
+			}
+			if (pj) {
+				rda = PLAYER_AY_JUMP - (pctj >> 2) - (pctj >> 3);
+				pvy -= (rda > 1 ? rda : 1);
+				if (pvy < -PLAYER_VY_JUMP_MAX) pvy = -PLAYER_VY_JUMP_MAX;
+				pctj ++; if (pctj == PLAYER_VY_JUMP_A_STEPS) pj = 0;
+			}
+		} else {
+			pjb = 0; pj = 0;
 		}
-		if (pj) {
-			rda = PLAYER_AY_JUMP - (pctj >> 2) - (pctj >> 3);
-			pvy -= (rda > 1 ? rda : 1);
-			if (pvy < -PLAYER_VY_JUMP_MAX) pvy = -PLAYER_VY_JUMP_MAX;
-			pctj ++; if (pctj == PLAYER_VY_JUMP_A_STEPS) pj = 0;
-		}
-	} else {
-		pjb = 0;
-		pj = 0;
 	}
 
 	// Horizontal
 
 	if (pad & PAD_LEFT) {
 		pfacing = PFACING_LEFT;
-		ppressingh = 1;
-		if (pvx > -PLAYER_VX_MAX) pvx -= (pslip ? PLAYER_AX_SLIP : PLAYER_AX);
+		if (pvx > -pvmax) pvx -= PLAYER_AX;
 	} else if (pad & PAD_RIGHT) {
 		pfacing = PFACING_RIGHT;
-		ppressingh = 1;
-		if (pvx < PLAYER_VX_MAX) pvx += (pslip ? PLAYER_AX_SLIP : PLAYER_AX);
+		if (pvx < pvmax) pvx += PLAYER_AX;
 	} else {
-		ppressingh = 0;
 		if (pvx > 0) {
-			pvx -= (pslip ? PLAYER_RX_SLIP : PLAYER_RX); if (pvx < 0) pvx = 0;
+			pvx -= PLAYER_RX; if (pvx < 0) pvx = 0;
 		} else if (pvx < 0) {
-			pvx += (pslip ? PLAYER_RX_SLIP : PLAYER_RX); if (pvx > 0) pvx = 0;
+			pvx += PLAYER_RX; if (pvx > 0) pvx = 0;
 		}
 	}
 
@@ -224,23 +259,35 @@ void player_move (void) {
 	// Detect evil tile
 	if (prx < 252) // Safe. 
 		cx1 = (prx + 4) >> 4;
-		/*
-		cy1 = (pry + 8) >> 4;
-		cyaux = (cy1 < 2 ? 0 : cy1 - 2) << 4;
-		*/
-		// this is faster:
 		cy1 = (pry + 8) & 0xf0;
 		cyaux = (cy1 < 32 ? 0 : cy1 - 32);
 		if (*(scr_buffer_ptr + cyaux + cx1) & 1) {
 			psignal = PLAYER_KILLED;
 		}
 
+	// Podewwwr
+	if (pad & PAD_B) {
+		if (pad & PAD_UP) {
+			if (pcharges) {
+				if (ppodewwwr == 0) {
+					ppodewwwr = 250;
+					pvmax = PLAYER_VX_MAX_PODEWWWR;
+					c_pal_fg = mypal_game_fg1;
+					fx_flash (c_pal_bg);
+					//sfx_play (SFX_PODEWWWR, SC_PLAYER);
+				}
+			} else no_ct = ticks;
+		}
+	}
+
 	// Calc cell
 	if (tt_ct || use_ct) {
+	} else if (ppodewwwr) {
+		pfr = PCELL_SUPERHERO + ((frame_counter >> 3) & 3);
 	} else if (ppossee || pgotten) {
 		if (guay_ct) 
 			pfr = PCELL_WIN_POSE;
-		else if (ABS (pvx) > PLAYER_VX_MIN && (!pslip || ppressingh)) {
+		else if (ABS (pvx) > PLAYER_VX_MIN) {
 			pfr = PCELL_WALK_BASE + ((prx >> 4) & 3);
 		} else pfr = PCELL_STANDING;
 	} else {

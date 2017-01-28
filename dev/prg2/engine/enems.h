@@ -136,7 +136,7 @@ void enems_do (void) {
 				if (en_mx [gpit]) {
 					if (pry + 18 >= spry && pry + 12 <= spry) {
 						pgotten = 1;
-						pgtmx = en_mx [gpit] << (FIX_BITS - en_state [gpit]);
+						pgtmx = endx << FIX_BITS;
 						pry = spry - 16; py = pry << FIX_BITS;
 						pvy = 0;
 					}

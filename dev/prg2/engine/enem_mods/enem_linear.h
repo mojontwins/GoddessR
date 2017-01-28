@@ -1,6 +1,9 @@
 // Linear enemies version all tomorow's parties
 // Copyleft 2017 by The Mojon Twins
 
+	en_cx = en_x [gpit];
+	en_cy = en_y [gpit];
+			
 	if (!en_state [gpit] || half_life) {
 
 		// Can be stopped by a wall
@@ -13,7 +16,6 @@
 		rdx = en_x [gpit] >> 4;
 
 		if (en_mx [gpit]) {
-			en_cx = en_x [gpit];
 			en_x [gpit] += en_mx [gpit];
 
 			if (en_x [gpit] == en_x1 [gpit] ||
@@ -31,7 +33,6 @@
 
 		if (en_my [gpit]) {
 			rdx = en_x [gpit] >> 4;
-			en_cy = en_y [gpit];
 			en_y [gpit] += en_my [gpit];
 
 			if (en_y [gpit] == en_y1 [gpit] ||
@@ -47,6 +48,8 @@
 			}
 		}
 	}
+	
+	endx = en_x [gpit] - en_cx;
 
 	sprx = en_x [gpit]; spry = en_y [gpit];
 	sprid = en_s [gpit] + (en_mx [gpit] == 0 ?

@@ -196,7 +196,9 @@ void scroll_to (void) {
 
 void scroll_draw_screen (void) {
 	// Redraw
-	cx1 = (cam_pos >> 5); if (cx1) cx1 --;
+	cx1 = (cam_pos >> 5); 
+	if (cx1) cx1 --;
+	if (cx1) cx1 --;
 	cx2 = cx1 + 10;
 	col_idx_latest = 0xffff;
 	for (col_idx = cx1; col_idx <= cx2; col_idx ++) {

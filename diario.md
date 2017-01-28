@@ -1196,3 +1196,15 @@ Además está todo en el level 0, para ahorrar.
 Anim Gate:
 
 s = 0, s = 1, s = 2.
+
+20170128
+========
+
+Al final, tras muchas tribulaciones y cambios de planes, lo hice. En el camino tuve que cambiar cómo se comportaba el renderer del scroll. El cambio ha necesitado que se pinte más pantalla al empezar para que esté más relleno el buffer, con lo que la transición entre pisos es más lenta, pero nada grave.
+
+Lo que haré (y lo dejo para el final) es una función específica para que este primer dibujado de la pantalla sea mucho más rápido, que actué con la pantalla apagada y modificando directamente VRAM, sin esperas ni pollas.
+
+Otra cosa que tengo que hacer es pulir las plataformas horizontales, que no van finas.
+
+Ahora voy a dejar fino el marcador y controlar un poco el desarrollo del juego (game over y win game).
+

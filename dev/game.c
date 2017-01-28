@@ -66,12 +66,12 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 // ROM2, game functions here. When the game is running, ROM2 is paged in
 // ############################################################################
 
+#include "prg2/assets/palettes.h"
 #include "prg2/assets/spritedata.h"
 #include "prg2/assets/metasprites.h"
 #include "prg2/assets/precalcs.h"
 #include "prg2/assets/enems0.h"
 #include "prg2/assets/hud_rle.h"
-#include "prg2/assets/palettes.h"
 
 #include "prg2/engine/palette_fx.h"
 #include "prg2/engine/printer.h"
@@ -114,6 +114,7 @@ void main (void) {
 	pal_bright (0);
 
 	// Rehash
+	pcontinues = 0;
 	game_init ();
 
 	music_on = 0;

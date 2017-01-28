@@ -31,6 +31,8 @@ void hotspots_do (void) {
 			sprid = rda;
 		} else if (rda & 0x10) {
 			sprid = rda & 0x7;
+		} else if (rda == 0x22) {
+			sprid = 2;
 		} else sprid = 3;
 
 		if (cam_pos_pant == gpit) {
@@ -45,6 +47,12 @@ void hotspots_do (void) {
 			spr_it [sprid]
 		);
 
+		if (rda == 0x22 && half_life) oam_index = oam_meta_spr (
+			rdx, rdc + SPRITE_ADJUST,
+			oam_index,
+			spr_it [8]
+		);
+
 		// Collision
 		if (CL (prx, pry, rdb, rdc)) {
 			// Plain ones, react on touch if < 8
@@ -52,12 +60,22 @@ void hotspots_do (void) {
 				switch (rda) {
 					case 0x01: 
 						// life
+						plife ++;
+						hrt [hrp [gpit]] = 0;
 						break;
 					case 0x04:
 					case 0x05:
 					case 0x06:
 					case 0x07:
+						if (pinv == 0xff || (pad0 & PAD_B)) {
+							hrt [hrp [gpit]] = pinv;
+							pinv = rda;
+						} 
 						// Get object
+						break;
+					case 0x22:
+						// Ending
+						psignal = PLAYER_WINS;
 						break;
 				}
 			} else if ((pad0 & PAD_B) && !(guay_ct || tt_ct || use_ct || no_ct)) {
@@ -96,9 +114,6 @@ void hotspots_do (void) {
 							guay_ct = ticks;
 							rdb = 1;
 						}
-						break;
-					case 0x22:
-						// Ending
 						break;
 				}
 				if (!rdb) no_ct = ticks;

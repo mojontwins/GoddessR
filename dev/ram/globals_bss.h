@@ -57,6 +57,7 @@ unsigned char safe_prx, safe_pry, safe_n_pant, safe_level;
 // Hud & stats
 unsigned char plife, pcharges, pinv;
 unsigned char oplife, opcharges;
+unsigned char pcontinues;
 
 // Music
 unsigned char music_on;

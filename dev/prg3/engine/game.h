@@ -10,14 +10,13 @@ void game_init (void) {
 	tokumaru_lzss (chars_ts_patterns_c, 3584);	// 224*16
 	tokumaru_lzss (main_ss_patterns_c,  4096);	// 256*16
 
-	stage = 0;
-	//level = LEVEL_INI; n_pant = SCR_INI;
-	level = 0; n_pant = 17;
+	if (pcontinues) {
+		level = 1; n_pant = 9;
+	} else {
+		stage = 0;
+		level = LEVEL_INI; n_pant = SCR_INI;		
+	}
 
-	bankswitch (2);
-	player_init ();
-
-	c_pal_bg = mypal_game_bg0;
 	c_pal_fg = mypal_game_fg0;
 
 	c_enems_t = enems_t_0;
@@ -28,12 +27,14 @@ void game_init (void) {
 	c_hotspots_yx = hotspots_yx_0;
 	c_hotspots_t = hotspots_t_0;
 
-	hotspots_init ();
-
 	guay_ct = 0;
 	gpit = 4; while (gpit --) gs_flags [gpit] = 0;
 
-	gs_flags [0] = 2;
+	bankswitch (2);
+	player_init ();
+	hotspots_init ();
+
+	level = 0;n_pant=0;pinv=4;pcharges=3;
 }
 
 void game_strip_setup (void) {
@@ -74,6 +75,8 @@ void game_stuff_preload (void) {
 
 void game_loop (void) {
 	// Add palette selection logic - later
+	c_pal_bg = c_pal_bgs [stage];
+
 	bankswitch (2);
 	pal_bg (c_pal_bg);
 	pal_spr (c_pal_fg);
@@ -140,6 +143,7 @@ void game_loop (void) {
 			oam_index = 28;
 			if (cutscene) {
 				bg_object_do ();
+				hotspots_do ();
 			} else {
 				player_move ();
 				camera_do ();

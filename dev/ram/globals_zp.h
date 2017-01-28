@@ -49,11 +49,12 @@ unsigned char n_pant;
 // Player 
 unsigned char prx, pry;
 signed int px, py;
-signed int pvx, pvy;
+signed char pvx, pvy;
+signed char pvmax;
 unsigned char pgotten, pfacing, psprid;
-unsigned char ppossee, pslip, psignal;
+unsigned char ppossee, psignal;
 unsigned char pj, pjb, pctj;
-unsigned char ppressingh, pfr, pflickers, ppodewwwr;
+unsigned char pfr, pflickers, ppodewwwr;
 signed char pgtmx, pgtmy;
 
 signed int px_world;
@@ -71,6 +72,7 @@ unsigned char en_x [6], en_y [6], en_state [6], en_s [6], en_p [6];
 signed char en_mx [6], en_my [6];
 unsigned char sprx, spry, sprid;
 unsigned char en_cx, en_cy;
+signed char endx;
 
 // Hotspots
 const unsigned char *c_hotspots_yx;

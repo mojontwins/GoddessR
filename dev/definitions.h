@@ -24,7 +24,7 @@
 	#define DISABLE_SFX_NEXT_FRAME		*((unsigned char*)0x01bf)=1;
 	#define ADD_SIGN2(a,b,v)			((a)==(b))?(0):(((a)>(b))?(v):(-(v)))
 	#define ADD_SIGN(a,v) 				((a)?(((a)>0)?(v):(-(v))):(0))
-	#define DIGIT(n) 					(240+(n))
+	#define DIGIT(n) 					(224+(n))
 	#define UPDATE						*gp_ul++
 	#define SCR_BUFFER_PTR_UPD 			scr_buffer_ptr = scr_buffer + ((n_pant & 1) ? 192 : 0)
 
@@ -51,6 +51,7 @@
 	#define PLAYER_VY_SINK				2
 	#define PLAYER_AY_JUMP 				8	
 	#define PLAYER_VX_MAX				32	
+	#define PLAYER_VX_MAX_PODEWWWR		48
 	#define PLAYER_AX					4	
 	#define PLAYER_RX					4
 	#define PLAYER_AX_SLIP				1
@@ -83,6 +84,8 @@
 	#define PLAYER_TELEPORT 			6
 	#define PLAYER_CUTSCENE				7
 	#define PLAYER_RESTORE				8
+	#define PLAYER_WINS					9
+	#define PLAYER_GAME_OVER 			10
 	#define PLAYER_DEBUG				0xff
 
 // Scroll states
