@@ -1175,3 +1175,24 @@ Medio me convence, voy a hacerlo (que no copiarlo). Necesito antes infraestructu
 
 Toneladas de infraestructura, recargas y teletransportaciones hechas. Podría haber empezado por coger objetos... Bueno, eso lo siguiente. Ahora a Github.
 
+20170127
+========
+
+Después de las vacaciones (sin apenas tiempo y con dos cojones ¡vacaciones!) voy a ponerme a generalizar los chac chacs para que también contengan la puerta abierta / cerrada y las tres compuertas de final.
+
+~~
+
+Vale, he estado pensando como implementar esto. Está claro que voy a usar las estructuras de los chac-chacs. X = par, hasta ahí todo guay. El tipo de cosa podría identificarlo usando tiles especiales del tileset, como los chac-chacs. Los tiles, a partir del 96, indicarán qué flag de estado de juego gobiernan cada chac chac. O lo hago custom así, o no hay forma.
+
+0 -> usar piedra
+1 -> usar papel
+2 -> usar tijeras
+3 -> usar llaves.
+
+Además está todo en el level 0, para ahorrar.
+
+~~
+
+Anim Gate:
+
+s = 0, s = 1, s = 2.

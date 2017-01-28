@@ -34,9 +34,9 @@ void hotspots_do (void) {
 		} else sprid = 3;
 
 		if (cam_pos_pant == gpit) {
-			if (rdb >= cam_pos_mod) rdx = rdb - cam_pos_mod; else return;
+			if (rdb >= cam_pos_mod) rdx = rdb - cam_pos_mod; else continue;
 		} else {
-			if (rdb + 16 < cam_pos_mod) rdx = 256 - cam_pos_mod + rdb; else return;
+			if (rdb + 16 < cam_pos_mod) rdx = 256 - cam_pos_mod + rdb; else continue;
 		}
 		
 		oam_index = oam_meta_spr (
@@ -68,6 +68,13 @@ void hotspots_do (void) {
 					case 0x0E:
 					case 0x0F:
 						// Use object
+						if (pinv == (rda & 7)) {
+							music_pause (1);
+							use_ct = 1; fr_ct = 0;
+							rdb = 1;
+							h_modify_this = hrp [gpit];
+							gs_this_flag = rda - 0x0C;
+						}
 						break;
 					case 0x20:
 						// Teleport

@@ -14,6 +14,6 @@ void hud_do (void) {
 	oam_index = oam_meta_spr (
 		136, 15,
 		oam_index,
-		spr_it [ (pinv > 3 && pinv < 7) ? pinv : 3 ]
+		spr_it [ (pinv > 3 && pinv < 8) ? pinv : 3 ]
 	); 
 }

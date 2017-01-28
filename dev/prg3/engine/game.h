@@ -11,7 +11,8 @@ void game_init (void) {
 	tokumaru_lzss (main_ss_patterns_c,  4096);	// 256*16
 
 	stage = 0;
-	level = LEVEL_INI; n_pant = SCR_INI;
+	//level = LEVEL_INI; n_pant = SCR_INI;
+	level = 0; n_pant = 17;
 
 	bankswitch (2);
 	player_init ();
@@ -30,6 +31,9 @@ void game_init (void) {
 	hotspots_init ();
 
 	guay_ct = 0;
+	gpit = 4; while (gpit --) gs_flags [gpit] = 0;
+
+	gs_flags [0] = 2;
 }
 
 void game_strip_setup (void) {
@@ -76,7 +80,7 @@ void game_loop (void) {
 	palfx_init ();
 	
 	// Inits
-	chac_chac_init ();
+	bg_object_init ();
 	game_strip_setup ();
 	hud_and_split_setup ();
 
@@ -87,18 +91,26 @@ void game_loop (void) {
 	bankswitch (0);
 	scroll_draw_screen ();
 
-	// Preload enems
+	// Preload enems, bg objects, hotspots
 	bankswitch (2);
-	rdpant = n_pant; 
-	enems_load (); hotspots_load ();
-	rdpant = (n_pant & 1) ? n_pant + 1 : n_pant - 1; 
-	enems_load (); hotspots_load ();
+
+	scroll_state = SCROLL_STATE_FREE;
+	for (frame_counter = 0; frame_counter < 3; frame_counter ++) {
+		gp_ul = update_list;
+		bg_object_do ();
+		*gp_ul = NT_UPD_EOF;
+		ppu_wait_nmi ();
+	}
+	
+	cam_pant = MSB (cam_pos);
+	rdpant = cam_pant; enems_load (); hotspots_load ();
+	rdpant = cam_pant + 1; enems_load (); hotspots_load ();
 	cam_pant_old = MSB (cam_pos);
 	
 	SCR_BUFFER_PTR_UPD;
 	fade_in_split ();
 
-	no_ct = tt_ct = use_ct = half_life = psignal = 0;
+	no_ct = tt_ct = half_life = psignal = 0;
 
 	if (!music_on) {
 		music_play (MUSIC_INGAME_BASE + stage);
@@ -107,6 +119,7 @@ void game_loop (void) {
 
 	// Do
 	game_res = 0;
+	frame_counter = 0;
 	while (!game_res) {
 		half_life = 1 - half_life;
 		frame_counter ++;
@@ -125,12 +138,16 @@ void game_loop (void) {
 
 		if (!ntsc || fskip_ctr < 5) {
 			oam_index = 28;
-			player_move ();
-			camera_do ();
-			chac_chac_do ();
-			enems_do ();
-			player_render ();
-			hotspots_do ();
+			if (cutscene) {
+				bg_object_do ();
+			} else {
+				player_move ();
+				camera_do ();
+				bg_object_do ();
+				enems_do ();
+				player_render ();
+				hotspots_do ();
+			}
 			hud_do ();
 			oam_hide_rest (oam_index);
 		}
@@ -161,6 +178,8 @@ void game_loop (void) {
 		else if (px_world > section_x1 + 244) game_res = PLAYER_EXIT_RIGHT;	
 
 		if (pad0 & PAD_SELECT) game_res = PLAYER_DEBUG;
+
+		if (cutscene && !frame_counter) game_res = PLAYER_RESTORE;
 	}
 
 	bankswitch (2);

@@ -45,7 +45,15 @@ const signed char fanty_retreat_incs [] = {
 const unsigned char chac_chac_tiles_0 [] = { 48, 50, 53, 50, 48, 54 };
 const unsigned char chac_chac_tiles_1 [] = { 54, 54, 52, 54, 54, 54 };
 const unsigned char chac_chac_tiles_2 [] = { 49, 51, 53, 51, 49, 54 };
-const unsigned char chac_chac_times [] = { 16, 1, 50, 2, 2, 120 };
+const unsigned char bg_object_times [] = { 16, 1, 50, 2, 2, 120 };
+
+const unsigned char column_tiles_0 [] = { 6, 6, 20 };
+const unsigned char column_tiles_1 [] = { 6, 20, 0 };
+const unsigned char column_tiles_2 [] = { 20, 0, 0 };
+
+const unsigned char main_gate_tiles_0 [] = { 2, 2, 2 };
+const unsigned char main_gate_tiles_1 [] = { 29, 0, 0 };
+const unsigned char main_gate_tiles_2 [] = { 30, 29, 0 };
 
 const unsigned int nt_tile_offsets_y [] = {
 	0, 64, 128, 192,

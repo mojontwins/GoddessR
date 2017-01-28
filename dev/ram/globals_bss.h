@@ -27,14 +27,16 @@ const unsigned char *c_pal_fg;
 unsigned char scroll_state;
 signed int section_x0;
 signed int section_x1;
+signed int cam_pos_old;
 
 // Chac chacs
-unsigned char cc_on [CHAC_CHAC_MAX];
-unsigned char cc_x [CHAC_CHAC_MAX], cc_y [CHAC_CHAC_MAX];
-unsigned char cc_pant [CHAC_CHAC_MAX], cc_s [CHAC_CHAC_MAX];
-unsigned char cc_ctr [CHAC_CHAC_MAX];
-unsigned int cc_col_idx [CHAC_CHAC_MAX];
-unsigned char cc_total;
+unsigned char bgo_on [BG_OBJS_MAX];
+unsigned char bgo_x [BG_OBJS_MAX], bgo_y [BG_OBJS_MAX];
+unsigned char bgo_pant [BG_OBJS_MAX], bgo_s [BG_OBJS_MAX];
+unsigned char bgo_ctr [BG_OBJS_MAX];
+unsigned int bgo_col_idx [BG_OBJS_MAX];
+unsigned char bgo_total;
+unsigned char bgo_type [BG_OBJS_MAX];
 
 // Level info
 unsigned char stage; 	// Decides palette & music
@@ -42,10 +44,12 @@ unsigned char level;
 unsigned char base_pant;
 const signed int *section;
 unsigned char game_res;
+unsigned char fskip_ctr;
 
 // Hotspots
 unsigned char hrt [MAX_PANTS];
 unsigned char hrx [2], hry [2], hrp [2];
+unsigned char h_modify_this;
 
 // Safe respawn
 unsigned char safe_prx, safe_pry, safe_n_pant, safe_level;
@@ -64,3 +68,10 @@ unsigned char fr_ct;
 // Flash fx
 const unsigned char *c_pal_back;
 unsigned char ct_flash;
+
+// Game state flags
+unsigned char gs_flags [4];
+unsigned char gs_this_flag;
+
+// Cutscene
+unsigned char cutscene;

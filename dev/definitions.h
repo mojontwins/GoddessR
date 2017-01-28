@@ -61,17 +61,15 @@
 // Animation cells
 
 	#define PFACING_RIGHT				0
-	#define PFACING_LEFT				22
+	#define PFACING_LEFT				27
 
 	#define PCELL_STANDING 				0
 	#define PCELL_WALK_BASE				1
 	#define PCELL_SUPERHERO				5
-	#define PCELL_TURN_AROUND_BASE		9
-	#define PCELL_CROUCHS_BASE			12
-	#define PCELL_BACK_UP_BASE			15
-	#define PCELL_WIN_BASE				18
-	#define PCELL_WIN_POSE				20
-	#define PCELL_AIRBORNE				21
+	#define PCELL_USE_ANIM_BASE			8  // Minus one
+	#define PCELL_WIN_POSE				25
+	#define PCELL_AIRBORNE				26
+	#define PCELL_TELEPORT				54
 
 	#define ENCELL_NO					40
 
@@ -83,6 +81,8 @@
 	#define PLAYER_EXIT_RIGHT			4
 	#define PLAYER_KILLED				5
 	#define PLAYER_TELEPORT 			6
+	#define PLAYER_CUTSCENE				7
+	#define PLAYER_RESTORE				8
 	#define PLAYER_DEBUG				0xff
 
 // Scroll states
@@ -105,8 +105,8 @@
 
 // Defines for chac chacs
 
-	#define CHAC_CHAC_MAX 				5
-	#define CHAC_CHAC_BASE_TILE			48		// For detection
+	#define BG_OBJS_MAX 				5
+	#define bg_object_BASE_TILE			48		// For detection
 
 // Defines for readability
 

@@ -23,16 +23,16 @@ unsigned char pad0, pad;
 // Game counters
 unsigned char half_life;
 unsigned char frame_counter;
-unsigned char fskip_ctr;
 
 // Scrolling engine
 unsigned int col_idx;
+unsigned int col_idx_latest;
 const unsigned char *col_ptr;
 const unsigned char *map_ptr;
 unsigned char state_ctr;
 unsigned int col_v_offset;
 
-signed int cam_pos, cam_pos_old;
+signed int cam_pos;
 unsigned char cam_pos_mod, cam_pos_pant;
 
 // Collision detection
@@ -75,3 +75,4 @@ unsigned char en_cx, en_cy;
 // Hotspots
 const unsigned char *c_hotspots_yx;
 const unsigned char *c_hotspots_t;
+

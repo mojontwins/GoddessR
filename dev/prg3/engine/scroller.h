@@ -3,32 +3,39 @@
 
 // Scrolling stuff. Everything you need is in prg0, so page it in.
 
-void scroll_chac_chac_create (void) {
+void scroll_bg_object_create (void) {
 	// I could do something prettier but RAM is tight, time is tight
 	// And my ass is NOT tight.
 
-	if (col_idx == cc_col_idx [0] || 
-		col_idx == cc_col_idx [1] || 
-		col_idx == cc_col_idx [2] || 
-		col_idx == cc_col_idx [3] ||
-		col_idx == cc_col_idx [4]) return;
+	if (col_idx == bgo_col_idx [0] || 
+		col_idx == bgo_col_idx [1] || 
+		col_idx == bgo_col_idx [2] || 
+		col_idx == bgo_col_idx [3] ||
+		col_idx == bgo_col_idx [4]) return;
 
 	// Discard?
-	ccit = CHAC_CHAC_MAX; while (ccit --) {
-		if (0 == cc_col_idx [ccit]) {
-			cc_x [ccit] = rdc >> 1;
-			cc_pant [ccit] = (col_idx >> 3) & 1;
-			cc_y [ccit] = rdd + (rdct >> 1);
-			cc_s [ccit] = 0;
-			cc_ctr [ccit] = chac_chac_times [5] + (rand8 () & 0x1f);
-			cc_col_idx [ccit] = col_idx;
-			cc_total ++;
+	ccit = BG_OBJS_MAX; while (ccit --) {
+		if (0 == bgo_col_idx [ccit]) {
+			bgo_x [ccit] = rdc >> 1;
+			bgo_pant [ccit] = (col_idx >> 3) & 1;
+			bgo_y [ccit] = rdd + (rdct >> 1);
+			bgo_s [ccit] = (rda >= 96 && gs_flags [rda - 96] == 2) ? 2 : 0;
+			bgo_ctr [ccit] = (rda >= 96) ? 0 : 120 + (rand8 () & 0x1f);
+			bgo_col_idx [ccit] = col_idx;
+			bgo_type [ccit] = rda;
+			bgo_total ++;
+
 			break;
 		}
 	}
 }
 
 void scroll_paint_chunk (void) {
+	if (col_idx != col_idx_latest && state_ctr >= 7) {
+		state_ctr = 0;
+	}
+	col_idx_latest = col_idx;
+
 	// Calculate memory address of current column [col_idx * 24]
 	gpint = col_idx << 2;
 	// 24 = 12 * 2 = (4*3)*2
@@ -54,8 +61,8 @@ void scroll_paint_chunk (void) {
 
 		// Chac chac creation. Note there's an increible
 		// shortcut: chac chacks must have X even
-		if (rda == CHAC_CHAC_BASE_TILE) {
-			rdd = 0; scroll_chac_chac_create ();
+		if (rda == 48) {
+			rdd = 0; scroll_bg_object_create ();
 			rda = 54;
 		}
 		
@@ -84,9 +91,12 @@ void scroll_paint_chunk (void) {
 
 		// Chac chac creation. Note there's an increible
 		// shortcut: chac chacks must have X even
-		if (rda == CHAC_CHAC_BASE_TILE) {
-			rdd = 1; scroll_chac_chac_create ();
+		if (rda == 48) {
+			rdd = 1; scroll_bg_object_create ();
 			rda = 54;
+		} else if (rda >= 96) {
+			rdd = 1; scroll_bg_object_create ();
+			rda = 0;
 		}
 		
 		UPDATE = MSB (gp_addr) | NT_UPD_HORZ;
@@ -146,7 +156,8 @@ void scroll_paint_chunk (void) {
 		scroll_state = SCROLL_STATE_FREE;
 	}
 
-	state_ctr = (state_ctr + 1) & 7;
+	//state_ctr = (state_ctr + 1) & 7;
+	if (state_ctr < 7) state_ctr ++;
 }
 
 void scroll_draw_one_chunk_completely (void) {
@@ -187,6 +198,7 @@ void scroll_draw_screen (void) {
 	// Redraw
 	cx1 = (cam_pos >> 5); if (cx1) cx1 --;
 	cx2 = cx1 + 10;
+	col_idx_latest = 0xffff;
 	for (col_idx = cx1; col_idx <= cx2; col_idx ++) {
 		scroll_draw_one_chunk_completely ();
 	}

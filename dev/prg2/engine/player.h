@@ -12,12 +12,21 @@ void player_register_safe_spot (void) {
 	safe_n_pant = n_pant; safe_level = level;
 }
 
+void player_restore_safe_spot (void) {
+	prx = safe_prx; px = prx << FIX_BITS;
+	pry = safe_pry; py = pry << FIX_BITS;			
+	n_pant = safe_n_pant; level = safe_level;
+}
+
 void player_init (void) {
 	prx = (4 << 4); px = prx << FIX_BITS;
 	pry = (6 << 4); py = pry << FIX_BITS;
 	pfacing = pfr = 0;
 	player_register_safe_spot ();
 	player_reset_movement ();
+
+	pinv = 7; //0xff;
+	use_ct = 0;
 }
 
 void player_collision_vertical (void) {
@@ -50,14 +59,13 @@ void player_move (void) {
 	// Timers and stuff
 	if (pflickers) pflickers --;
 
-	// Vertical
 	if (guay_ct) {
 		guay_ct --;
 	} else if (tt_ct) {
 		if (fr_ct) fr_ct --; else {
 			if (0xff != (rda = tt_anim [tt_ct ++])) {
 				if (0 == (fr_ct = rda & 0x0f)) fr_ct = 20;
-				pfr = 44 + (rda >> 4);
+				pfr = PCELL_TELEPORT + (rda >> 4);
 				if ((rand8 () & 3) == 0) {
 					// sfx_play (SFX_FLASH, SC_LEVEL);
 					fx_flash (mypal_reds);
@@ -67,8 +75,28 @@ void player_move (void) {
 			}
 		}
 	} else if (use_ct) {
-
+		pfr = PCELL_USE_ANIM_BASE + use_ct;
+		if (fr_ct) fr_ct --; else {
+			use_ct ++;
+			if (use_ct == 7) {
+				hrt [h_modify_this] = pinv | 0x10;
+				pinv = 0xff;
+			}
+			if (use_ct == 15) {
+				gs_flags [gs_this_flag] = 1;
+				if (gs_this_flag < 3) {
+					psignal = PLAYER_CUTSCENE;
+				}
+			}
+			if (use_ct == 18) {
+				gs_flags [gs_this_flag] = 2;
+				use_ct = 0;
+			}
+			fr_ct = 8;
+		}
 	} else pad = pad0;
+
+	// Vertical
 
 	// Gravity
 	if (!pgotten) {
@@ -208,7 +236,7 @@ void player_move (void) {
 		}
 
 	// Calc cell
-	if (tt_ct) {
+	if (tt_ct || use_ct) {
 	} else if (ppossee || pgotten) {
 		if (guay_ct) 
 			pfr = PCELL_WIN_POSE;

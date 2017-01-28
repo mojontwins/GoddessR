@@ -11,7 +11,7 @@ void update_buffered_tile (void) {
 	// This function gets called from prg2 so I MUST PAGE IT BACK IN!
 	// This makes this code not über portable, but 8 bits are... 8 bits.
 
-	*(scr_buffer + (rdct ? 192 : 0) + rdx + (rdy << 4)) = rdt;
+	*(scr_buffer + (rdct ? 192 : 0) + rdx + (rdy << 4)) = behs [rdt];
 
 	// Paint
 	gp_addr = (rdct ? NAMETABLE_B : NAMETABLE_A) + (rdx << 1) + nt_tile_offsets_y [rdy];
