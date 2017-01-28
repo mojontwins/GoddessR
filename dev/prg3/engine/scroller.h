@@ -18,7 +18,7 @@ void scroll_bg_object_create (void) {
 		if (0 == bgo_col_idx [ccit]) {
 			bgo_x [ccit] = rdc >> 1;
 			bgo_pant [ccit] = (col_idx >> 3) & 1;
-			bgo_y [ccit] = rdd + (rdct >> 1);
+			bgo_y [ccit] = rde + (rdct >> 1);
 			bgo_s [ccit] = (rda >= 96 && gs_flags [rda - 96] == 2) ? 2 : 0;
 			bgo_ctr [ccit] = (rda >= 96) ? 0 : 120 + (rand8 () & 0x1f);
 			bgo_col_idx [ccit] = col_idx;
@@ -62,7 +62,7 @@ void scroll_paint_chunk (void) {
 		// Chac chac creation. Note there's an increible
 		// shortcut: chac chacks must have X even
 		if (rda == 48) {
-			rdd = 0; scroll_bg_object_create ();
+			rde = 0; scroll_bg_object_create ();
 			rda = 54;
 		}
 		
@@ -92,10 +92,10 @@ void scroll_paint_chunk (void) {
 		// Chac chac creation. Note there's an increible
 		// shortcut: chac chacks must have X even
 		if (rda == 48) {
-			rdd = 1; scroll_bg_object_create ();
+			rde = 1; scroll_bg_object_create ();
 			rda = 54;
 		} else if (rda >= 96) {
-			rdd = 1; scroll_bg_object_create ();
+			rde = 1; scroll_bg_object_create ();
 			rda = 0;
 		}
 		
@@ -220,14 +220,15 @@ void scroll_draw_one_chunk_completely (void) {
 	rdc = gpint & 31;
 	rdd = (col_idx & 8);
 
-	col_v_offset = scr_v_offset = 0;
+	gp_addr = (rdd ? NAMETABLE_B : NAMETABLE_A) + rdc;
+	scr_buffer_ptr = scr_buffer + (rdd ? 192 : 0) + ((col_idx & 0x7) << 1);
 
 	for (state_ctr = 0; state_ctr < 6; state_ctr ++) {
 		// State 0..5: draw patterns. 4x4 chunk
 
 		// where to paint
 		rdct = (state_ctr << 2);
-		gp_addr = (rdd ? NAMETABLE_B : NAMETABLE_A) + rdc + col_v_offset;
+		//gp_addr = (rdd ? NAMETABLE_B : NAMETABLE_A) + rdc + col_v_offset;
 		gp_aux = (unsigned char *) (col_ptr + rdct);
 		gp_gen = gp_aux;
 		
@@ -237,7 +238,7 @@ void scroll_draw_one_chunk_completely (void) {
 		// Chac chac creation. Note there's an increible
 		// shortcut: chac chacks must have X even
 		if (rda == 48) {
-			rdd = 0; scroll_bg_object_create ();
+			rde = 0; scroll_bg_object_create ();
 			rda = 54;
 		}
 		
@@ -263,10 +264,10 @@ void scroll_draw_one_chunk_completely (void) {
 		// Chac chac creation. Note there's an increible
 		// shortcut: chac chacks must have X even
 		if (rda == 48) {
-			rdd = 1; scroll_bg_object_create ();
+			rde = 1; scroll_bg_object_create ();
 			rda = 54;
 		} else if (rda >= 96) {
-			rdd = 1; scroll_bg_object_create ();
+			rde = 1; scroll_bg_object_create ();
 			rda = 0;
 		}
 		
@@ -284,15 +285,15 @@ void scroll_draw_one_chunk_completely (void) {
 		vram_put (main_ts_tmaps_2 [rdb]);
 		vram_put (main_ts_tmaps_3 [rdb]);
 
+		gp_addr += 32;
+
 		// Next chunk at
-		col_v_offset += 128;
+		//col_v_offset += 128;
 
 		// Write a bit in the collision buffer
-		gp_gen = gp_aux;
-		gp_aux = scr_buffer + (rdd ? 192 : 0) + ((col_idx & 0x7) << 1) + scr_v_offset;
-		*gp_aux ++ = behs [*gp_gen ++]; *gp_aux = behs [*gp_gen ++]; gp_aux += 15;
-		*gp_aux ++ = behs [*gp_gen ++]; *gp_aux = behs [*gp_gen];
-		scr_v_offset += 32;
+		
+		*scr_buffer_ptr ++ = behs [*gp_aux ++]; *scr_buffer_ptr = behs [*gp_aux ++]; scr_buffer_ptr += 15;
+		*scr_buffer_ptr ++ = behs [*gp_aux ++]; *scr_buffer_ptr = behs [*gp_aux]; scr_buffer_ptr += 15;
 	} 
 
 	// State 6: fetch & paint attrs.
@@ -321,11 +322,11 @@ void scroll_draw_screen (void) {
 	cx1 = (cam_pos >> 5); 
 	if (cx1) cx1 --;
 	if (cx1) cx1 --;
-	cx2 = cx1 + 11;
-	col_idx_latest = 0xffff;
+	cx2 = cx1 + 11; if (cx2 > 159) cx2 = 159;
 	for (col_idx = cx1; col_idx <= cx2; col_idx ++) {
 		scroll_draw_one_chunk_completely ();
 	}
 
-	state_ctr = 0; col_v_offset = scr_v_offset = 0;
+	// Init
+	state_ctr = 0; col_v_offset = scr_v_offset = 0; col_idx_latest = 0xffff;
 }

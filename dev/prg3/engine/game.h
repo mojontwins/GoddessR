@@ -35,6 +35,7 @@ void game_init (void) {
 	hotspots_init ();
 
 	//level = 0;n_pant=0;pinv=4;pcharges=3;
+	//level = 3; n_pant = 17; pinv = 6; pcharges = 3;
 }
 
 void game_strip_setup (void) {
@@ -91,6 +92,7 @@ void game_loop (void) {
 	bankswitch (0);
 	scroll_draw_screen ();
 	ppu_on_all ();
+
 	set_vram_update (update_list);
 
 	// Preload enems, bg objects, hotspots

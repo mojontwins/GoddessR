@@ -36,6 +36,7 @@ void player_init (void) {
 	plife = 5;
 
 	pvmax = PLAYER_VX_MAX;
+	ppodewwwr = 0;
 }
 
 void player_collision_vertical (void) {
@@ -273,6 +274,7 @@ void player_move (void) {
 		if (pad & PAD_UP) {
 			if (pcharges) {
 				if (ppodewwwr == 0) {
+					pcharges --;
 					ppodewwwr = 250;
 					pvmax = PLAYER_VX_MAX_PODEWWWR;
 					c_pal_fg = mypal_game_fg1;

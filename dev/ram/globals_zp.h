@@ -4,7 +4,7 @@
 // Zero page globals
 
 // General
-unsigned char rda, rdb, rdc, rdd, rdct, rdt;
+unsigned char rda, rdb, rdc, rdd, rde, rdct, rdt;
 unsigned char rdx, rdy, rdpant, ccit;
 signed char rds;
 
@@ -25,8 +25,8 @@ unsigned char half_life;
 unsigned char frame_counter;
 
 // Scrolling engine
-unsigned int col_idx;
-unsigned int col_idx_latest;
+unsigned char col_idx;
+unsigned char col_idx_latest;
 const unsigned char *col_ptr;
 const unsigned char *map_ptr;
 unsigned char state_ctr;
