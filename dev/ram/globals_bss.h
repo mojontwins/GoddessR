@@ -45,6 +45,8 @@ unsigned char base_pant;
 const signed int *section;
 unsigned char game_res;
 unsigned char fskip_ctr;
+unsigned char first_time;
+unsigned char keep_playing;
 
 // Hotspots
 unsigned char hrt [MAX_PANTS];

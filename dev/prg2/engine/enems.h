@@ -161,6 +161,7 @@ void enems_do (void) {
 		// With plain enemies
 		if (CL (prx, pry, sprx, spry)) {
 			psignal = PLAYER_KILLED;
+			sfx_play (SFX_KILL, SC_PLAYER);
 		}
 	}
 }

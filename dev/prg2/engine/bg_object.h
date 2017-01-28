@@ -73,7 +73,7 @@ void bg_object_do (void) {
 								bg_object_draw_this ();
 
 								if (gs_flags [bgo_type [ccit] - 96] && rdd < 2) {
-									bgo_ctr [ccit] = 50;
+									bgo_ctr [ccit] = 50; if (rdd) sfx_play (SFX_OFF, SC_LEVEL);
 									bgo_s [ccit] ++;
 								} else bgo_ctr [ccit] = 0;
 							}

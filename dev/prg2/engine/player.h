@@ -76,10 +76,11 @@ void player_move (void) {
 				if (0 == (fr_ct = rda & 0x0f)) fr_ct = 20;
 				pfr = PCELL_TELEPORT + (rda >> 4);
 				if ((rand8 () & 3) == 0) {
-					// sfx_play (SFX_FLASH, SC_LEVEL);
+					sfx_play (SFX_FLASH, SC_LEVEL);
 					fx_flash (mypal_reds);
 				}
 			} else {
+				fx_flash (c_pal_bg);
 				psignal = PLAYER_TELEPORT;
 			}
 		}
@@ -88,6 +89,7 @@ void player_move (void) {
 		if (fr_ct) fr_ct --; else {
 			use_ct ++;
 			if (use_ct == 7) {
+				sfx_play (SFX_GET, SC_LEVEL);
 				hrt [h_modify_this] = pinv | 0x10;
 				pinv = 0xff;
 				if (gs_this_flag < 3) {
@@ -97,6 +99,7 @@ void player_move (void) {
 				}
 			}
 			if (use_ct == 15) {
+				sfx_play (SFX_USE, SC_LEVEL);
 				gs_flags [gs_this_flag] = 1;
 				if (gs_this_flag < 3) {
 					psignal = PLAYER_CUTSCENE;
@@ -117,7 +120,7 @@ void player_move (void) {
 
 		if (0 == ppodewwwr) {
 			// Deactivate
-			//sfx_play (SFX_PODEWWWR, SC_PLAYER);
+			sfx_play (SFX_OFF, SC_PLAYER);
 			pvmax = PLAYER_VX_MAX;
 			c_pal_fg = mypal_game_fg0;
 			fx_flash (c_pal_bg);
@@ -188,7 +191,7 @@ void player_move (void) {
 					if (pgotten || ppossee) {
 						pj = 1; pctj = 0; 
 						pvy = -PLAYER_VY_JUMP_INITIAL;
-						//sfx_play (SFX_JUMP, SC_PLAYER);
+						sfx_play (SFX_JUMP, SC_PLAYER);
 						if (ppossee) player_register_safe_spot ();
 					}
 				} 
@@ -274,24 +277,31 @@ void player_move (void) {
 					pvmax = PLAYER_VX_MAX_PODEWWWR;
 					c_pal_fg = mypal_game_fg1;
 					fx_flash (c_pal_bg);
-					//sfx_play (SFX_PODEWWWR, SC_PLAYER);
+					sfx_play (SFX_ON, SC_PLAYER);
 				}
-			} else no_ct = ticks;
+			} else if (no_ct == 0) {
+				no_ct = ticks;
+				sfx_play (SFX_KILL, SC_PLAYER);
+			}
 		}
 	}
 
 	// Calc cell
 	if (tt_ct || use_ct) {
-	} else if (ppodewwwr) {
-		pfr = PCELL_SUPERHERO + ((frame_counter >> 3) & 3);
-	} else if (ppossee || pgotten) {
-		if (guay_ct) 
-			pfr = PCELL_WIN_POSE;
-		else if (ABS (pvx) > PLAYER_VX_MIN) {
-			pfr = PCELL_WALK_BASE + ((prx >> 4) & 3);
-		} else pfr = PCELL_STANDING;
 	} else {
-		pfr = PCELL_AIRBORNE;
+		if (ppodewwwr) {
+			pfr = PCELL_SUPERHERO + ((frame_counter >> 3) & 3);
+		} else if (ppossee || pgotten) {
+			if (guay_ct) 
+				pfr = PCELL_WIN_POSE;
+			else if (ABS (pvx) > PLAYER_VX_MIN) {
+				pfr = PCELL_WALK_BASE + ((prx >> 4) & 3);
+			} else pfr = PCELL_STANDING;
+		} else {
+			pfr = PCELL_AIRBORNE;
+		}
+
+		pfr += pfacing;
 	}
 
 	// Real world pixel coordinate
@@ -307,7 +317,7 @@ void player_render (void) {
 	if (half_life || !pflickers) oam_meta_spr (
 		rdx, rdy,
 		4,
-		spr_pl [pfacing + pfr]); 
+		spr_pl [pfr]); 
 	else oam_meta_spr (
 		rdx, rdy,
 		4,

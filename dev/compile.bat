@@ -23,18 +23,22 @@ copy /b work\palbg0.h + work\palbg1.h + work\palbg2.h + work\palbg3.h + work\pal
 cd ..\gfx
 ..\utils\mkts.exe mode=scripted in=cut_sprites.spt out=..\dev\work\main_ss_patterns.bin silent
 ..\utils\mkts.exe mode=chars in=chars.png pals=palts.png offset=0,14 max=32 out=..\dev\work\chars_ts_patterns.bin silent
+..\utils\mkts.exe mode=chars in=mapchars.png pals=palts.png offset=0,14 max=32 out=..\dev\work\map_ts_patterns.bin silent
 
 rem this one is for nesst
 
 ..\utils\mkts.exe mode=chars in=chars.png pals=palts.png out=..\dev\work\nesst.chr silent
+..\utils\mkts.exe mode=chars in=mapchars.png pals=palts.png out=..\dev\work\mapnesst.chr silent
 
 cd ..\dev
 ..\utils\lzsscomp.exe work\main_ss_patterns.bin main_ss_patterns_c.h
 ..\utils\lzsscomp.exe work\chars_ts_patterns.bin chars_ts_patterns_c.h
+..\utils\lzsscomp.exe work\map_ts_patterns.bin map_ts_patterns_c.h
 
 move main_ts_patterns_c.h prg1 > nul
 move main_ss_patterns_c.h prg1 > nul
 move chars_ts_patterns_c.h prg1 > nul
+move map_ts_patterns_c.h prg1 > nul
 
 echo PRG2
 cd ..\enems

@@ -1208,3 +1208,47 @@ Otra cosa que tengo que hacer es pulir las plataformas horizontales, que no van 
 
 Ahora voy a dejar fino el marcador y controlar un poco el desarrollo del juego (game over y win game).
 
+~~
+
+Ya he metido el mapa, he terminado el marcador, está hecho el control de desarrollo del juego (pero sin pantallas). Queda:
+
+- Rehacer el dibujado inicial del mapa para que lo haga con la pantalla OFF
+- Retocar las plataformas horizontales que hacen un "raro"
+- Recolocar enemigos mal
+- Pantalla de final / título
+- Censura
+- Sonidos
+
+Voy al banco de sonidos. Cogeré el original y sustituiré el salto por ahora.
+
+~~
+
+Estos son los sonidos que el original utiliza del banco original:
+
+1 - Relámpago
+2 - Usar objeto (colocar, frame 7) / Activar TT
+3 - Use (end, frame 16) / Coger objeto / Recargar
+4 - Kill player / NO
+5 - Podewwwr on
+6 - Podewwwr off / Clear gate
+7 - Salto
+
+0 SFX_DUMMY
+1 SFX_FLASH
+2 SFX_USE
+3 SFX_GET
+4 SFX_KILL
+5 SFX_ON
+6 SFX_OFF
+7 SFX_JUMP
+
+~~
+
+Bueno, cosas metidas y pulidas a saco. Creo que ya todo el juego está completo a falta de pulir y las pantallas fijas:
+
+- Retocar las plataformas horizontales que hacen un "raro"
+- Recolocar enemigos mal
+- Pantalla de final / título
+- Censura
+
+Lo dejo por hoy. Creo que al final va a dar tiempo y todo :*)

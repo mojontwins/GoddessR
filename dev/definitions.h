@@ -86,6 +86,7 @@
 	#define PLAYER_RESTORE				8
 	#define PLAYER_WINS					9
 	#define PLAYER_GAME_OVER 			10
+	#define PLAYER_MAP 					11
 	#define PLAYER_DEBUG				0xff
 
 // Scroll states
@@ -109,7 +110,6 @@
 // Defines for chac chacs
 
 	#define BG_OBJS_MAX 				5
-	#define bg_object_BASE_TILE			48		// For detection
 
 // Defines for readability
 
@@ -121,3 +121,19 @@
 
 	#define MUSIC_TITLE					0
 	#define MUSIC_INGAME_BASE 			1
+	#define MUSIC_CLEAR					5
+	#define MUSIC_GAME_OVER 			6
+
+// SFX
+
+	#define SC_PLAYER					0
+	#define SC_LEVEL 					1
+
+	#define SFX_DUMMY					0
+	#define SFX_FLASH 					1
+	#define SFX_USE 					2
+	#define SFX_GET 					3
+	#define SFX_KILL 					4
+	#define SFX_ON 						5
+	#define SFX_OFF 					6
+	#define SFX_JUMP 					7

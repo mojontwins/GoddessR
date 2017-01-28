@@ -34,7 +34,7 @@ void game_init (void) {
 	player_init ();
 	hotspots_init ();
 
-	level = 0;n_pant=0;pinv=4;pcharges=3;
+	//level = 0;n_pant=0;pinv=4;pcharges=3;
 }
 
 void game_strip_setup (void) {
@@ -88,11 +88,10 @@ void game_loop (void) {
 	hud_and_split_setup ();
 
 	// Screen
-	ppu_on_all ();
-	
-	set_vram_update (update_list);
 	bankswitch (0);
 	scroll_draw_screen ();
+	ppu_on_all ();
+	set_vram_update (update_list);
 
 	// Preload enems, bg objects, hotspots
 	bankswitch (2);
@@ -115,10 +114,12 @@ void game_loop (void) {
 
 	no_ct = tt_ct = half_life = psignal = 0;
 
-	if (!music_on) {
-		music_play (MUSIC_INGAME_BASE + stage);
-		music_on = 1;
-	} else music_pause (0);
+	if (!cutscene) {
+		if (!music_on) {
+			music_play (MUSIC_INGAME_BASE + stage);
+			music_on = 1;
+		} else music_pause (0);
+	}
 
 	// Do
 	game_res = 0;
@@ -181,7 +182,7 @@ void game_loop (void) {
 		if (px_world < section_x0 + 4) game_res = PLAYER_EXIT_LEFT;
 		else if (px_world > section_x1 + 244) game_res = PLAYER_EXIT_RIGHT;	
 
-		if (pad0 & PAD_SELECT) game_res = PLAYER_DEBUG;
+		if (pad0 & PAD_SELECT) game_res = PLAYER_MAP;
 
 		if (cutscene && !frame_counter) game_res = PLAYER_RESTORE;
 	}
@@ -191,4 +192,20 @@ void game_loop (void) {
 	oam_hide_rest (4);
 	set_vram_update (0);
 	ppu_off ();
+}
+
+void game_title (void) {
+
+}
+
+void game_over (void) {
+
+}
+
+void game_ending (void) {
+
+}
+
+void game_intro (void) {
+
 }

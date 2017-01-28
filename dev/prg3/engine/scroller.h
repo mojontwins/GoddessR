@@ -160,6 +160,20 @@ void scroll_paint_chunk (void) {
 	if (state_ctr < 7) state_ctr ++;
 }
 
+void scroll_to (void) {
+	// Updates nametables upon direction
+	if (cam_pos > cam_pos_old) {
+		col_idx = (cam_pos >> 5) + 9;
+		scroll_paint_chunk ();
+	} else if (cam_pos < cam_pos_old) {
+		col_idx = (cam_pos >> 5) - 1;
+		scroll_paint_chunk ();
+	} else scroll_state = SCROLL_STATE_FREE;
+
+	cam_pos_old = cam_pos;
+}
+
+/*
 void scroll_draw_one_chunk_completely (void) {
 	state_ctr = col_v_offset = scr_v_offset = 0;
 	gp_ul = update_list;
@@ -181,17 +195,125 @@ void scroll_draw_one_chunk_completely (void) {
 	ppu_wait_nmi ();
 }
 
-void scroll_to (void) {
-	// Updates nametables upon direction
-	if (cam_pos > cam_pos_old) {
-		col_idx = (cam_pos >> 5) + 9;
-		scroll_paint_chunk ();
-	} else if (cam_pos < cam_pos_old) {
-		col_idx = (cam_pos >> 5) - 1;
-		scroll_paint_chunk ();
-	} else scroll_state = SCROLL_STATE_FREE;
+void scroll_draw_screen (void) {
+	// Redraw
+	cx1 = (cam_pos >> 5); 
+	if (cx1) cx1 --;
+	if (cx1) cx1 --;
+	cx2 = cx1 + 11;
+	col_idx_latest = 0xffff;
+	for (col_idx = cx1; col_idx <= cx2; col_idx ++) {
+		scroll_draw_one_chunk_completely ();
+	}
+}
+*/
 
-	cam_pos_old = cam_pos;
+// New version: Screen off, faster
+
+void scroll_draw_one_chunk_completely (void) {
+	// Calculate memory address of current column [col_idx * 24]
+	gpint = col_idx << 2;
+	// 24 = 12 * 2 = (4*3)*2
+	col_ptr = map_ptr + ((gpint + gpint + gpint) << 1);
+
+	// VRAM address
+	rdc = gpint & 31;
+	rdd = (col_idx & 8);
+
+	col_v_offset = scr_v_offset = 0;
+
+	for (state_ctr = 0; state_ctr < 6; state_ctr ++) {
+		// State 0..5: draw patterns. 4x4 chunk
+
+		// where to paint
+		rdct = (state_ctr << 2);
+		gp_addr = (rdd ? NAMETABLE_B : NAMETABLE_A) + rdc + col_v_offset;
+		gp_aux = (unsigned char *) (col_ptr + rdct);
+		gp_gen = gp_aux;
+		
+		// Two metatiles
+		rda = *gp_gen ++; rdb = *gp_gen ++;
+
+		// Chac chac creation. Note there's an increible
+		// shortcut: chac chacks must have X even
+		if (rda == 48) {
+			rdd = 0; scroll_bg_object_create ();
+			rda = 54;
+		}
+		
+		vram_adr (gp_addr);
+		vram_put (main_ts_tmaps_0 [rda]);
+		vram_put (main_ts_tmaps_1 [rda]);
+		vram_put (main_ts_tmaps_0 [rdb]);
+		vram_put (main_ts_tmaps_1 [rdb]);
+
+		gp_addr += 32;
+
+		vram_adr (gp_addr);
+		vram_put (main_ts_tmaps_2 [rda]);
+		vram_put (main_ts_tmaps_3 [rda]);
+		vram_put (main_ts_tmaps_2 [rdb]);
+		vram_put (main_ts_tmaps_3 [rdb]);
+
+		gp_addr += 32;
+
+		// Two metatiles more
+		rda = *gp_gen ++; rdb = *gp_gen;
+
+		// Chac chac creation. Note there's an increible
+		// shortcut: chac chacks must have X even
+		if (rda == 48) {
+			rdd = 1; scroll_bg_object_create ();
+			rda = 54;
+		} else if (rda >= 96) {
+			rdd = 1; scroll_bg_object_create ();
+			rda = 0;
+		}
+		
+		vram_adr (gp_addr);
+		vram_put (main_ts_tmaps_0 [rda]);
+		vram_put (main_ts_tmaps_1 [rda]);
+		vram_put (main_ts_tmaps_0 [rdb]);
+		vram_put (main_ts_tmaps_1 [rdb]);
+
+		gp_addr += 32;
+
+		vram_adr (gp_addr);
+		vram_put (main_ts_tmaps_2 [rda]);
+		vram_put (main_ts_tmaps_3 [rda]);
+		vram_put (main_ts_tmaps_2 [rdb]);
+		vram_put (main_ts_tmaps_3 [rdb]);
+
+		// Next chunk at
+		col_v_offset += 128;
+
+		// Write a bit in the collision buffer
+		gp_gen = gp_aux;
+		gp_aux = scr_buffer + (rdd ? 192 : 0) + ((col_idx & 0x7) << 1) + scr_v_offset;
+		*gp_aux ++ = behs [*gp_gen ++]; *gp_aux = behs [*gp_gen ++]; gp_aux += 15;
+		*gp_aux ++ = behs [*gp_gen ++]; *gp_aux = behs [*gp_gen];
+		scr_v_offset += 32;
+	} 
+
+	// State 6: fetch & paint attrs.
+
+	// which nametable?
+	gp_addr = (rdd ? NAMETABLE_B : NAMETABLE_A) + 0x03c0 + (col_idx & 0x7);
+	gp_gen = (unsigned char *) col_ptr;
+
+	gpit = 6; do {
+		rda = *gp_gen ++;
+		rdt = attr_lookup_0_0 [rda];
+		rda = *gp_gen ++;
+		rdt += attr_lookup_0_1 [rda];
+		rda = *gp_gen ++;
+		rdt += attr_lookup_0_2 [rda];
+		rda = *gp_gen ++;
+		rdt += attr_lookup_0_3 [rda];
+		vram_adr (gp_addr);
+		vram_put (rdt);
+		gp_addr += 8;
+	} while (-- gpit);
 }
 
 void scroll_draw_screen (void) {
@@ -199,9 +321,11 @@ void scroll_draw_screen (void) {
 	cx1 = (cam_pos >> 5); 
 	if (cx1) cx1 --;
 	if (cx1) cx1 --;
-	cx2 = cx1 + 10;
+	cx2 = cx1 + 11;
 	col_idx_latest = 0xffff;
 	for (col_idx = cx1; col_idx <= cx2; col_idx ++) {
 		scroll_draw_one_chunk_completely ();
 	}
+
+	state_ctr = 0; col_v_offset = scr_v_offset = 0;
 }

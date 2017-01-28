@@ -62,16 +62,18 @@ void hotspots_do (void) {
 						// life
 						plife ++;
 						hrt [hrp [gpit]] = 0;
+						sfx_play (SFX_GET, SC_LEVEL);
 						break;
 					case 0x04:
 					case 0x05:
 					case 0x06:
 					case 0x07:
+						// Get object
 						if (pinv == 0xff || (pad0 & PAD_B)) {
 							hrt [hrp [gpit]] = pinv;
 							pinv = rda;
 						} 
-						// Get object
+						sfx_play (SFX_GET, SC_LEVEL);
 						break;
 					case 0x22:
 						// Ending
@@ -87,11 +89,13 @@ void hotspots_do (void) {
 					case 0x0F:
 						// Use object
 						if (pinv == (rda & 7)) {
-							music_pause (1);
+							music_on = 0;
+							music_stop ();
 							use_ct = 1; fr_ct = 0;
 							rdb = 1;
 							h_modify_this = hrp [gpit];
 							gs_this_flag = rda - 0x0C;
+							sfx_play (SFX_USE, SC_LEVEL);
 						}
 						break;
 					case 0x20:
@@ -99,7 +103,7 @@ void hotspots_do (void) {
 						if (pcharges) {
 							pcharges --;
 							music_pause (1);
-							// sfx_play (SFX_TELEPORT, SC_LEVEL);
+							sfx_play (SFX_USE, SC_LEVEL);
 							fx_flash (mypal_reds);
 							tt_ct = 1; fr_ct = 0;
 							rdb = 1;
@@ -109,14 +113,17 @@ void hotspots_do (void) {
 						// Recharge
 						if (pcharges < 3) {
 							pcharges = 3;
-							// sfx_play (SFX_RECHARGE, SC_LEVEL);
+							sfx_play (SFX_GET, SC_LEVEL);
 							fx_flash (c_pal_bg);
 							guay_ct = ticks;
 							rdb = 1;
 						}
 						break;
 				}
-				if (!rdb) no_ct = ticks;
+				if (!rdb) {
+					no_ct = ticks;
+					sfx_play (SFX_KILL, SC_PLAYER);
+				}
 			}
 		}
 	}
