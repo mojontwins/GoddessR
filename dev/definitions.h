@@ -133,7 +133,16 @@
 	#define SFX_FLASH 					1
 	#define SFX_USE 					2
 	#define SFX_GET 					3
-	#define SFX_KILL 					4
+	
 	#define SFX_ON 						5
 	#define SFX_OFF 					6
 	#define SFX_JUMP 					7
+	#define SFX_RECHARGE				8
+	#define SFX_SHOW_MAP				9
+	#define SFX_KILL 					10
+	#define SFX_HEART 					11
+	#define SFX_PAUSE 					12
+	#define SFX_NO 						13
+	#define SFX_LAVA 					14
+	#define SFX_FISH 					15
+	#define SFX_FLY 					16

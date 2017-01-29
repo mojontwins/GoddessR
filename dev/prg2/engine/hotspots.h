@@ -27,7 +27,9 @@ void hotspots_do (void) {
 
 		rdb = hrx [gpit]; rdc = hry [gpit];
 
-		if (rda < 8) {
+		if (rda == 0xff) {
+			sprid = 3;
+		} else if (rda < 8) {
 			sprid = rda;
 		} else if (rda & 0x10) {
 			sprid = rda & 0x7;
@@ -62,18 +64,22 @@ void hotspots_do (void) {
 						// life
 						plife ++;
 						hrt [hrp [gpit]] = 0;
-						sfx_play (SFX_GET, SC_LEVEL);
+						sfx_play (SFX_HEART, SC_LEVEL);
 						break;
 					case 0x04:
 					case 0x05:
 					case 0x06:
 					case 0x07:
+					case 0xff:
 						// Get object
-						if (pinv == 0xff || (pad0 & PAD_B)) {
-							hrt [hrp [gpit]] = pinv;
-							pinv = rda;
+						if (guay_ct == 0) {
+							if (pinv == 0xff || (pad0 & PAD_B)) {
+								hrt [hrp [gpit]] = pinv;
+								pinv = rda;
+								sfx_play (SFX_GET, SC_LEVEL);
+								guay_ct = ticks;
+							}
 						} 
-						sfx_play (SFX_GET, SC_LEVEL);
 						break;
 					case 0x22:
 						// Ending
@@ -113,7 +119,7 @@ void hotspots_do (void) {
 						// Recharge
 						if (pcharges < 3) {
 							pcharges = 3;
-							sfx_play (SFX_GET, SC_LEVEL);
+							sfx_play (SFX_RECHARGE, SC_LEVEL);
 							fx_flash (c_pal_bg);
 							guay_ct = ticks;
 							rdb = 1;
@@ -122,7 +128,7 @@ void hotspots_do (void) {
 				}
 				if (!rdb) {
 					no_ct = ticks;
-					sfx_play (SFX_KILL, SC_PLAYER);
+					sfx_play (SFX_NO, SC_PLAYER);
 				}
 			}
 		}

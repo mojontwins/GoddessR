@@ -22,6 +22,7 @@
 			PEZON_INCS_IDX [gpit] = 0;
 			en_state [gpit] = 1;
 			en_y [gpit] = en_y1 [gpit];
+			sfx_play (SFX_FISH, SC_LEVEL);
 		}
 	}
 	

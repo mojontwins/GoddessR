@@ -128,6 +128,7 @@ void enems_do (void) {
 		// Collision
 
 		if (n_pant != en_p [gpit]) continue;
+		if (ppodewwwr) continue;
 
 		// With platforms
 		if (rdt == 0x20) {
@@ -137,6 +138,7 @@ void enems_do (void) {
 					if (pry + 18 >= spry && pry + 12 <= spry) {
 						pgotten = 1;
 						pgtmx = endx << FIX_BITS;
+						prx += endx; px = prx << FIX_BITS;
 						pry = spry - 16; py = pry << FIX_BITS;
 						pvy = 0;
 					}
@@ -156,7 +158,7 @@ void enems_do (void) {
 			continue;
 		}
 
-		if (pflickers || ppodewwwr) continue;
+		if (pflickers) continue;
 
 		// With plain enemies
 		if (CL (prx, pry, sprx, spry)) {

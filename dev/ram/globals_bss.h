@@ -60,6 +60,7 @@ unsigned char safe_prx, safe_pry, safe_n_pant, safe_level;
 unsigned char plife, pcharges, pinv;
 unsigned char oplife, opcharges;
 unsigned char pcontinues;
+unsigned char pcrx, pcry;
 
 // Music
 unsigned char music_on;

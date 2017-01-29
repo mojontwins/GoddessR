@@ -96,6 +96,7 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 #include "prg3/engine/ul_helpers.h"
 #include "prg3/engine/scroller.h"
 #include "prg3/engine/game.h"
+#include "prg3/engine/minimap.h"
 
 // Main section
 
@@ -188,31 +189,7 @@ void main (void) {
 					keep_playing = 0;
 					break;
 				case PLAYER_MAP:
-					bankswitch (1);
-					tokumaru_lzss (map_ts_patterns_c, 3584);	// 224*16
-					bankswitch (2);
-					scroll (0,0);
-					vram_adr (NAMETABLE_A);
-					vram_unrle (map_rle);
-					vram_adr (NAMETABLE_A + ((12 + level) << 5) + 6 + n_pant);
-					vram_put (224);
-					pal_bg (mypal_game_bg0);
-					ppu_on_all ();
-					fade_in ();
-					while (1) {
-						// Thanks for this, Nicole & nesdev!
-						// https://forums.nesdev.com/viewtopic.php?p=179315#p179315
-						rda = pad0;
-						pad0 = pad_poll (0);
-						rda = (rda ^ pad0) & pad0;
-						if (rda) break;
-					}
-					fade_out ();
-					ppu_off ();
-					pal_bg (c_pal_bg);
-					bankswitch (1);
-					tokumaru_lzss (chars_ts_patterns_c, 3584);	// 224*16
-					bankswitch (2);
+					minimap_do ();
 					break;
 				//
 

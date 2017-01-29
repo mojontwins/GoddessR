@@ -34,8 +34,9 @@ void game_init (void) {
 	player_init ();
 	hotspots_init ();
 
+	// Debug shyte:
 	//level = 0;n_pant=0;pinv=4;pcharges=3;
-	//level = 3; n_pant = 17; pinv = 6; pcharges = 3;
+	//level = 1; n_pant = 0x0d; pinv = 4; pcharges = 3;
 }
 
 void game_strip_setup (void) {
@@ -184,7 +185,10 @@ void game_loop (void) {
 		if (px_world < section_x0 + 4) game_res = PLAYER_EXIT_LEFT;
 		else if (px_world > section_x1 + 244) game_res = PLAYER_EXIT_RIGHT;	
 
-		if (pad0 & PAD_SELECT) game_res = PLAYER_MAP;
+		if (pad0 & PAD_SELECT) {
+			sfx_play (SFX_SHOW_MAP, SC_PLAYER);
+			game_res = PLAYER_MAP;
+		}
 
 		if (cutscene && !frame_counter) game_res = PLAYER_RESTORE;
 	}

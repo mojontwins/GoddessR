@@ -1247,8 +1247,74 @@ Estos son los sonidos que el original utiliza del banco original:
 Bueno, cosas metidas y pulidas a saco. Creo que ya todo el juego está completo a falta de pulir y las pantallas fijas:
 
 - Retocar las plataformas horizontales que hacen un "raro"
-- Recolocar enemigos mal
+- Recolocar enemigos mal 
 - Pantalla de final / título
 - Censura
 
 Lo dejo por hoy. Creo que al final va a dar tiempo y todo :*)
+
+~~
+
+Probando rápido:
+
+- Redibujado al borde del mapa la lía parda, tengo que controlar que no me salgo.
+- Usar podewwwr no gasta recargas.`[X]
+- En reaidad mirar bien el redibujado, en general.
+- Al hacer game_over, quitar podewwwr! [X]
+
+Reescribo:
+
+- En realidad, por alguna extraña razón, si se empieza con n_pant = 17, 18 o 19 sale mal el rendering en level = 3. Esto parece que pasa con el código nuevo.
+
+Y
+
+- Si lo hago por el método lento, no falla. Hrm. Algo se me tiene que estar escapando.
+
+- Si quito la creación de los scroll_bg_objects, va...
+
+Y eso es porque...
+
+NO SE, NO PARECE TENER SENTIDO
+
+Muy polstergeist ... Si quito las llamadas a scroll_bg_object_create -> Funciona. Si comento el contenido de la funcion scroll_bg_object_create -> ya no.
+
+No lo veo. A unas malas puedo poner la versión lenta pero... WTF?
+En serio, tío?
+
+Hum, espera.
+
+Hay tres cosas: 
+
+- Dibujo de patrones.
+- Dibujo de atributos.
+- Rellenado de buffer.
+
+He cambiado el primero para que la dirección de escritura solo se calcule al principio de la columna y luego sea incremental, y ahora parece que todos los patrones se dibujan bien, pero los atributos y obviamente el buffer no.
+
+Vamos a intentar hacerlo todo así.
+
+En el interim me he dado cuenta de que estaba reutilizando una variable global. Lo raro es que no se jodiera en el modo lento O_o
+
+En realidad sí lo sé: no importaba la reutilización en modo "lento" (por UL) porque se llamaba para un trozo cada vez y no era necesario conservar el valor de rdd...
+
+UF.
+
+20170129
+========
+
+Añadir a TODO:
+
+- Mapa dinámico. Las celdas con hotspots deben pintarse de forma dinámica.
+- UP+B apaga ppodewwwr [X]
+- Mejores SFX [/] - necesita mejorar
+- Arreglar coger objeto que está MUY PEÍO. [X]
+- Retocar las plataformas horizontales que hacen un "raro" [X]
+- Recolocar enemigos mal 
+- Pantalla de final / título
+- Censura
+- En ppodewwwr no debe activarse guay_ct [X]
+- En ppodewwwr no deben arrastrarte las plataformas moviles [X]
+- Pause
+
+
+
