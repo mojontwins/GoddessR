@@ -15,6 +15,7 @@ unsigned char scr_buffer [384];
 
 // Stuff
 signed char fader;
+unsigned char paused;
 
 // Palette fx
 unsigned char pal_cycle [3];

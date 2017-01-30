@@ -115,8 +115,6 @@ void game_loop (void) {
 	SCR_BUFFER_PTR_UPD;
 	fade_in_split ();
 
-	no_ct = tt_ct = half_life = psignal = 0;
-
 	if (!cutscene) {
 		if (!music_on) {
 			music_play (MUSIC_INGAME_BASE + stage);
@@ -124,45 +122,62 @@ void game_loop (void) {
 		} else music_pause (0);
 	}
 
-	// Do
-	game_res = 0;
-	frame_counter = 0;
+	// Zero stuff
+	
+	game_res = frame_counter = 0;
+	paused = no_ct = tt_ct = half_life = psignal = 0;
+
+	// And do
+
 	while (!game_res) {
-		half_life = 1 - half_life;
-		frame_counter ++;
+		if (!paused) {
+			half_life = 1 - half_life;
+			frame_counter ++;
+		}
 		gp_ul = update_list;
 
 		bankswitch (2);
 		palfx_do ();
 		
+		// Thanks for this, Nicole & nesdev!
+		// https://forums.nesdev.com/viewtopic.php?p=179315#p179315
+		pad_this_frame = pad0;
 		pad0 = pad_poll (0);
+		pad_this_frame = (pad_this_frame ^ pad0) & pad0;
+		if (pad_this_frame & PAD_START) {
+			sfx_play (SFX_PAUSE, SC_LEVEL);
+			if (paused) pal_bright (4); else pal_bright (3);
+			paused = !paused;
+		}
 
 		//*((unsigned char*)0x2001) = 0x1e;
 		split (cam_pos & 0x1ff, SCROLL_Y);
 		//*((unsigned char*)0x2001) = 0x1f;
 
-		game_stuff_preload ();
+		if (!paused) {
+			game_stuff_preload ();
 
-		if (!ntsc || fskip_ctr < 5) {
-			oam_index = 28;
-			if (cutscene) {
-				bg_object_do ();
-				hotspots_do ();
-			} else {
-				player_move ();
-				camera_do ();
-				bg_object_do ();
-				enems_do ();
-				player_render ();
-				hotspots_do ();
+			if (!ntsc || fskip_ctr < 5) {
+				oam_index = 28;
+				if (cutscene) {
+					bg_object_do ();
+					hotspots_do ();
+				} else {
+					player_move ();
+					camera_do ();
+					bg_object_do ();
+					enems_do ();
+					player_render ();
+					hotspots_do ();
+				}
+				hud_do ();
+				oam_hide_rest (oam_index);
 			}
-			hud_do ();
-			oam_hide_rest (oam_index);
-		}
-		fskip_ctr ++; if (fskip_ctr == 6) fskip_ctr = 0;
+			fskip_ctr ++; if (fskip_ctr == 6) fskip_ctr = 0;
 
-		bankswitch (0);
-		scroll_to ();
+			bankswitch (0);
+			scroll_to ();
+		}
 		
 		*gp_ul = NT_UPD_EOF;
 		

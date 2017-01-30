@@ -18,7 +18,7 @@ unsigned int gp_addr;
 unsigned char oam_index;
 
 // Pad control
-unsigned char pad0, pad;						
+unsigned char pad0, pad, pad_this_frame;						
 
 // Game counters
 unsigned char half_life;
