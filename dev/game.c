@@ -3,6 +3,8 @@
 // Goddess Engine v0.1
 // Copyleft 2017 The Mojon Twins
 
+#define THIS_IS_THE_USA
+
 #include "neslib-unrom.h"
 
 #include "definitions.h"
@@ -53,10 +55,27 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 // ROM1, patterns, music, etc
 // ############################################################################
 
+// Patterns for the game
 #include "prg1/main_ts_patterns_c.h"
-#include "prg1/main_ss_patterns_c.h"
+#ifdef THIS_IS_THE_USA
+	#include "prg1/main_ss_patterns_usa_c.h"
+#else
+	#include "prg1/main_ss_patterns_c.h"
+#endif
 #include "prg1/chars_ts_patterns_c.h"
 #include "prg1/map_ts_patterns_c.h"
+
+// Patterns for the cutscenes, ending, title & game over screens
+
+#include "prg1/font_ts_patterns_c.h"
+#include "prg1/cuts_p1_ts_patterns_c.h"
+#include "prg1/cuts_p2_ts_patterns_c.h"
+#ifdef THIS_IS_THE_USA
+	#include "prg1/ending_ts_patterns_usa_c.h"
+#else
+	#include "prg1/ending_ts_patterns_c.h"
+#endif
+#include "prg1/title_ts_patterns_c.h"
 
 // ----------------------------------------------------------------------------
 
@@ -68,12 +87,24 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 // ############################################################################
 
 #include "prg2/assets/palettes.h"
-#include "prg2/assets/spritedata.h"
+#ifdef THIS_IS_THE_USA
+	#include "prg2/assets/spritedata_usa.h"
+#else
+	#include "prg2/assets/spritedata.h"
+#endif
 #include "prg2/assets/metasprites.h"
 #include "prg2/assets/precalcs.h"
 #include "prg2/assets/enems0.h"
 #include "prg2/assets/hud_rle.h"
 #include "prg2/assets/map_rle.h"
+#include "prg2/assets/plate1_rle.h"
+#include "prg2/assets/plate2_rle.h"
+#ifdef THIS_IS_THE_USA
+	#include "prg2/assets/ending_usa_rle.h"
+#else
+	#include "prg2/assets/ending_rle.h"
+#endif
+#include "prg2/assets/title_rle.h"
 
 #include "prg2/engine/palette_fx.h"
 #include "prg2/engine/printer.h"
@@ -93,8 +124,12 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 // CODE segment = PRG3, the fixed segment. Global functions need be here.
 // ############################################################################
 
+#include "prg3/assets/texts.h"
+
 #include "prg3/engine/ul_helpers.h"
 #include "prg3/engine/scroller.h"
+#include "prg3/engine/screens.h"
+#include "prg3/engine/cutscene.h"
 #include "prg3/engine/game.h"
 #include "prg3/engine/minimap.h"
 

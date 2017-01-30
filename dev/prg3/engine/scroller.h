@@ -322,7 +322,7 @@ void scroll_draw_screen (void) {
 	cx1 = (cam_pos >> 5); 
 	if (cx1) cx1 --;
 	if (cx1) cx1 --;
-	cx2 = cx1 + 11; if (cx2 > 159) cx2 = 159;
+	cx2 = cx1 + 12; if (cx2 > 159) cx2 = 159;
 	for (col_idx = cx1; col_idx <= cx2; col_idx ++) {
 		scroll_draw_one_chunk_completely ();
 	}

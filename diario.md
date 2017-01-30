@@ -1314,7 +1314,36 @@ Añadir a TODO:
 - Censura
 - En ppodewwwr no debe activarse guay_ct [X]
 - En ppodewwwr no deben arrastrarte las plataformas moviles [X]
-- Pause
+- Pause [X]
 
+20170130
+========
 
+Aquí no puedo pintar pero puedo planear. Necesito saber qué voy a poner en la intro. Vamos a divagar.
 
+[DIBUJO DE LA PANTALLA DE LAS CANCELAS Y LA CANINA]
+
+TO BECOME A GODDESS,
+CHERIL MUST GAIN ACCESS
+TO THE SACRED SKULL
+
+./.
+
+TO OPEN THE GATES, SHE
+MUST 'BREAK' THE TEMPLES OF 
+ROCK, PAPER AND SCISSORS
+USING THE TALISMANS.
+
+[IMAGEN DE UN TELEPORTER Y UN RECARGADOR]
+
+USE THE HEART PEDESTALS TO
+RELOAD YOUR MIGHT. 
+YOU CAN USE TELEPORTERS TO
+GET BACK TO THE BEGINNING.
+
+./.
+
+[B] TO INTERACT
+[^]+[B] FOR SUPER POWER
+[SELECT] DISPLAYS A MAP
+[START] PAUSES THE GAME

@@ -6,16 +6,14 @@
 void game_init (void) {
 	// Decompress patterns from tileset #1
 	bankswitch (1);
-	tokumaru_lzss (main_ts_patterns_c,  0);
-	tokumaru_lzss (chars_ts_patterns_c, 3584);	// 224*16
-	tokumaru_lzss (main_ss_patterns_c,  4096);	// 256*16
-
-	if (pcontinues) {
-		level = 1; n_pant = 9;
-	} else {
-		stage = 0;
-		level = LEVEL_INI; n_pant = SCR_INI;		
-	}
+	tokumaru_lzss (main_ts_patterns_c,  	0);
+	tokumaru_lzss (chars_ts_patterns_c, 	3584);	// 224*16
+#ifdef THIS_IS_THE_USA
+	tokumaru_lzss (main_ss_patterns_usa_c, 	4096);	// 256*16
+#else
+	tokumaru_lzss (main_ss_patterns_c,  	4096);	// 256*16
+#endif
+	bankswitch (2);
 
 	c_pal_fg = mypal_game_fg0;
 
@@ -28,12 +26,18 @@ void game_init (void) {
 	c_hotspots_t = hotspots_t_0;
 
 	guay_ct = 0;
-	gpit = 4; while (gpit --) gs_flags [gpit] = 0;
 
-	bankswitch (2);
+	if (pcontinues) {
+		level = 1; n_pant = 9;
+	} else {
+		stage = 0;
+		level = LEVEL_INI; n_pant = SCR_INI;	
+		gpit = 4; while (gpit --) gs_flags [gpit] = 0;	
+		hotspots_init ();
+	}
+
 	player_init ();
-	hotspots_init ();
-
+	
 	// Debug shyte:
 	//level = 0;n_pant=0;pinv=4;pcharges=3;
 	//level = 1; n_pant = 0x0d; pinv = 4; pcharges = 3;
@@ -133,11 +137,10 @@ void game_loop (void) {
 		if (!paused) {
 			half_life = 1 - half_life;
 			frame_counter ++;
+			bankswitch (2);
+			palfx_do ();
 		}
 		gp_ul = update_list;
-
-		bankswitch (2);
-		palfx_do ();
 		
 		// Thanks for this, Nicole & nesdev!
 		// https://forums.nesdev.com/viewtopic.php?p=179315#p179315
@@ -216,11 +219,30 @@ void game_loop (void) {
 }
 
 void game_title (void) {
-
+	enter_screen (mypal_game_bg0, screen_title);
+	music_play (MUSIC_TITLE);
+	while (1) {
+		pad0 = pad_poll (0);
+		if (pad0 & PAD_START) {
+			pcontinues = 0; break;
+		}
+		if ((pad0 & PAD_SELECT) && !first_time) {
+			pcontinues = 1; break;
+		}
+	}
+	music_stop ();
+	sfx_play (SFX_PAUSE, SC_LEVEL);
+	bankswitch (2);
+	fade_out ();
+	if (!pcontinues) delay (halfticks);
+	ppu_off ();
+	first_time = 0;
 }
 
 void game_over (void) {
-
+	enter_screen (mypal_game_bg0, screen_game_over);
+	music_play (MUSIC_GAME_OVER);
+	do_screen (10);
 }
 
 void game_ending (void) {
@@ -228,5 +250,28 @@ void game_ending (void) {
 }
 
 void game_intro (void) {
+	bankswitch (1);
+	tokumaru_lzss (font_ts_patterns_c,		0);
+	tokumaru_lzss (cuts_p1_ts_patterns_c,	1024);
 
+	bankswitch (2);
+	vram_adr (NAMETABLE_A);
+	vram_unrle (plate1_rle);
+
+	cutscene_show (0);
+	if (!panic_exit) {
+		bankswitch (1);
+		tokumaru_lzss (cuts_p2_ts_patterns_c,	1024);
+
+		bankswitch (2);
+		vram_adr (NAMETABLE_A);
+		vram_unrle (plate2_rle);
+		
+		cutscene_show (1);
+	}
+	
+	if (!panic_exit) {
+		cls ();
+		cutscene_show (2);
+	}	
 }

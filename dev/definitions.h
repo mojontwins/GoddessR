@@ -146,3 +146,8 @@
 	#define SFX_LAVA 					14
 	#define SFX_FISH 					15
 	#define SFX_FLY 					16
+
+// Cutscenes
+
+	#define NEW_LINE 					1
+	#define NEW_PAGE					2

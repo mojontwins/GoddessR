@@ -6,6 +6,7 @@
 // 50 or 60 depending on TV system
 unsigned char ticks, halfticks;				
 unsigned char ntsc;
+unsigned char game_time, ticker;
 
 // Update list for VBlank updates
 static unsigned char update_list [1 + UPDATE_LIST_SIZE * 3];
@@ -16,6 +17,10 @@ unsigned char scr_buffer [384];
 // Stuff
 signed char fader;
 unsigned char paused;
+
+// Cutscenes
+unsigned char flush, reset, clear, cutscene_do;
+unsigned char panic_exit;
 
 // Palette fx
 unsigned char pal_cycle [3];

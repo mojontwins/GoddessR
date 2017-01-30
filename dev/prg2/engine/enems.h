@@ -158,7 +158,7 @@ void enems_do (void) {
 			continue;
 		}
 
-		if (pflickers) continue;
+		if (pflickers || guay_ct) continue;
 
 		// With plain enemies
 		if (CL (prx, pry, sprx, spry)) {

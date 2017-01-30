@@ -70,12 +70,18 @@
 			break;
 
 		case FANTY_ST_RETREATING:
-			en_mx [gpit] = (en_mx [gpit] + 1) & 3;
-			rds = fanty_retreat_incs [en_mx [gpit]];
-			if (en_x [gpit] != en_x1 [gpit]) en_x [gpit] += (en_x [gpit] > en_x1 [gpit] ? -rds : rds);
-			if (en_y [gpit] != en_y1 [gpit]) en_y [gpit] += (en_y [gpit] > en_y1 [gpit] ? -rds : rds);
-			if (en_x [gpit] == en_x1 [gpit] && en_y [gpit] == en_y1 [gpit])
-				en_state [gpit] = FANTY_ST_IDLE;
+			if (rdb) {
+				en_state [gpit] = FANTY_ST_PURSUING;
+				en_mx [gpit] = 0;
+				en_my [gpit] = 0;
+			} else {
+				en_mx [gpit] = (en_mx [gpit] + 1) & 3;
+				rds = fanty_retreat_incs [en_mx [gpit]];
+				if (en_x [gpit] != en_x1 [gpit]) en_x [gpit] += (en_x [gpit] > en_x1 [gpit] ? -rds : rds);
+				if (en_y [gpit] != en_y1 [gpit]) en_y [gpit] += (en_y [gpit] > en_y1 [gpit] ? -rds : rds);
+				if (en_x [gpit] == en_x1 [gpit] && en_y [gpit] == en_y1 [gpit])
+					en_state [gpit] = FANTY_ST_IDLE;
+			}
 			break;
 	}
 
