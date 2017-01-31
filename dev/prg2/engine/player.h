@@ -131,7 +131,7 @@ void player_move (void) {
 			pvmax = PLAYER_VX_MAX;
 			c_pal_fg = mypal_game_fg0;
 			fx_flash (c_pal_bg);
-			pflickers = ticks + ticks;
+			pflickers = ticks;
 			ppodewwwr = 0;
 		}
 

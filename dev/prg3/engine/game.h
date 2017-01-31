@@ -152,7 +152,13 @@ void game_loop (void) {
 		pad_this_frame = (pad_this_frame ^ pad0) & pad0;
 		if (pad_this_frame & PAD_START) {
 			sfx_play (SFX_PAUSE, SC_LEVEL);
-			if (paused) pal_bright (4); else pal_bright (3);
+			if (paused) { 
+				pal_bright (4); 
+				music_pause (0);
+			} else { 
+				pal_bright (3);
+				music_pause (1);
+			}
 			paused = !paused;
 		}
 
