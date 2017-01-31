@@ -86,8 +86,9 @@ cc65 -Oi game.c --add-source
 ca65 crt0-unrom.s
 ca65 game.s
 ca65 prg1\ogt.s -o music.o
+ca65 prg2\interlude_music.s -o interlude_music.o
 
-ld65 -C nes-unrom.cfg -o goddessr.nes crt0-unrom.o game.o music.o runtime.lib  -Ln labels.txt
+ld65 -C nes-unrom.cfg -o goddessr.nes crt0-unrom.o game.o music.o interlude_music.o runtime.lib  -Ln labels.txt
 
 rem del game.s > nul
 del game.o > nul

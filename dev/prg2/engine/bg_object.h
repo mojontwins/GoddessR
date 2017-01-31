@@ -57,6 +57,8 @@ void bg_object_do (void) {
 							update_buffered_tile ();
 							rdy ++; rdt = chac_chac_tiles_2 [rdd];
 							update_buffered_tile ();
+
+							if (rdd == 2) sfx_play (SFX_FLASH, SC_LEVEL);
 							
 							bgo_ctr [ccit] = bg_object_times [rdd];
 

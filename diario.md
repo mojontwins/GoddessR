@@ -1371,3 +1371,11 @@ Creo que voy a definir 1 y 2 para los tiles que te matan, de forma que la lava s
 
 Otra cosa que se me ocurrió ayer: cuando mueras, al continuar, ¡el objeto que llevas debe volver a su sitio! Tengo que ver la mejor forma de hacer esto. Recorreré la ROM y actualizaré solo cuando el valor sea igual a pinv.
 
+~~
+
+Llevo todo el día puliendo:
+
+- La música de "BIEN PICHA" loopea, arreglar.
+- Poner música título en el final.
+- No quitar la música al usar la llave.
+- Poner cutscene al continuar para que se vea como va el tema.

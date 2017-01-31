@@ -30,7 +30,7 @@ void cutscene_show (unsigned char n) {
 					UPDATE = MSB (gp_addr) | NT_UPD_HORZ;
 					UPDATE = LSB (gp_addr);
 					UPDATE = 32;
-					gpjt = 32; while (gpjt --) UPDATE = 0xff;
+					gpjt = 32; while (gpjt --) UPDATE = 63;
 					*gp_ul = NT_UPD_EOF;
 					delay (4);
 					gp_addr += 64;

@@ -42,7 +42,7 @@ void game_init (void) {
 	
 	// Debug shyte:
 	//level = 0;n_pant=0;pinv=4;pcharges=3;
-	//level = 3; n_pant = 2; pcharges = 3;
+	//level = 3; n_pant = 17; pcharges = 3;
 	//gpit = 4; while (gpit --) gs_flags [gpit] = 2;	
 }
 
@@ -215,6 +215,7 @@ void game_loop (void) {
 					}
 					split_and_wait ();
 				}
+				music_stop ();
 			}
 			game_res = psignal;
 		}
@@ -227,7 +228,7 @@ void game_loop (void) {
 			game_res = PLAYER_MAP;
 		}
 
-		if (cutscene && !frame_counter) game_res = PLAYER_RESTORE;
+		if ((cutscene == 1 && frame_counter == 0) || (cutscene == 2 && frame_counter == 90)) game_res = PLAYER_RESTORE;
 	}
 
 	bankswitch (2);
@@ -282,12 +283,15 @@ void game_ending (void) {
 	vram_unrle (ending_rle);
 #endif
 
+	music_play (MUSIC_TITLE);
 	cutscene_show (3);
-
-	do_screen (255);
+	music_stop ();
+	delay (ticks);
 }
 
 void game_intro (void) {
+	famitone_init (2, music_ROM2);
+
 	bankswitch (1);
 	tokumaru_lzss (font_ts_patterns_c,		0);
 	tokumaru_lzss (cuts_p1_ts_patterns_c,	1024);
@@ -295,6 +299,8 @@ void game_intro (void) {
 	bankswitch (2);
 	vram_adr (NAMETABLE_A);
 	vram_unrle (plate1_rle);
+
+	music_play (0);
 
 	cutscene_show (0);
 	if (!panic_exit) {
@@ -312,4 +318,8 @@ void game_intro (void) {
 		cls ();
 		cutscene_show (2);
 	}	
+
+	music_stop ();
+
+	famitone_init (1, music_ROM1);
 }

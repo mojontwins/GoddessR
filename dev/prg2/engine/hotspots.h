@@ -100,7 +100,7 @@ void hotspots_do (void) {
 						// Use object
 						if (pinv == (rda & 7)) {
 							music_on = 0;
-							music_stop ();
+							if (rda < 0x0f) music_stop ();
 							use_ct = 1; fr_ct = 0;
 							rdb = 1;
 							h_modify_this = hrp [gpit];

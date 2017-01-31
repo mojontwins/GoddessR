@@ -9,6 +9,9 @@
 
 #include "definitions.h"
 
+extern const unsigned char music_ROM1 [];	// A pointer to the music data @ ROM1.
+extern const unsigned char music_ROM2 [];	// A pointer to the music data @ ROM2.
+
 // ----------------------------------------------------------------------------
 
 #pragma bss-name (push,"ZEROPAGE")
@@ -135,8 +138,6 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 
 // Main section
 
-extern const unsigned char music_ROM1 [];	// A pointer to the music data @ ROM1.
-
 void main (void) {
 	// Initialization
 	ntsc = ppu_system ();
@@ -159,6 +160,10 @@ void main (void) {
 		game_title ();
 		if (pcontinues == 0) game_intro ();
 		game_init ();
+		if (pcontinues) {
+			player_register_safe_spot ();
+			n_pant = 19; level = 0; cutscene = 2;
+		}
 
 		music_on = 0;
 		keep_playing = 1;
