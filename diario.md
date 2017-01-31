@@ -1347,3 +1347,27 @@ GET BACK TO THE BEGINNING.
 [^]+[B] FOR SUPER POWER
 [SELECT] DISPLAYS A MAP
 [START] PAUSES THE GAME
+
+Mucho trabajo no interesante - pantalla de título, START o SELECT para continuar, adaptar las rutinas de cutscenes de Lala, modificar un poco el conversor de textos para pasar de tbl y usar ASCII o BASE (que es ASCII[32..96]-32), dibujar y escribir cutscenes, hacer el "modo USA" añadiendo algunos píxels y un #define, montar la de game over...
+
+20170131
+========
+
+Tengo el final dibujado, convertido e importado, solo me queda montarlo. Eso y el fanfare de win-game, para cuando tocas la calavera. Tengo que estimar cuanto dura para dejar esto esperando mientras tanto, y luego la pantalla final (que es otro cutscene).
+
+Tengo que encontrar rato para jugar esto y anotar todo lo que vea para corregirlo. A las 00:00 CST del 1 de Febrero (o sea, a las 7:00 del 1 de Febrero en España) termina el plazo, y quiero que entre a concurso. Lo bueno es que luego te dejan pulir un poco para el multicart.
+
+~~
+
+Son 6 segundos. Dejo 7.
+
+~~
+
+Tengo además un problema con la implementación peste que hice de los tiles que matan. Ahora mira vx o vy, y el que sea mayor es el que indica la dirección del rebote. Esto no funciona guay porque si haces el bruto con ppodewwwr te puedes quedar MUY atascao (vaya, que a veces la lava no te saca de ella y si se te acaba el ppodewwwr no puedes saltar para salir).
+
+Creo que voy a definir 1 y 2 para los tiles que te matan, de forma que la lava sea 1 y rebote verticalmente hacia arriba, y que los chac chacs sean 2 y reboten horizontalmente en sentido contrario. Todo con PLAYER_V_REBOUND.
+
+~~
+
+Otra cosa que se me ocurrió ayer: cuando mueras, al continuar, ¡el objeto que llevas debe volver a su sitio! Tengo que ver la mejor forma de hacer esto. Recorreré la ROM y actualizaré solo cuando el valor sea igual a pinv.
+

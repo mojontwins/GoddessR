@@ -9,6 +9,11 @@ void hotspots_init (void) {
 	gpit = MAX_PANTS; while (gpit --) hrt [gpit] = c_hotspots_t [gpit];
 }
 
+void hotspots_restore_carried_object (void) {
+	// Object in pinv returns to hrt
+	gpit = MAX_PANTS; while (gpit --) if (c_hotspots_t [gpit] == pinv) hrt [gpit] = pinv;
+}
+
 void hotspots_load (void) {
 	rda = rdpant + base_pant;
 	gpit = rda & 1;
@@ -58,7 +63,7 @@ void hotspots_do (void) {
 		// Collision
 		if (CL (prx, pry, rdb, rdc)) {
 			// Plain ones, react on touch if < 8
-			if (rda < 8) {
+			if (rda < 8 || rda == 0x22) {
 				switch (rda) {
 					case 0x01: 
 						// life
@@ -70,11 +75,10 @@ void hotspots_do (void) {
 					case 0x05:
 					case 0x06:
 					case 0x07:
-					case 0xff:
 						// Get object
 						if (guay_ct == 0) {
-							if (pinv == 0xff || (pad0 & PAD_B)) {
-								hrt [hrp [gpit]] = pinv;
+							if (pinv == 0xff) {
+								hrt [hrp [gpit]] = 0xff;
 								pinv = rda;
 								sfx_play (SFX_GET, SC_LEVEL);
 								guay_ct = ticks;

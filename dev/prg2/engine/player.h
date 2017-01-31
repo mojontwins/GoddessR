@@ -205,7 +205,7 @@ void player_move (void) {
 	}
 	cy1 = (pry + 16) & 0xf0;
 	player_collision_vertical ();
-	ppossee = ((pry & 0xf) == 0) && ((at1 & 14) || (at2 & 14));
+	ppossee = ((pry & 0xf) == 0) && ((at1 & 12) || (at2 & 12));
 
 	// Jump
 	if (0 == ppodewwwr) {
@@ -289,16 +289,16 @@ void player_move (void) {
 		cx1 = (prx + 4) >> 4;
 		cy1 = (pry + 8) & 0xf0;
 		cyaux = (cy1 < 32 ? 0 : cy1 - 32);
-		if (*(scr_buffer_ptr + cyaux + cx1) & 1) {
+		at1 = *(scr_buffer_ptr + cyaux + cx1);
+
+		if (at1 & 3) {
 			if (pflickers || ppodewwwr) {
-				if (ABS (pvx) > ABS (pvy)) {
-					prx = pcrx;
-					px = prx << FIX_BITS;
-					pvx = -pvx; 
+				if (at1 & 1) {
+					pry = pcry; py = pry << FIX_BITS;
+					pvy = -PLAYER_V_REBOUND;
 				} else {
-					pry = pcry;
-					py = pry << FIX_BITS;
-					pvy = -pvy;
+					prx = pcrx; px = prx << FIX_BITS;
+					pvx = ADD_SIGN (-pvx, PLAYER_V_REBOUND);
 				}
 			} else {
 				sfx_play (SFX_LAVA, SC_PLAYER);
@@ -315,7 +315,7 @@ void player_move (void) {
 				pfr = PCELL_WIN_POSE;
 			else 
 				pfr = PCELL_SUPERHERO + ((frame_counter >> 3) & 3);
-		} else if (ppossee || pgotten) {
+		} else if ((ppossee || pgotten) && pvy >= 0) {
 			if (guay_ct) 
 				pfr = PCELL_WIN_POSE;
 			else if (ABS (pvx) > PLAYER_VX_MIN) {

@@ -29,6 +29,8 @@ void game_init (void) {
 
 	if (pcontinues) {
 		level = 1; n_pant = 9;
+		// Must return the carried object to its place
+		if (pinv != 0xff) hotspots_restore_carried_object ();
 	} else {
 		stage = 0;
 		level = LEVEL_INI; n_pant = SCR_INI;	
@@ -36,11 +38,12 @@ void game_init (void) {
 		hotspots_init ();
 	}
 
-	player_init ();
+	player_init ();	// Remember pinv is reset here.
 	
 	// Debug shyte:
 	//level = 0;n_pant=0;pinv=4;pcharges=3;
-	//level = 1; n_pant = 0x0d; pinv = 4; pcharges = 3;
+	//level = 3; n_pant = 2; pcharges = 3;
+	//gpit = 4; while (gpit --) gs_flags [gpit] = 2;	
 }
 
 void game_strip_setup (void) {
@@ -193,9 +196,19 @@ void game_loop (void) {
 
 		if (psignal) {
 			if (psignal == PLAYER_KILLED) {
-				// sfx_play (SFX_ENEMY_HIT, SC_PLAYER);
 				music_pause (1);
 				delay_split (ticks);
+			} else if (psignal == PLAYER_WINS) {
+				music_stop  ();
+				delay_split (8);
+				music_play (MUSIC_CLEAR);
+				ticker = ticks; game_time = 7;
+				while (game_time) {
+					if (ticker) ticker --; else {
+						ticker = ticks; game_time --;
+					}
+					split_and_wait ();
+				}
 			}
 			game_res = psignal;
 		}
@@ -246,7 +259,26 @@ void game_over (void) {
 }
 
 void game_ending (void) {
+	bankswitch (1);
+	tokumaru_lzss (font_ts_patterns_c,		0);
+#ifdef THIS_IS_THE_USA
+	tokumaru_lzss (ending_ts_patterns_usa_c,1024);
+#else	
+	tokumaru_lzss (ending_ts_patterns_c,	1024);
+#endif
 
+	bankswitch (2);
+	pal_bg (mypal_ending);
+	vram_adr (NAMETABLE_A);
+#ifdef THIS_IS_THE_USA	
+	vram_unrle (ending_usa_rle);
+#else
+	vram_unrle (ending_rle);
+#endif
+
+	cutscene_show (3);
+
+	do_screen (255);
 }
 
 void game_intro (void) {
