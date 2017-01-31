@@ -33,7 +33,7 @@ void player_init (void) {
 	use_ct = 0;
 	pinv = 0xff;
 	pcharges = 0;
-	plife = 5;
+	plife = 3;
 
 	pvmax = PLAYER_VX_MAX;
 	ppodewwwr = 0;
@@ -72,6 +72,7 @@ void player_move (void) {
 	pad = 0;
 	if (guay_ct) {
 		guay_ct --;
+		if (guay_ct == 0 && !ppodewwwr) pflickers = ticks;
 	} else if (tt_ct) {
 		if (fr_ct) fr_ct --; else {
 			if (0xff != (rda = tt_anim [tt_ct ++])) {
