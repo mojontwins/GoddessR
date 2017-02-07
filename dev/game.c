@@ -154,7 +154,7 @@ void main (void) {
 	pal_bright (0);
 
 	// Rehash
-	pcontinues = 0;
+	soft_reenter = pcontinues = 0;
 
 	while (1) {
 		game_title ();
@@ -173,7 +173,7 @@ void main (void) {
 			switch (game_res) {
 				case PLAYER_EXIT_TOP:
 					level --;
-					py = 3328 /*3072*/; pvy = -PLAYER_VY_JUMP_MAX; pvx = 0;
+					py = 3328 /*3072*/; pvy = -PLAYER_VY_JUMP_FLICK; pvx = 0;
 					break;
 				case PLAYER_EXIT_BOTTOM:
 					level ++;

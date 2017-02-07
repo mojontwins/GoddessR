@@ -83,17 +83,19 @@ void game_stuff_preload (void) {
 }
 
 void game_loop (void) {
-	// Add palette selection logic - later
-	c_pal_bg = c_pal_bgs [stage];
+	if (!soft_reenter) {
+		// Add palette selection logic - later
+		c_pal_bg = c_pal_bgs [stage];
 
-	bankswitch (2);
-	pal_bg (c_pal_bg);
-	pal_spr (c_pal_fg);
-	palfx_init ();
-	
-	// Inits
-	bg_object_init ();
-	game_strip_setup ();
+		bankswitch (2);
+		pal_bg (c_pal_bg);
+		pal_spr (c_pal_fg);
+		palfx_init ();
+		
+		// Inits
+		bg_object_init ();
+		game_strip_setup ();
+	} 
 	hud_and_split_setup ();
 
 	// Screen
@@ -114,10 +116,12 @@ void game_loop (void) {
 		ppu_wait_nmi ();
 	}
 	
-	cam_pant = MSB (cam_pos);
-	rdpant = cam_pant; enems_load (); hotspots_load ();
-	rdpant = cam_pant + 1; enems_load (); hotspots_load ();
-	cam_pant_old = MSB (cam_pos);
+	if (!soft_reenter) {
+		cam_pant = MSB (cam_pos);
+		rdpant = cam_pant; enems_load (); hotspots_load ();
+		rdpant = cam_pant + 1; enems_load (); hotspots_load ();
+		cam_pant_old = MSB (cam_pos);
+	}
 	
 	SCR_BUFFER_PTR_UPD;
 	fade_in_split ();
@@ -131,7 +135,7 @@ void game_loop (void) {
 
 	// Zero stuff
 	
-	game_res = frame_counter = 0;
+	soft_reenter = game_res = frame_counter = 0;
 	paused = no_ct = tt_ct = half_life = psignal = 0;
 
 	// And do
@@ -226,6 +230,7 @@ void game_loop (void) {
 		if (pad0 & PAD_SELECT) {
 			sfx_play (SFX_SHOW_MAP, SC_PLAYER);
 			game_res = PLAYER_MAP;
+			soft_reenter = 1;
 		}
 
 		if ((cutscene == 1 && frame_counter == 0) || (cutscene == 2 && frame_counter == 90)) game_res = PLAYER_RESTORE;

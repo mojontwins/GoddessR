@@ -21,6 +21,7 @@ unsigned char paused;
 // Cutscenes
 unsigned char flush, reset, clear, cutscene_do;
 unsigned char panic_exit;
+unsigned char soft_reenter;
 
 // Palette fx
 unsigned char pal_cycle [3];
