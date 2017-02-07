@@ -166,7 +166,8 @@ void player_move (void) {
 
 		// Gravity
 		if (!pgotten) {
-			if (pvy < PLAYER_VY_FALLING_MAX) pvy += PLAYER_G; else pvy = PLAYER_VY_FALLING_MAX;
+			if (!pj) pvy += PLAYER_G; else pvy += PLAYER_G_JUMPING;
+			if (pvy > PLAYER_VY_FALLING_MAX) pvy = PLAYER_VY_FALLING_MAX;
 		}
 	}
 
@@ -223,13 +224,14 @@ void player_move (void) {
 				} 
 			}
 			if (pj) {
-				rda = PLAYER_AY_JUMP - (pctj >> 2) - (pctj >> 3);
-				pvy -= (rda > 1 ? rda : 1);
-				if (pvy < -PLAYER_VY_JUMP_MAX) pvy = -PLAYER_VY_JUMP_MAX;
 				pctj ++; if (pctj == PLAYER_VY_JUMP_A_STEPS) pj = 0;
 			}
 		} else {
-			pjb = 0; pj = 0;
+			pjb = 0;
+			if (pj) {
+				if (pvy < -PLAYER_VY_JUMP_RELEASE) pvy = -PLAYER_VY_JUMP_RELEASE;
+				pj = 0;
+			}
 		}
 	}
 

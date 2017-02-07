@@ -44,15 +44,17 @@
 
 	#define PLAYER_VY_FALLING_MAX		64
 	#define PLAYER_G					4
-	#define PLAYER_VY_JUMP_INITIAL		16
-	#define PLAYER_VY_JUMP_MAX			64	
+	#define PLAYER_G_JUMPING			1
+	#define PLAYER_VY_JUMP_INITIAL		52 
+	#define PLAYER_VY_JUMP_RELEASE		24
+	#define PLAYER_VY_JUMP_FLICK		64	
 	#define PLAYER_VY_JUMP_BUTT			96
 	#define PLAYER_VY_JUMP_A_STEPS  	16
 	#define PLAYER_VY_SINK				2
 	#define PLAYER_AY_JUMP 				8	
 	#define PLAYER_VX_MAX				32	
 	#define PLAYER_VX_MAX_PODEWWWR		48
-	#define PLAYER_AX					4	
+	#define PLAYER_AX					3	
 	#define PLAYER_RX					4
 	#define PLAYER_AX_SLIP				1
 	#define PLAYER_RX_SLIP				0

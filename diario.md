@@ -1379,3 +1379,8 @@ Llevo todo el día puliendo:
 - Poner música título en el final.
 - No quitar la música al usar la llave.
 - Poner cutscene al continuar para que se vea como va el tema.
+
+20170207
+========
+
+Tras una semana entregado en el concurso de nesdev han venido algunas críticas. Algunas serán tomadas en cuenta para la versión multicart, otras no. Pero la mejor ha sido con respecto a la física de saltos. Creo que siguiendo las sugerencias lo he mejorado bastante. Actualizo, por tanto, el repo.
