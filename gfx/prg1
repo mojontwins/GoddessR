@@ -1,0 +1,3 @@
+const unsigned char title_ts_patterns_c [2] = {
+	0x80, 0x00
+};

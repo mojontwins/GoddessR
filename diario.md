@@ -1384,3 +1384,101 @@ Llevo todo el día puliendo:
 ========
 
 Tras una semana entregado en el concurso de nesdev han venido algunas críticas. Algunas serán tomadas en cuenta para la versión multicart, otras no. Pero la mejor ha sido con respecto a la física de saltos. Creo que siguiendo las sugerencias lo he mejorado bastante. Actualizo, por tanto, el repo.
+
+~~
+
+20170220
+========
+
+Aún tengo que ponerme a darle un laneo a las partes que me reportaron del mapa que eran chungas y a un par que vi yo, pero me apetece, en el interim, empezar a darle forma a una versión TKROM (MMC3) de este juego, por probar y empezar a familiarizarme con este mapper.
+
+Lo primero será darle fran a modificar neslib, crt.s y nes.cfg. Supongo que los cambios en famitone2 funcionarán igual aunque el tamaño paginable sea diferente (8K).
+
+Ojal, si 8K es muy poco siempre puedo paginar los bancos de 2 en 2 y decirle en el cfg que son de 16, según convenga. Esa es una baza con la que juego. Lo voy a necesitar para el mapa, tendré que hacer esa fullería.
+
+~~
+
+La rutina _bankswitch debe guardar CURRENT_BANK si 'reg' vale 6, y hay que acordarse de paginarlo bien todo nada más empezar. Luego tendré que leer otras mierdas de inicialización de TKROM/MMC3 pero ahora no me preocupan.
+
+Cosa:
+
+void __fastcall__ f (unsigned char par1, unsigned char par2)
+
+; A <- par2
+jsr popa
+; A <- par1
+...
+
+Para asegurarme de que tengo 16K fijos al final, que es mi preferencia (y, por lo que creo, lo será siempre), he modificado el crt0 para que la interrupción reset no salte a start, sino a una rutina mía en un nuevo segmento "setup" que me aseguro de que esté al final de la ROM.
+
+Este segmento llama a los registros de MMC3 para hacer sus fullerías necesarias y me asegura de que de $C000 a $DFFF va a estar la PRG 1E, de forma que en el .cfg puedo definir las PRG 1E y 1F como juntas y tener un bloque de 16K a ojos del compilador.
+
+En el .cfg también he pegado juntas las ROMs 0 y 1 para poder tener ahí todo el mapa, que pesa 15K. Pero tengo que recordar que tengo que paginarlas LAS DOS cuando vaya a tocar algo del scroller.
+
+~~
+
+Quiero hacer el split por IRQ. Lo suyo sería que en mi NMI, al final, hiciese varias cosas:
+
+- Mirar si una variable de por ahí está activa.
+- Si lo está, establezco el contador para que cuente 32 scans ya ctivo las IRQ.
+
+Luego en el código que responde a IRQ (que ahora está vacío), tengo que hacer el split a la posición nabo tal y como hago llamando a split. La posición nabo la tendré que escribir en un sitio donde sea fácilmente encontrable en el código de la IRQ, o quizá inventarme otra forma para que ya se sepa durante NMI. Creo que es más agnóstico hacer lo primero. Dejarlo, yo que sé, en $FE y $FF y procurar que no me cargue esas posiciones de la ZP.
+
+Pero esto es para después. Tenlo primero funcionando en modo básico y luego ya me cuentas, primo. Haz una ROM que arranque y cambie la paleta, por lo menos, y me cuentas.
+
+~~
+
+Si quiero hacer tiles animados y que esta gente se haca cagurcias debería arrimar los tiles que quiero que se muevan, y luego generar un neuvo MAP con los cambios. Creo que tengo por ahí un substitutor (!) de tiles para mapas, pero si no se hace en dos minutos.
+
+En realidad no es complicado - puedo mover todos los tiles de fondo de follaje al principio del tileset. Los cambios serían:
+
+9->32
+10->33
+11->34
+12->35
+16->64
+17->65
+18->66
+19->67
+21->68
+32->9
+33->10
+34->11
+35->12
+64->16
+65->17
+66->18
+67->19
+68->21
+
+~~
+
+Podemos tener este mapa de caracteres, divididos en bancos de 1K:
+
+offs    size    what
+0       4       TS ingame, completo
+4       1       Copia de 0, para animar (frame 1)
+5       1       Frame 2
+6       1       Frame 3
+7       1       Frame 4
+8       1       Map, para poner como 3er banco en vez de 3
+9       1       Font, para poner como 1er banco
+10      2       cutscene 1, poner como 2º/3er bancos
+12      2       cutscene 2, poner como 2º/3er bancos
+14      2       title, poner como 2º/3er bancos
+16      2       ending, poner como 2º/3er bancos
+18      4       spriteset, completo
+
+Son 22K de gráficos.
+
+~~
+
+20170221
+========
+
+Ya he montado y distribuido todos los bloques de código (casi todos, me quedan los principales porque hacen bankeos y aún tengo que controlar eso más despacio) y ahora me dispongo a montar el binariaco para la CHR-ROM siguiendo el guión de arriba. Normalmente lo montaría con scripts de MKTS y... 
+
+¿Qué coño? Voy a montarlo con scripts de mkts. Voy a meter una función fill para ir rellenando con 0.
+
+~~
+

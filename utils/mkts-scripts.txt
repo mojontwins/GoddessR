@@ -63,3 +63,16 @@ METASPRITESET X0, Y0, MSW, MSH, AW, AH, OX, OY [, MAX] [FLIPPED|MIRRORED]
 Texts:
 
 TEXTS X0, Y0, AW, AH, 
+
+Fill:
+
+FILL BYTES
+						- BYTES count to reach. Will add zeroes to the binary.
+						
+Limit generation:
+
+PATTERNSLIMIT n|OFF
+
+						- Limit subsequent generations to n patterns
+						- OFF turns it off.
+						

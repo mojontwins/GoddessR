@@ -21,8 +21,9 @@ Const PLATFORM_SG1000 	= 1
 Const PLATFORM_GB 		= 2
 Const PLATFORM_SMS 		= 3
 
-Dim Shared As Integer verbose, silent, mainIdx, cPoolIndex, tMapsIndex, flipped, upsideDown, clrIdx, outputPalList
+Dim Shared As Integer verbose, silent, mainIdx, cPoolIndex, tMapsIndex, flipped, upsideDown, clrIdx, outputPalList, patternsLimit, outputPatterns
 Dim Shared As Integer blackiszero, columns, nextPattern, mirrored, simplemeta, supersimplemeta, aseprite, noskipempty, allbg, deinterlaced
+Dim Shared As Integer succesfullyAddedPatternToPool
 Dim Shared As uByte mainBin (65535), clrBin (65535)
 Dim Shared As String cPool (255)
 Dim Shared As uByte tMaps (255, 255)
@@ -817,11 +818,17 @@ Function isAllZeroes (patternS As String) As Integer
 End Function
 
 Sub addPatternToPool (patternS As String)
+	succesfullyAddedPatternToPool = 0
+	If patternsLimit > 0 And outputPatterns >= patternsLimit Then  Exit Sub
+
 	' Add
 	cPool (cPoolIndex) = patternS
+	succesfullyAddedPatternToPool = -1
 	
 	' Next
 	cPoolIndex = cPoolIndex + 1
+
+	outputPatterns = outputPatterns + 1
 End Sub
 
 Function findPatternInPoolAndAdd (patternS As String, ByRef wasNew As Integer) As Integer
@@ -841,10 +848,10 @@ Function findPatternInPoolAndAdd (patternS As String, ByRef wasNew As Integer) A
 	Next i
 	
 	' Add
-	cPool (cPoolIndex) = patternS
-	
+	'cPool (cPoolIndex) = patternS
 	' Next
-	cPoolIndex = cPoolIndex + 1
+	'cPoolIndex = cPoolIndex + 1
+	addPatternToPool patternS
 	
 	' Return
 	wasNew = -1
@@ -852,16 +859,16 @@ Function findPatternInPoolAndAdd (patternS As String, ByRef wasNew As Integer) A
 End Function
 
 Sub copyArrayToMainBin (array () As uByte)
-	Dim As Integer i
-	
+	If Not succesfullyAddedPatternToPool Then Exit Sub
+	Dim As Integer i	
 	For i = Lbound (array) To Ubound (array)
 		mbWrite array (i)
 	Next i
 End Sub
 
 Sub copyArrayToClrBin (array () As uByte)
-	Dim As Integer i
-	
+	If Not succesfullyAddedPatternToPool Then Exit Sub
+	Dim As Integer i	
 	For i = Lbound (array) To Ubound (array)
 		cbWrite array (i)
 	Next i
@@ -888,6 +895,7 @@ Sub sg1000DoChars (img As Any Ptr, xOrg As Integer, yOrg As Integer, wProc As In
 	For y = y0 To y1 Step 8
 		For x = x0 To x1 Step 8
 			sg1000ExtractPatternFrom img, x, y, pgt (), cgt ()
+			addPatternToPool sg1000patternToString (pgt (), cgt ())
 			copyArrayToMainBin pgt ()
 			copyArrayToClrBin cgt ()
 			ct = ct + 1
@@ -1252,6 +1260,7 @@ Sub nesDoTiles (img As Any Ptr, pal () As Integer, xOrg As Integer, yOrg As Inte
 				xa = x
 				For xx = 1 To wMeta
 					nesExtractPatternFrom img, xa, ya, pal (), pattern ()
+					addPatternToPool patternToString (pattern ())
 					copyArrayToMainBin pattern ()
 					cPoolIndex = cPoolIndex + 1
 					ct = ct + 1
@@ -1306,6 +1315,7 @@ Sub gbDoTiles (img As Any Ptr, pal () As Integer, xOrg As Integer, yOrg As Integ
 				xa = x
 				For xx = 1 To wMeta
 					gbExtractPatternFrom img, xa, ya, pal (), pattern ()
+					addPatternToPool patternToString (pattern ())
 					copyArrayToMainBin pattern ()
 					ct = ct + 1
 					xa = xa + 8
@@ -1383,6 +1393,7 @@ Sub nesDoColTiles (img As Any Ptr, pal () As Integer, xOrg As Integer, yOrg As I
 				ya = y
 				For yy = 1 To wMeta
 					nesExtractPatternFrom img, xa, ya, pal (), pattern ()
+					addpatterntopool patternToString (pattern ())
 					copyArrayToMainBin pattern ()
 					ct = ct + 1
 					ya = ya + 8
@@ -1435,6 +1446,7 @@ Sub gbDoColTiles (img As Any Ptr, pal () As Integer, xOrg As Integer, yOrg As In
 				ya = y
 				For yy = 1 To wMeta
 					gbExtractPatternFrom img, xa, ya, pal (), pattern ()
+					addPatternToPool patternToString (pattern ())
 					copyArrayToMainBin pattern ()
 					ct = ct + 1
 					ya = ya + 8
@@ -1559,10 +1571,11 @@ Function nesFindPatternInPoolAndAddEx (patternS As String, ByRef wasNew As Integ
 	modifier = 0
 	
 	' Add
-	cPool (cPoolIndex) = patternS
+	'cPool (cPoolIndex) = patternS
 	
 	' Next
-	cPoolIndex = cPoolIndex + 1
+	'cPoolIndex = cPoolIndex + 1
+	addPatternToPool patternS
 	
 	' Return
 	wasNew = -1
@@ -1619,10 +1632,11 @@ Function gbFindPatternInPoolAndAddEx (patternS As String, ByRef wasNew As Intege
 	modifier = 0
 	
 	' Add
-	cPool (cPoolIndex) = patternS
-	
+	'cPool (cPoolIndex) = patternS
 	' Next
-	cPoolIndex = cPoolIndex + 1
+	'cPoolIndex = cPoolIndex + 1
+
+	addPatternToPool patternS
 	
 	' Return
 	wasNew = -1
@@ -1684,10 +1698,11 @@ Function smsFindPatternInPoolAndAddEx (patternS As String, ByRef wasNew As Integ
 	modifier = 0
 	
 	' Add
-	cPool (cPoolIndex) = patternS
-	
+	'cPool (cPoolIndex) = patternS
 	' Next
-	cPoolIndex = cPoolIndex + 1
+	'cPoolIndex = cPoolIndex + 1
+
+	addPatternToPool patternS
 	
 	' Return
 	wasNew = -1
@@ -1727,10 +1742,12 @@ Function find2PatternsInPoolAndAdd (patternS As String, ByRef wasNew As Integer)
 	Next i
 	
 	' Add
-	cPool (cPoolIndex) = pattern1S
-	cPoolIndex = cPoolIndex + 1
-	cPool (cPoolIndex) = pattern2S
-	cPoolIndex = cPoolIndex + 1
+	'cPool (cPoolIndex) = pattern1S
+	'cPoolIndex = cPoolIndex + 1
+	'cPool (cPoolIndex) = pattern2S
+	'cPoolIndex = cPoolIndex + 1
+	addPatternToPool pattern1S
+	addPatternToPool pattern2S
 	
 	' Return
 	wasNew = -1
@@ -1783,6 +1800,7 @@ Sub sg1000DoTmaps (img As Any Ptr, xOrg As Integer, yOrg As Integer, wProc As In
 					patternS = sg1000patternToString (pgt (), cgt ())
 					ct = findPatternInPoolAndAdd (patternS, wasnew)
 					If wasnew Then 
+						addPatternToPool sg1000patternToString (pgt (), cgt ())
 						copyArrayToMainBin pgt ()
 						copyArrayToClrBin cgt ()
 					End If
@@ -2449,6 +2467,7 @@ Sub sg1000DoSprites (img As Any Ptr, xOrg As Integer, yOrg As Integer, wProc As 
 										End If
 									Next xp
 								Next yp
+								addPatternToPool patternToString (sgt ())
 								copyArrayToMainBin sgt ()
 								cPoolIndex = cPoolIndex + 1
 								yaa = yaa + 8
@@ -3520,6 +3539,7 @@ Sub doScripted (inFileName As String, outFileName As String, platform As Integer
 	Dim As Integer max
 	Dim As Integer xOrg, yOrg, wProc, hProc, wMeta, hMeta, sprxorg, spryorg, wA, hA
 	Dim As Integer metaSpriteCounter
+	Dim As Integer byteMark
 
 	If platform = PLATFORM_SG1000 Then Puts "The SG-1000 platform is not supported in scripted mode, sorry": End
 
@@ -3531,6 +3551,9 @@ Sub doScripted (inFileName As String, outFileName As String, platform As Integer
 	metaSpriteCounter = 0
 	noskipempty = 0
 	aseprite = 0
+	deinterlaced = 0
+	outputpallist = 0
+	patternsLimit = 0
 	
 	Puts ("Processing script " & inFileName & ", platform = " & platform)
 	fIn = FreeFile
@@ -3541,6 +3564,16 @@ Sub doScripted (inFileName As String, outFileName As String, platform As Integer
 		cmd = uCase (tokens (0))
 
 		Select Case cmd
+			Case "RESETPOOL"
+				Puts ("Resetting patterns pool!")
+				cPoolIndex = 0
+			Case "PATTERNSLIMIT":
+				Puts ("Patters limit = " & tokens (1))
+				If tokens (1) = "OFF" Then patternsLimit = 0 Else patternsLimit = Val (tokens (1))
+			Case "OUTPUTPALLIST":
+				outputpallist = -1
+			Case "NOPALLIST":
+				outputpallist = 0
 			Case "ASEPRITE":
 				Puts "ASEPRITE MODE ON"
 				aseprite = -1
@@ -3590,6 +3623,8 @@ Sub doScripted (inFileName As String, outFileName As String, platform As Integer
 						smsFindStraightPalette palImg, pal ()
 				End Select
 			Case "METASPRITE":
+				outputPatterns = 0
+
 				xOrg = Val (tokens (1))
 				yOrg = Val (tokens (2))
 				wMeta = Val (tokens (3))
@@ -3613,6 +3648,8 @@ Sub doScripted (inFileName As String, outFileName As String, platform As Integer
 				metaSpriteCounter = metaSpriteCounter + 1
 
 			Case "CHARSET":
+				outputPatterns = 0
+
 				xOrg = Val (tokens (1))
 				yOrg = Val (tokens (2))
 				wProc = Val (tokens (3))
@@ -3631,6 +3668,8 @@ Sub doScripted (inFileName As String, outFileName As String, platform As Integer
 				' 'If max <> -1 Then charOffset = charOffset + max Else charOffset = charOffset + wProc * hProc
 
 			Case "TILESROW2X2"
+				outputPatterns = 0
+
 				xOrg = Val (tokens (1))
 				yOrg = Val (tokens (2))
 				wProc = Val (tokens (3))
@@ -3647,6 +3686,8 @@ Sub doScripted (inFileName As String, outFileName As String, platform As Integer
 				End Select
 
 			Case "MAPPED"
+				outputPatterns = 0
+
 				xOrg = Val (tokens (1))
 				yOrg = Val (tokens (2))
 				wMeta = Val (tokens (3))
@@ -3667,6 +3708,8 @@ Sub doScripted (inFileName As String, outFileName As String, platform As Integer
 				metaSpriteCounter = metaSpriteCounter + 1
 
 			Case "METASPRITESET"
+				outputPatterns = 0
+
 				xOrg = Val (tokens (1))
 				yOrg = Val (tokens (2))
 				wMeta = Val (tokens (3))
@@ -3692,6 +3735,8 @@ Sub doScripted (inFileName As String, outFileName As String, platform As Integer
 				End Select
 
 			Case "TEXTS"
+				outputPatterns = 0
+
 				xOrg = Val (tokens (1))
 				yOrg = Val (tokens (2))
 				wProc = Val (tokens (3))
@@ -3706,6 +3751,12 @@ Sub doScripted (inFileName As String, outFileName As String, platform As Integer
 					Case PLATFORM_SMS:
 						smsDoTexts img, pal (), xOrg, yOrg, wProc, hProc, "-", label, charOffset, max, fMapFile
 				End Select
+			case "FILL"
+				byteMark = Val (tokens (1))
+				Puts ("Filling with zeroes until bc=" & byteMark)
+				While byteMark > mainIdx
+					mbWrite (0)
+				Wend
 		End Select
 	Wend
 	If fMapFile <> -1 Then Close fMapFile

@@ -1,0 +1,129 @@
+# cut_tkrom.spt
+
+# 0, 1, 2, 3: ts ingame, completo
+
+OPEN ts_tkrom.png
+PALS palts.png
+MAPFILE ..\dev-tkrom\prg0001\main_ts.h
+LABEL main_ts
+OUTPUTPALLIST
+MAPPED 0, 0, 2, 2, 16, 6 DEINTERLACED
+
+# 224 * 16
+FILL 3584
+OPEN chars.png
+CHARSET 0, 14, 16, 2
+
+FILL 4096
+NOPALLIST
+
+# 4, 5, 6, 7: 1K portions of ts_ingame
+PATTERNSLIMIT 64
+
+RESETPOOL
+OPEN ts_tkrom.png
+MAPFILE ..\dev-tkrom\work\dummy_0.h
+MAPPED 0, 0, 2, 2, 16, 6 DEINTERLACED
+
+RESETPOOL
+OPEN ts_tkrom_anim1.png
+MAPFILE ..\dev-tkrom\work\dummy_1.h
+MAPPED 0, 0, 2, 2, 16, 6 DEINTERLACED
+
+RESETPOOL
+OPEN ts_tkrom_anim2.png
+MAPFILE ..\dev-tkrom\work\dummy_2.h
+MAPPED 0, 0, 2, 2, 16, 6 DEINTERLACED
+
+RESETPOOL
+OPEN ts_tkrom_anim3.png
+MAPFILE ..\dev-tkrom\work\dummy_3.h
+MAPPED 0, 0, 2, 2, 16, 6 DEINTERLACED
+
+PATTERNSLIMIT OFF
+
+# 8: Map chars
+
+RESETPOOL
+OPEN mapchars.png
+CHARSET 0, 14, 16, 2
+# Fill to 9K
+FILL 9216
+
+# 9: Charset
+
+RESETPOOL
+OPEN font.png
+CHARSET 0, 0, 32, 2
+# Fill to 10K
+FILL 10240
+
+# 10,11: Cutscene 1
+
+RESETPOOL
+OPEN fixed_screens\plate1_full.png
+MAPFILE ..\dev-tkrom\work\dummy_4.h
+MAPPED 0, 0, 2, 2, 16, 15
+# Fill to 12K
+FILL 12288
+
+# 12,13: Cutscene 2
+
+RESETPOOL
+OPEN fixed_screens\plate2_full.png
+MAPFILE ..\dev-tkrom\work\dummy_5.h
+MAPPED 0, 0, 2, 2, 16, 15
+# Fill to 14K
+FILL 14336
+
+# 14,15: Title
+
+RESETPOOL
+OPEN fixed_screens\title.png
+MAPFILE ..\dev-tkrom\work\dummy_6.h
+MAPPED 0, 0, 2, 2, 16, 15
+# Fill to 16K
+FILL 16384
+
+# 16,17: Ending
+
+RESETPOOL
+OPEN fixed_screens\ending.png
+PALS fixed_screens\palending.png
+MAPFILE ..\dev-tkrom\work\dummy_7.h
+MAPPED 0, 0, 2, 2, 16, 15
+# Fill to 18K
+FILL 18432
+PALS palts.png
+
+# 18, 19, 20, 21: Spriteset
+
+RESETPOOL
+NOSKIPEMPTY
+MAPFILE ..\dev-tkrom\prg04\spritedata.h
+
+# METASPRITES
+OPEN ss.png
+PALS palss.png
+
+CHARSET 15, 19, 1, 1
+
+LABEL sspl
+METASPRITESET 0, 0, 2, 3, 8, 2, -4, -8 FLIPPED
+LABEL sspld
+METASPRITESET 0, 6, 2, 3, 8, 1, -4, -8
+
+LABEL ssena
+METASPRITESET 0, 13, 2, 3, 7, 1, 0, -8 FLIPPED
+LABEL ssenx
+METASPRITESET 12, 13, 2, 3, 1, 1, 0, -10 FLIPPED
+LABEL ssenb
+METASPRITESET 0, 16, 3, 2, 3, 2, -4, 0
+LABEL ssenc
+METASPRITESET 0, 11, 2, 2, 6, 1, 0, 0
+
+LABEL ssit
+METASPRITESET 0, 9, 2, 2, 8, 1, 0, 0
+
+# Fill to 128K
+FILL 131072
