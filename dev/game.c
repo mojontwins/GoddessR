@@ -95,6 +95,8 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 #else
 	#include "prg2/assets/spritedata.h"
 #endif
+#include "prg2/assets/spritedata_sps.h"
+#include "prg2/assets/spritedata_push_b.h"
 #include "prg2/assets/metasprites.h"
 #include "prg2/assets/precalcs.h"
 #include "prg2/assets/enems0.h"
@@ -128,6 +130,8 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 // ############################################################################
 
 #include "prg3/assets/texts.h"
+#include "prg3/assets/sps_ss_patterns_c.h" 		// Last time addition and it doesn't fit in prg1.
+#include "prg3/assets/push_b_ss_patterns_c.h"	// Last time addition and it doesn't fit in prg1.
 
 #include "prg3/engine/ul_helpers.h"
 #include "prg3/engine/scroller.h"
@@ -223,6 +227,7 @@ void main (void) {
 				case PLAYER_WINS:
 					game_ending ();
 					keep_playing = 0;
+					first_time = 1;
 					break;
 				case PLAYER_GAME_OVER:
 					game_over ();

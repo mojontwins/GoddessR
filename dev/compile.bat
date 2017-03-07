@@ -25,6 +25,8 @@ copy /b work\palbg0.h + work\palbg1.h + work\palbg2.h + work\palbg3.h + work\pal
 cd ..\gfx
 ..\utils\mkts.exe mode=scripted in=cut_sprites.spt out=..\dev\work\main_ss_patterns.bin silent
 ..\utils\mkts.exe mode=scripted in=cut_sprites_usa.spt out=..\dev\work\main_ss_patterns_usa.bin silent
+..\utils\mkts.exe mode=sprites in=superpowers.png out=..\dev\work\sps_ss_patterns.bin pals=palss.png tsmap=..\dev\prg2\assets\spritedata_sps.h size=1,1 metasize=5,3 sprorg=-12,-32 label=spr_sps tmapoffset=232 silent
+..\utils\mkts.exe mode=sprites in=push_b.png out=..\dev\work\push_b_ss_patterns.bin pals=palss.png tsmap=..\dev\prg2\assets\spritedata_push_b.h size=1,1 metasize=2,2 sprorg=0,0 label=spr_push_b tmapoffset=248 silent
 ..\utils\mkts.exe mode=chars in=chars.png pals=palts.png offset=0,14 max=32 out=..\dev\work\chars_ts_patterns.bin silent
 ..\utils\mkts.exe mode=chars in=mapchars.png pals=palts.png offset=0,14 max=32 out=..\dev\work\map_ts_patterns.bin silent
 ..\utils\mkts.exe mode=chars in=font.png pals=palts.png out=..\dev\work\font_ts_patterns.bin silent
@@ -60,6 +62,8 @@ cd ..\dev
 ..\utils\bloat.exe in=work\ending_ts_patterns_usa.bin out=work\nesst_ending_usa.chr maxsize=4096 leading=1024
 ..\utils\lzsscomp.exe work\title_ts_patterns.bin title_ts_patterns_c.h
 ..\utils\bloat.exe in=work\title_ts_patterns.bin out=work\nesst_title.chr maxsize=4096 leading=1024
+..\utils\lzsscomp.exe work\sps_ss_patterns.bin sps_ss_patterns_c.h
+..\utils\lzsscomp.exe work\push_b_ss_patterns.bin push_b_ss_patterns_c.h
 
 move main_ts_patterns_c.h prg1 > nul
 move main_ss_patterns_c.h prg1 > nul
@@ -72,6 +76,8 @@ move font_ts_patterns_c.h prg1 > nul
 move ending_ts_patterns_c.h prg1 > nul
 move ending_ts_patterns_usa_c.h prg1 > nul
 move title_ts_patterns_c.h prg1 > nul
+move sps_ss_patterns_c.h prg3\assets > nul
+move push_b_ss_patterns_c.h prg3\assets > nul
 
 echo PRG2
 cd ..\enems

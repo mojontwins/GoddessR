@@ -16,8 +16,8 @@ void update_buffered_tile (void) {
 	// Paint
 	gp_addr = (rdct ? NAMETABLE_B : NAMETABLE_A) + (rdx << 1) + nt_tile_offsets_y [rdy];
 	//bankswitch (0);
-	bankswitch_prg_a (0);
-	bankswitch_prg_b (1);
+	bankswitch_prg_a (PRG_BANK_A_SCROLL);
+	bankswitch_prg_b (PRG_BANK_B_SCROLL);
 
 	UPDATE = MSB (gp_addr) | NT_UPD_HORZ;
 	UPDATE = LSB (gp_addr);
@@ -33,5 +33,6 @@ void update_buffered_tile (void) {
 	UPDATE = main_ts_tmaps_3 [rdt];
 
 	// Don't forget!
-	bankswitch_prg_b (6);
+	bankswitch_prg_a (PRG_BANK_A_MAIN_DATA);
+	bankswitch_prg_b (PRG_BANK_B_MAIN);
 }

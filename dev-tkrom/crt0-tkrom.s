@@ -273,9 +273,11 @@ sounds_data:
 
 .segment "SETUP"
 setup:
+	sei
+	
 	; Put everything in place. 
 	; Making sure ROM $1E is @ $C000.
-	; Of course, this code runs from ROM $1F @ $E000.
+	; Of course, this code runs from PRG-ROM $1F @ $E000.
 
 	lda #$86    ; 1000 0110 C = 1, P = 0
 	sta $8000
@@ -294,6 +296,9 @@ setup:
 	; unlock WRAM
 	lda #$80
 	sta $a001
+
+	; disable IRQ
+	sta $e000
 
 	; and...
 	jmp start

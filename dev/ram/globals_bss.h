@@ -46,7 +46,8 @@ unsigned char bgo_total;
 unsigned char bgo_type [BG_OBJS_MAX];
 
 // Level info
-unsigned char stage; 	// Decides palette & music
+unsigned char stage; 			// Decides palette
+unsigned char music_track;		// Decides music
 unsigned char level;
 unsigned char base_pant;
 const signed int *section;
@@ -54,6 +55,7 @@ unsigned char game_res;
 unsigned char fskip_ctr;
 unsigned char first_time;
 unsigned char keep_playing;
+unsigned char playfish;
 
 // Hotspots
 unsigned char hrt [MAX_PANTS];
@@ -68,6 +70,7 @@ unsigned char plife, pcharges, pinv;
 unsigned char oplife, opcharges;
 unsigned char pcontinues;
 unsigned char pcrx, pcry;
+unsigned char first_blood;
 
 // Music
 unsigned char music_on;

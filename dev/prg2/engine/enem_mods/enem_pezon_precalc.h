@@ -22,7 +22,10 @@
 			PEZON_INCS_IDX [gpit] = 0;
 			en_state [gpit] = 1;
 			en_y [gpit] = en_y1 [gpit];
-			sfx_play (SFX_FISH, SC_LEVEL);
+			// A play sound trigger used to be here, but I've moved it
+			// until we know if we should be displaying this enemy.
+			// If enemy is not showing, then don't play the sound!
+			playfish = 1;	
 		}
 	}
 	

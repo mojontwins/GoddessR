@@ -163,13 +163,16 @@ void scroll_paint_chunk (void) {
 void scroll_to (void) {
 	// Updates nametables upon direction
 	if (cam_pos > cam_pos_old) {
-		col_idx = (cam_pos >> 5) + 9;
-		scroll_paint_chunk ();
+		//col_idx = (cam_pos >> 5) + 9;
+		col_idx = (cam_pos >> 5) + 10;
+		//scroll_paint_chunk ();
 	} else if (cam_pos < cam_pos_old) {
-		col_idx = (cam_pos >> 5) - 1;
-		scroll_paint_chunk ();
+		//col_idx = (cam_pos >> 5) - 1;
+		col_idx = (cam_pos >> 5) - 2;
+		//scroll_paint_chunk ();
 	} else scroll_state = SCROLL_STATE_FREE;
 
+	scroll_paint_chunk ();
 	cam_pos_old = cam_pos;
 }
 

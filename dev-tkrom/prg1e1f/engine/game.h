@@ -181,6 +181,9 @@ void game_loop (void) {
 			paused = !paused;
 		}
 
+		// Animate some tiles
+		tkrom_bankswitch (BG_BANK_0, CHR_BANK_TS_ANIM + ((frame_counter >> 3) & 3));
+
 		//*((unsigned char*)0x2001) = 0x1e;
 		split (cam_pos & 0x1ff, SCROLL_Y);
 		//*((unsigned char*)0x2001) = 0x1f;

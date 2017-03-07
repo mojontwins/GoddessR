@@ -1480,5 +1480,33 @@ Ya he montado y distribuido todos los bloques de código (casi todos, me quedan 
 
 ¿Qué coño? Voy a montarlo con scripts de mkts. Voy a meter una función fill para ir rellenando con 0.
 
-~~
+20170222
+========
+
+Todo animado y tal y cual.
+
+Ahora lo que no se me quita de la mente es hacer un juego más tocho con esto :-)
+
+En principio, intro/perils/goddess, cada uno con la capacida de goddess, pero divididos como pegue. Eso significa 80 pantallas para cada sección, saco de tilesets, etc, pero lo suyo es que antes me piense bien cómo hacerlo.
+
+A ver, en 2 páginas contiguas puedo meter mapas/metatilesets/precalcs. Como siempre ocuparán lo mismo, tendremos 80 pantallas por sección y no necesitaré cambiar de punteros ni nada, solo cambiar de página (porque todo estará en el mismo sitio sin improtar qué par de páginas esté).
+
+El resto de los datos y más cosa que necesite, como cutscenes, cada uno en su página.
+
+Por tanto cada levelset tendrá 80 pantallas en total ocupando 3 páginas (24K).
+
+La división será arbitraria pero para simplificar siempre será sobre un rectángulo de 20x4 pantallas. Me gustan los niveles verticales, de todos modos, así que no sé ¿cómo de difícil es ajustar el ancho del mapa sin tener que multiplicar? No es trivial.
+
+Estoy hasta el rábano de los niveles de perils / yun originales así que los reharé.
+
+Pero antes de estas mierdas tengo que dejar el Goddess UNROM original bien pulido y con las aristas muy talladas para el multicart.
+
+20170224
+========
+
+A eso venía. Voy a apuntar cosas que necesito hacer:
+
+- Modificar algunas partes del mapa, tal y como me han notificado en el foro. Revisar por mi parte también.
+- Revisar trayectorias de enemigos en las transiciones.
+- 
 

@@ -6,13 +6,15 @@
 void game_init (void) {
 	// Decompress patterns from tileset #1
 	bankswitch (1);
-	tokumaru_lzss (main_ts_patterns_c,  	0);
+	tokumaru_lzss (main_ts_patterns_c,		0);
 	tokumaru_lzss (chars_ts_patterns_c, 	3584);	// 224*16
 #ifdef THIS_IS_THE_USA
-	tokumaru_lzss (main_ss_patterns_usa_c, 	4096);	// 256*16
+	tokumaru_lzss (main_ss_patterns_usa_c,	4096);	// 256*16
 #else
-	tokumaru_lzss (main_ss_patterns_c,  	4096);	// 256*16
+	tokumaru_lzss (main_ss_patterns_c,		4096);	// 256*16
 #endif
+	tokumaru_lzss (sps_ss_patterns_c,		7808);	// 488*16 (sprite pattern 232 onwards)
+	tokumaru_lzss (push_b_ss_patterns_c,	8064);	// 504*16 (sprite pattern 248 onwards)
 	bankswitch (2);
 
 	c_pal_fg = mypal_game_fg0;
@@ -32,8 +34,9 @@ void game_init (void) {
 		// Must return the carried object to its place
 		if (pinv != 0xff) hotspots_restore_carried_object ();
 	} else {
-		stage = 0;
-		level = LEVEL_INI; n_pant = SCR_INI;	
+		music_track = stage = 0;
+		level = LEVEL_INI; n_pant = SCR_INI;
+		first_blood = 1;
 		gpit = 4; while (gpit --) gs_flags [gpit] = 0;	
 		hotspots_init ();
 	}
@@ -102,6 +105,7 @@ void game_loop (void) {
 	bankswitch (0);
 	scroll_draw_screen ();
 	ppu_on_all ();
+	if (level == 3) ppu_mask (0x9e); else ppu_mask (0x1e);
 
 	set_vram_update (update_list);
 
@@ -128,7 +132,7 @@ void game_loop (void) {
 
 	if (!cutscene) {
 		if (!music_on) {
-			music_play (MUSIC_INGAME_BASE + stage);
+			music_play (MUSIC_INGAME_BASE + music_track);
 			music_on = 1;
 		} else music_pause (0);
 	}

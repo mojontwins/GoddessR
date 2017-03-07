@@ -1,0 +1,48 @@
+Name: 			Cheril the Goddess
+
+Submitted By: 	na_th_an
+
+Category:		1 (the contest)
+
+Description:  	Cheril must obtain the Skull of Podewwwr and use its power to
+				become a goddess. In order to do so, she must open three gates
+				and unlock a magic column.
+
+				The gates are magically locked by the temples of Stone, Paper 
+				and Scissors. You must break the seals using the proper 
+				medallion in each temple, which you have to find.
+
+				The magic column is unlocked using a key in the keyhole located
+				next to the column.
+
+				Cheril can get three magic charges from the pedestals with two
+				hearts engraved. He can use such charges to gain super powers
+				for a short while (being able to fly around and becoming invin-
+				cible) or to activate teleporters which will take her to the
+				center of the map.
+
+				You can open the gates and the magic column in any order. You
+				can also take a look at a map telling you where everything is
+				located. You can only carry one object at a time.
+
+Controls:		D-pad: Movement
+				Select: Continue (title screen) / Map (ingame)
+				Start: Starts the game from the beginning (title screen) / Pause
+				B: Interact / use / action, etc.
+				A: Jump
+				B + UP: Activate super powers.
+
+Rom info:		Mapper 2, UNROM 64K with vertical mirroring
+				Filesize 64K
+				Special peripherals Needed: none
+
+Credits:		na_th_an - Design, Code, Levels & Graphics
+				Davidian - Music & SFX
+				Anjuel - Ines
+				Shiru - Neslib & Famitone2
+
+Other:			When you continue you lose the item you are carrying, but other
+				than that, progress is saved.
+
+				If you get lost, take a look at the map. The map is updated as
+				you progress.

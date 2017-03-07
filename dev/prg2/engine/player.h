@@ -23,7 +23,7 @@ void player_init (void) {
 		prx = (10 << 4); px = prx << FIX_BITS;
 		pry = (4 << 4); py = pry << FIX_BITS;
 	} else {
-		prx = (4 << 4); px = prx << FIX_BITS;
+		prx = (7 << 4); px = prx << FIX_BITS;
 		pry = (6 << 4); py = pry << FIX_BITS;
 	}
 	pfacing = pfr = 0;
@@ -97,6 +97,7 @@ void player_move (void) {
 				pinv = 0xff;
 				if (gs_this_flag < 3) {
 					stage = 1 + gs_this_flag;
+					music_track ++;
 					c_pal_bg = c_pal_bgs [stage];
 					pal_bg (c_pal_bg);
 				}
@@ -133,6 +134,8 @@ void player_move (void) {
 			fx_flash (c_pal_bg);
 			pflickers = ticks;
 			ppodewwwr = 0;
+		} else if (ppodewwwr <= 50) {
+			pal_spr (c_pal_fgs [half_life]);
 		}
 
 		if (pad & PAD_UP) {
@@ -153,6 +156,7 @@ void player_move (void) {
 				if (pflickers == 0) {
 					pcharges --;
 					ppodewwwr = 250;
+					first_blood = 0;
 					pvmax = PLAYER_VX_MAX_PODEWWWR;
 					c_pal_fg = mypal_game_fg1;
 					fx_flash (c_pal_bg);
@@ -358,4 +362,6 @@ void player_render (void) {
 			spr_en [ENCELL_NO] 
 		);
 	}
+
+	if (first_blood && pcharges) oam_index = oam_meta_spr ( rdx, rdy, oam_index, spr_sps_00 );
 }

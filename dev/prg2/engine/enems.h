@@ -100,7 +100,7 @@ void enems_do (void) {
 		// Render
 
 		if (sprid == 0xff) continue;
-		
+
 		if ((cam_pos_pant && gpit >= 3) || (!cam_pos_pant && gpit < 3)) {
 			if (sprx >= cam_pos_mod) rdx = sprx - cam_pos_mod; 
 			else continue; 
@@ -117,6 +117,11 @@ void enems_do (void) {
 				oam_index,
 				spr_en [PEZONS_BASE_SPRID + 2]
 			);
+		}
+
+		if (playfish) {
+			sfx_play (SFX_FISH, SC_LEVEL);
+			playfish = 0;
 		}
 
 		oam_index = oam_meta_spr (

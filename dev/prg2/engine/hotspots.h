@@ -48,6 +48,14 @@ void hotspots_do (void) {
 			if (rdb + 16 < cam_pos_mod) rdx = 256 - cam_pos_mod + rdb; else continue;
 		}
 		
+		if ((rda >= 8 && rda < 16) ||
+			(rda == 0x21 && pcharges < 3) ||
+			(rda == 0x20 && pcharges)) oam_index = oam_meta_spr (
+			rdx, rdc + SPRITE_ADJUST - 16 + bounce_precalc [frame_counter & 0x1f],
+			oam_index,
+			spr_push_b_00
+		);
+
 		oam_index = oam_meta_spr (
 			rdx, rdc + SPRITE_ADJUST,
 			oam_index,

@@ -46,6 +46,8 @@ PATTERNSLIMIT OFF
 
 RESETPOOL
 OPEN mapchars.png
+# Fill to 8.5K
+FILL 8704
 CHARSET 0, 14, 16, 2
 # Fill to 9K
 FILL 9216

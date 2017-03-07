@@ -34,7 +34,7 @@
 	#define MAP_H 						4
 	#define MAX_PANTS					MAP_W*MAP_H
 	#define LEVEL_INI					3
-	#define SCR_INI						9
+	#define SCR_INI						11
 	#define HUB_LEVEL					1
 	#define HUB_SCR 					9
 	#define HUB_X						0xA

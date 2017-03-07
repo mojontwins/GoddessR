@@ -18,7 +18,7 @@ const unsigned char shl4 [] = {
 const int sections_0 [] = { 0, 256, 4096, 5120 };
 const int sections_1 [] = { 0, 2304, 2816, 3328, 4096, 4352, 5120 };
 const int sections_2 [] = { 0, 1024, 2304, 3072, 4352, 5120 };
-const int sections_3 [] = { 0, 256, 2304, 2816, 4096, 5120 };
+const int sections_3 [] = { 0, 256, 2304, 2816, 3072, 4096, 5120 };
 const int * const sections [] = { sections_0, sections_1, sections_2, sections_3 };
 
 #define PEZON_INCS_MAX 48
@@ -83,4 +83,14 @@ const unsigned char * const c_pal_bgs [] = {
 	mypal_game_bg1,
 	mypal_game_bg2,
 	mypal_game_bg3
+};
+
+const unsigned char * const c_pal_fgs [] = {
+	mypal_game_fg0,
+	mypal_game_fg1
+};
+
+const unsigned char bounce_precalc [] = {
+	0, 1, 2, 3, 4, 4, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7,
+	7, 7, 7, 7, 6, 6, 6, 6, 5, 5, 4, 4, 3, 2, 1, 0
 };
