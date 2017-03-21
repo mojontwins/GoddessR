@@ -66,3 +66,9 @@ const unsigned char spr_empty [] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0x80
 };
+
+const unsigned char spr_cheril_mini [] = {
+	-4, -4, 240, 0, 4, -4, 241, 0,
+	-4, 4, 242, 0, 4, 4, 243, 0,
+	0x80
+};

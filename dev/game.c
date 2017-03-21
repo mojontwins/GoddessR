@@ -66,7 +66,6 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 	#include "prg1/main_ss_patterns_c.h"
 #endif
 #include "prg1/chars_ts_patterns_c.h"
-#include "prg1/map_ts_patterns_c.h"
 
 // Patterns for the cutscenes, ending, title & game over screens
 
@@ -132,6 +131,8 @@ const unsigned char bitmasks [] = {0xfc, 0xf3, 0xcf, 0x3f};
 #include "prg3/assets/texts.h"
 #include "prg3/assets/sps_ss_patterns_c.h" 		// Last time addition and it doesn't fit in prg1.
 #include "prg3/assets/push_b_ss_patterns_c.h"	// Last time addition and it doesn't fit in prg1.
+#include "prg3/assets/map_ts_patterns_c.h"		// Last time addition and it doesn't fit in prg1.
+#include "prg3/assets/map_ss_patterns_c.h" 		// Last time addition and it doesn't fit in prg1.
 
 #include "prg3/engine/ul_helpers.h"
 #include "prg3/engine/scroller.h"

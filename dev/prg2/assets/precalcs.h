@@ -94,3 +94,21 @@ const unsigned char bounce_precalc [] = {
 	0, 1, 2, 3, 4, 4, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7,
 	7, 7, 7, 7, 6, 6, 6, 6, 5, 5, 4, 4, 3, 2, 1, 0
 };
+
+// empty, tele, cherger, skull, stone, paper, scissors, key, 
+// cheril A, B, C, D, scissors temple, rock temple, paper temple, key hole
+
+const unsigned char map_sprite_positions_x [] = {
+	0, 16, 128, 136, 16, 128, 16, 128,
+	4, 12, 4, 12, 16, 16, 128, 128,
+};
+
+const unsigned char map_sprite_positions_y [] = {
+	0, 207, 207, 87, 159, 159, 175, 175,
+	83, 83, 91, 91, 127, 111, 111, 127
+};
+
+const unsigned char map_sprite_attributes [] = {
+	1, 1, 1, 1, 1, 1, 1, 1,
+	0, 0, 0, 0, 1, 1, 1, 1
+};

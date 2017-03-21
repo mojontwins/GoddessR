@@ -8,6 +8,7 @@ void game_init (void) {
 	bankswitch (1);
 	tokumaru_lzss (main_ts_patterns_c,		0);
 	tokumaru_lzss (chars_ts_patterns_c, 	3584);	// 224*16
+	
 #ifdef THIS_IS_THE_USA
 	tokumaru_lzss (main_ss_patterns_usa_c,	4096);	// 256*16
 #else
