@@ -3,14 +3,6 @@
 
 // Hud & scroll split setup routines.
 
-void hud_and_split_setup (void) {
-	scroll (0, SCROLL_Y);
-	vram_adr (NAMETABLE_A);
-	vram_unrle (hud_rle);
-	oam_spr (254, 27, 0, 3, 0);	// Sprite 0
-	oplife = opcharges = 0xff;
-}
-
 void hud_do (void) {
 	oam_index = oam_meta_spr (
 		136, 15,
@@ -29,4 +21,12 @@ void hud_do (void) {
 		UPDATE = DIGIT (pcharges);
 		opcharges = pcharges;
 	}
+}
+
+void hud_and_split_setup (void) {
+	scroll (0, SCROLL_Y);
+	vram_adr (NAMETABLE_A);
+	vram_unrle (hud_rle);
+	oam_spr (254, 27, 0, 3, 0);	// Sprite 0
+	oplife = opcharges = 0xff;
 }

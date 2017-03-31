@@ -72,6 +72,7 @@ void minimap_do (void) {
 		if (rda) break;
 	}
 	fade_out ();
+	oam_hide_rest (0);
 	ppu_off ();
 	pal_bg (c_pal_bg);
 

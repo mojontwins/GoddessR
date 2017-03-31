@@ -1,0 +1,975 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"co",
+				"corrspVal"
+			],
+			[
+				"music",
+				"music_play"
+			],
+			[
+				"ppu_",
+				"ppu_wait_nmi"
+			],
+			[
+				"pad",
+				"pad_poll"
+			],
+			[
+				"Sclp",
+				"sclpGetValue"
+			],
+			[
+				"sclp",
+				"sclpGetValue"
+			],
+			[
+				"pf",
+				"pflickers"
+			],
+			[
+				"c_pa",
+				"c_pal_bgs"
+			],
+			[
+				"pp",
+				"ppodewwwr"
+			],
+			[
+				"pvx",
+				"pvmax"
+			],
+			[
+				"cre",
+				"create_bg_object_type"
+			],
+			[
+				"scr",
+				"scroll_bg_object_create"
+			],
+			[
+				"hot",
+				"hotspots_load"
+			],
+			[
+				"enems",
+				"enems_load"
+			],
+			[
+				"rda",
+				"rdpant"
+			],
+			[
+				"spl",
+				"split_and_wait"
+			],
+			[
+				"FANTY_",
+				"FANTY_ST_IDLE"
+			],
+			[
+				"FA",
+				"FANTY_ST_RETREATING"
+			],
+			[
+				"FANT",
+				"FANTY_ST_PURSUING"
+			],
+			[
+				"FAN",
+				"FANTY_ST_IDLE"
+			],
+			[
+				"PEZON",
+				"PEZON_INCS_MAX"
+			],
+			[
+				"pezo",
+				"pezon_incs"
+			],
+			[
+				"en",
+				"en_iter"
+			],
+			[
+				"c_enem",
+				"c_enems_yx1"
+			],
+			[
+				"SCRO",
+				"SCROLL_STATE_CHUNK_0"
+			],
+			[
+				"scro",
+				"scroll_state"
+			],
+			[
+				"col",
+				"col_v_offset"
+			],
+			[
+				"NAM",
+				"NAMETABLE_A"
+			],
+			[
+				"smts",
+				"smtsPoolI"
+			],
+			[
+				"curSm",
+				"curSmtS"
+			],
+			[
+				"smtsP",
+				"smtsPoolS"
+			],
+			[
+				"TWO_SETS",
+				"TWO_SETS_MAPPED"
+			],
+			[
+				"TWO_SET",
+				"TWO_SETS_SEL"
+			],
+			[
+				"PSGSFX",
+				"PSGSFXPlay"
+			],
+			[
+				"PSG",
+				"PSGSFXPlay"
+			],
+			[
+				"MS_TYPE_",
+				"MS_TYPE_SINGLE"
+			],
+			[
+				"SG",
+				"SG_setTile"
+			],
+			[
+				"SG_",
+				"SG_setNextTileatXY"
+			],
+			[
+				"MS",
+				"MS_MAX"
+			],
+			[
+				"UNSA",
+				"UNSAFE_SG_copySpritestoSAT"
+			],
+			[
+				"UNS",
+				"UNSAFE_SG_copySpritestoSAT"
+			],
+			[
+				"MS_",
+				"MS_TYPE_EMPTY"
+			],
+			[
+				"pgo",
+				"pgotten_uwol"
+			],
+			[
+				"pgt",
+				"pgtmx_meemaid"
+			],
+			[
+				"PSTAT_",
+				"PSTATE_NAKED"
+			],
+			[
+				"draw_",
+				"draw_game_tile"
+			],
+			[
+				"show_",
+				"show_coins_vs"
+			],
+			[
+				"GP_",
+				"GM_2P_VS"
+			],
+			[
+				"PSTATE",
+				"PSTATE_DEAD"
+			],
+			[
+				"PF",
+				"PFACING_LEFT"
+			],
+			[
+				"A",
+				"TOP_ADJUST"
+			],
+			[
+				"TI_B",
+				"TI_BACKGROUNDS"
+			],
+			[
+				"update",
+				"update_list_index"
+			],
+			[
+				"SMS_setTile",
+				"SMS_setTileatXY"
+			],
+			[
+				"VDPS",
+				"VDPStatusPort"
+			],
+			[
+				"overfl",
+				"VDPSpriteOverflow"
+			],
+			[
+				"fra",
+				"frame_counter"
+			],
+			[
+				"PLAYER_",
+				"PLAYER_GENITAL"
+			],
+			[
+				"PLAYER_HA",
+				"PLAYER_HAS_JUMP"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "dev/prg3/engine/minimap.h",
+			"settings":
+			{
+				"buffer_size": 1836,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "dev/prg3/engine/game.h",
+			"settings":
+			{
+				"buffer_size": 7179,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "dev/prg3/engine/screens.h",
+			"settings":
+			{
+				"buffer_size": 1340,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "dev/prg2/engine/hud.h",
+			"settings":
+			{
+				"buffer_size": 590,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/engine"
+	],
+	"file_history":
+	[
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/enem_mods/enem_fanty_precalc.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/game.c",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/compile.bat",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/game.c",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/engine/minimap.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/assets/precalcs.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/hotspots.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/assets/metasprites.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/neslib-unrom.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/player.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/engine/game.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/assets/palettes.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/text/goddess.tzt",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/engine/scroller.h",
+		"/D/git/clean_goddess.bat",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev-tkrom/crt0-tkrom.s",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev-tkrom/neslib-tkrom.s",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev-tkrom/prg1e1f/assets/behs.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/maritrini/rom1/dev/main.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev-unrom/ram/desktop.ini",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/gfx/cut_tkrom.spt",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev-tkrom/prg06/bg_object.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev-tkrom/prg1e1f/engine/ul_helpers.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/diario.md",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/workroms/makebins.bat",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev-tkrom/definitions.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/trash/mappedchunkermap.bas",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev-tkrom/prg06/player.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev-tkrom/prg1e1f/engine/game.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev-tkrom/definitions.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/diario.md",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/map/subs.txt",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/utils/binsubstitutor.bas",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/engine/scroller.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/ram/globals_bss.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/engine/game.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/compile.bat",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/definitions.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/interlude_music.s",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/ogt/makemusic.bat",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/hotspots.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg1/ogt.s",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/bg_object.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/assets/texts.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/printer.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/engine/screens.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/engine/cutscene.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/enems.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/assets/precalcs.h",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/utils/enctexts.bas",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/gfx/fixed_screens/namgen.bat",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/PongPong/blurb.txt",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/blurb.txt",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/ogt/music.s",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/interlude_music.s",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/ogt/interlude.s",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/text/goddess.tzt",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/engine/cutscene.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/definitions.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/gfx/fixed_screens/namgen.bat",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/gfx/cut_sprites_usa.spt",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/utils/namgen.bas",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/gfx/cuts_work/namgen.bat",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/utils/bloat.bas",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/player.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/enems.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/enem_mods/enem_pezon_precalc.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/labels.txt",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/ram/globals_zp.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/bg_object.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/printer.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/hud.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/ogt/makemusic.bat",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/assets/palettes.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/enem_mods/enem_linear.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/engine/ul_helpers.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/famitone2.s",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/palette_fx.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/assets/spritedata.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/gfx/cut_sprites.spt",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/chac_chac.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/engine/general.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg1/ogt.s",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/utils/mkts.bas",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg1/chars_ts_patterns_c.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/map/pallist.txt",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/fceux.bat",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/assets/enems0.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/desktop.ini",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/assets/behs.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/camera.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/game.s",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/enem_mods/enem_fanty_precalc.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/enem_mods/enem_fanty.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/utils/genfantys.bas",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/utils/genpezons.bas",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/engine/enem_mods/pezon_precalc.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/utils/eneupdr.bas",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/utils/eneexp4.bas",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg1/palette_fx.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg0/main_ts.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/utils/mapcnvchunk.bas",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/map/subster.bas",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/CherilsR/goddess/dev/engine/printer.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg2/spritedata.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/CherilsR/goddess/dev/config.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/CherilsR/goddess/dev/game.c",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/engine/player.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg0/map.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/general.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg3/scroller.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/diario.txt",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg0/attr_precalcs.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/Lala/UNROM/dev/prg1/lala_nrom_full_ogt.s",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/PongPong/dev/music.s",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/Lala/UNROM/dev/make.bat",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/dev/prg1/main_ts_patterns_c.h",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/multicart/src/ZCP/gfx (1)/cut_sprites.spt",
+		"/C/Users/na_th_an/Google Drive/Maritrini/dev/NES/GoddessR/utils/mappedchunkermap.bas",
+		"/D/Google Drive/Maritrini/dev/NES/GoddessR/GoddessR.sublime-project",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK2/Ramiro el Vampiro/No tiene un respiro/texts/texts-eng.txt",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK2/Ramiro el Vampiro/En el bosque del suspiro/texts/texts-eng.txt",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK2/Ramiro el Vampiro/Devuelve el zafiro/texts/texts-eng.txt",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK2/Ramiro el Vampiro/Devuelve el zafiro/utils/src/textstuffer2.bas",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK2/Ramiro el Vampiro/Devuelve el zafiro/gfx/font.png",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK2/Ramiro el Vampiro/No tiene un respiro/texts/texts.txt",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK2/Ramiro el Vampiro/En el bosque del suspiro/texts/texts.txt",
+		"/D/Google Drive/Maritrini/dev/Speccy/MK2/Ramiro el Vampiro/Devuelve el zafiro/texts/texts.txt"
+	],
+	"find":
+	{
+		"height": 40.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"C:\\Users\\na_th_an\\Google Drive\\Maritrini\\dev\\NES\\GoddessR\\dev",
+			"C:\\Users\\na_th_an\\Google Drive\\Maritrini\\dev\\NES\\GoddessR"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"split",
+			"scr",
+			"24",
+			"sps_ss_patterns",
+			"col_idx_latest",
+			"irq",
+			"87",
+			"00",
+			"8000",
+			".segment \"SETUP\"\nsetup:\n\tsei\n\t\n\t; Put everything in place. \n\t; Making sure ROM $1E is @ $C000.\n\t; Of course, this code runs from PRG-ROM $1F @ $E000.\n\n\tlda #$86    ; 1000 0110 C = 1, P = 0\n\tsta $8000\n\tlda #$00\n\tsta $8001\n\n\tlda #$87\n\tsta $8000\n\tlda #$01\n\tsta $8001\n\n\t; Vertical mirroring\n\tlda #0\n\tsta $a000\n\n\t; unlock WRAM\n\tlda #$80\n\tsta $a001\n\n\t; disable IRQ\n\tsta $e000\n\n\t; and...\n\tjmp start",
+			"_exit",
+			"->",
+			"JUMP_MAX",
+			"cutscene",
+			"0xff",
+			"rdx = 2",
+			"show_cutscene",
+			"cuts_work",
+			"no_ct",
+			"guay_ct",
+			"gp_gen",
+			"gp_aux",
+			"scr_v_offset",
+			"UPDAT",
+			"col_v_offset",
+			"UPDAT",
+			"gp_ul",
+			"ppodewwr",
+			"state_ctr",
+			"phit",
+			"no_ct",
+			"chars",
+			"en_cx",
+			"ppress",
+			"control",
+			"col_v_offset",
+			"_even",
+			"rdd",
+			"rda",
+			"}\n",
+			"pfr",
+			":",
+			"_a",
+			"column_",
+			"bg_object",
+			"bg_object_tiles",
+			"create",
+			"bgo_",
+			"phit",
+			"F",
+			"hry [gpit]",
+			"hrx [gpit]",
+			"pgtmx",
+			"behs",
+			"unsigned",
+			"pflic",
+			"nesFindColourWithPal",
+			"tmaps",
+			"en_y [gpit]",
+			"en_x [gpit]",
+			"rda",
+			"scr_bu",
+			"44",
+			"bankswitch",
+			"cc_s [ccit]",
+			"gpit",
+			"CHAC_CHAC_MAX",
+			"x",
+			"n_pant",
+			"ST_FANTY",
+			"speed",
+			"_a",
+			"0xf",
+			"0xf0",
+			"3e",
+			"CHACK",
+			"16",
+			"ubound",
+			"idx",
+			"rdc",
+			"state_ctr",
+			"py",
+			"game_res",
+			"\t//",
+			"_a",
+			"cam_pos",
+			"*ul ++",
+			"cm_two",
+			"*gp_ul ++",
+			"~~~",
+			"~~~~",
+			"cam_pos",
+			"L4463",
+			"col_attr_adr",
+			"lala-unrom",
+			"^",
+			"_",
+			"'",
+			"SIRVIENTE VICENTE",
+			"VOZ DE ULTRATUMBA",
+			"'",
+			"HIJA CANIJA",
+			"GIGANTE ELEGANTE",
+			"JUANILLO EL COLMILLO",
+			"BRUJA MARUJA",
+			"ENANO MARRANO",
+			"AMADOR EL LE\\\\ADOR",
+			"PEPI CARAORTIGA",
+			"HIJA CANIJA",
+			"'",
+			"DONOSO EL SEBOSO",
+			"ALBERTO EL TUERTO",
+			"MACARIA LA ESTRAFALARIA",
+			"VOZ DE ULTRATUMBA",
+			"HIJA CANIJA",
+			"ALTAR",
+			"DEFORME DE UNIFORME",
+			"ROBERTA LA MUERTA",
+			"EL BANCARIO ARIO",
+			"BRUJA MARUJA",
+			"RUFINO EL MARINO",
+			"object_count",
+			"donoso",
+			"TILE_GET",
+			"GATE_X",
+			"(\\S+):",
+			"talk to",
+			"alberto"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"16",
+			",",
+			"rdx = 3",
+			"cutscene_show",
+			"fixed_screens",
+			"gp_aux",
+			"scr_buffer_ptr",
+			"map",
+			"_odd",
+			"create_bg_object_odd",
+			"create_bg_object_type",
+			";",
+			"_b",
+			"main_gate_",
+			"main_gate",
+			"column",
+			"chac_chac_tiles",
+			"CC_",
+			"rdc",
+			"rdb",
+			"spry",
+			"sprx",
+			"rdb",
+			"54",
+			"rdd",
+			"ccit",
+			"y",
+			"FANTY_ST",
+			"spee",
+			"_b",
+			"CHAC",
+			"upperBound",
+			"i",
+			"_b",
+			"UPDATE",
+			"gp_addr",
+			"goddessr",
+			"=",
+			"^",
+			"_",
+			"SERVANT VINCENT",
+			"VOICE FROM HEREAFTER",
+			"_",
+			"DOROTHANIA",
+			"SMART GIANT",
+			"JOHNNY FANG",
+			"WITCH MARUJA",
+			"FILTHY DWARF",
+			"JACK DA LUMBERJACK",
+			"PETULA",
+			"DOROTHANIA",
+			"_",
+			"TALLOW DONOSO",
+			"ONE EYED ALBERT",
+			"MACARIA THE LAVISH",
+			"VOICE FROM HEREAFTER",
+			"DOROTHANIA",
+			"PEDESTAL",
+			"UNIFORMED DEFORMED",
+			"ROBERTA THE DEAD",
+			"THE ARIAN BANKER",
+			"WITCH MARUJA",
+			"RUFINO THE SAILOR",
+			".\\1",
+			"CRYPT",
+			"SHROOM",
+			"DONOSO",
+			"ALBERTO",
+			"SHROOM",
+			", 45",
+			"5 6",
+			"$CASTILLO_CHUNGO",
+			"$TAL_4_STATE",
+			"$TAL_3_STATE",
+			"$TAL_1_STATE",
+			"$ALLPURP",
+			"$TRAP_ON",
+			"$GAME_STATE",
+			"$HECHIZO_POSTIZO",
+			"$TALISMAN_PIECES",
+			"$CROSSES",
+			"print_str",
+			"SHOW_COINS",
+			"CROSSES",
+			"TALISMAN_PIECES",
+			"$TALISMAN_PIECES",
+			"$CANIJA_GONE",
+			"$TALISMAN_4",
+			"$TALISMAN_3",
+			"$TALISMAN_2",
+			"$TALISMAN_1",
+			"$TRAMPA",
+			"$GO_SEE",
+			"$TESORO_MORO",
+			"$ALLPURPOSE",
+			"$ENCANTAMIENTO_PIMIENTO",
+			"$HECHIZO_POSTIZO",
+			"$TALISMAN",
+			"$COINS",
+			"/",
+			"en_an_t",
+			"Uwol",
+			"gp_ms",
+			"p_s",
+			"meemaid",
+			"gp_gen",
+			"meemaid",
+			"//sfx_play",
+			"SG",
+			"if (game_mode != GM_2P_VS) add_to_score",
+			"pcoins_uwol",
+			"_meemaid",
+			"add_to_score_meemaid (",
+			"add_to_score_uwol (",
+			"_meemaid",
+			"//pal_spr",
+			"_meemaid",
+			"y",
+			"_meemaid",
+			"UPDATE",
+			"ADD_UPD",
+			"",
+			"_meemaid",
+			">> 4",
+			"<< 4",
+			"",
+			"_b",
+			"attr_table"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "dev/prg3/engine/minimap.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1836,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1267,
+								1267
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 462.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "dev/prg3/engine/game.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7179,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2925,
+								2925
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1402.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "dev/prg3/engine/screens.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1340,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1189,
+								1189
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 336.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "dev/prg2/engine/hud.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 590,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								587,
+								587
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 22.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 100.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.sftp":
+	{
+		"height": 64.0
+	},
+	"pinned_build_system": "",
+	"project": "GoddessR.sublime-project",
+	"replace":
+	{
+		"height": 40.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"/D/Google Drive/Maritrini/dev/NES/hokuta/hokuta.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 197.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

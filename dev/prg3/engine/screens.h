@@ -65,6 +65,7 @@ void screen_title (void) {
 		p_s (8, 16, "START  TO BEGIN%%SELECT TO CONTINUE");
 	}
 	p_s (5, 25, "@ 2017 THE MOJON TWINS");
+	p_s (4, 27, "NESDEV COMPO EDITION 1.3");
 }
 
 void screen_game_over (void) {

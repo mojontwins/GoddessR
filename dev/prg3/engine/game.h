@@ -120,7 +120,9 @@ void game_loop (void) {
 		*gp_ul = NT_UPD_EOF;
 		ppu_wait_nmi ();
 	}
-	
+
+	oam_index = 28; gp_ul = update_list; hud_do (); *gp_ul = NT_UPD_EOF; ppu_wait_nmi ();
+		
 	if (!soft_reenter) {
 		cam_pant = MSB (cam_pos);
 		rdpant = cam_pant; enems_load (); hotspots_load ();
@@ -129,6 +131,7 @@ void game_loop (void) {
 	}
 	
 	SCR_BUFFER_PTR_UPD;
+
 	fade_in_split ();
 
 	if (!cutscene) {
