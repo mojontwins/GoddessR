@@ -46,7 +46,8 @@ void game_init (void) {
 	
 	// Debug shyte:
 	//level = 0;n_pant=0;pinv=4;pcharges=3;
-	//level = 3; n_pant = 17; pcharges = 3;
+	//level = 0; n_pant = 17; pinv = 7; pcharges = 3;
+	//level = 3; n_pant = 13; pcharges = 3;
 	//gpit = 4; while (gpit --) gs_flags [gpit] = 2;	
 }
 

@@ -22,7 +22,7 @@ void scroll_bg_object_create (void) {
 			bgo_s [ccit] = (rda >= 96 && gs_flags [rda - 96] == 2) ? 2 : 0;
 			bgo_ctr [ccit] = (rda >= 96) ? 0 : 120 + (rand8 () & 0x1f);
 			bgo_col_idx [ccit] = col_idx;
-			bgo_type [ccit] = rda;
+			bgo_type [ccit] = rda;		//if (rda >= 96) pal_col(0,rda-96);
 			bgo_total ++;
 
 			break;

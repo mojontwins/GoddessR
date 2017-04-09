@@ -39,8 +39,8 @@ void bg_object_do (void) {
 		if (bgo_col_idx [ccit]) {
 			// First, delete?
 			gpint = cam_pos >> 5;
-			if (bgo_col_idx [ccit] + 1 < gpint ||
-				bgo_col_idx [ccit] > gpint + 9) {
+			if (bgo_col_idx [ccit] + 2 < gpint ||
+				bgo_col_idx [ccit] > gpint + 10) {
 				bgo_col_idx [ccit] = 0;
 				bgo_total --;
 			} else {
